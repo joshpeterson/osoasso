@@ -3,7 +3,7 @@
 .PHONY: all clean
 
 # The files the project starts with.  Add your code files here!
-CCFILES = osoasso.cc
+CCFILES = src/osoasso.cc
 
 #Add your includes here.
 INCLUDES =
