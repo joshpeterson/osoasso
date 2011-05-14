@@ -6,16 +6,16 @@
 #include <iostream>
 #include <sstream>
 
-class test_assertion_failed_exception__ : std::exception
+class test_assertion_failed_exception__ : public std::exception
 {
 public:
-    test_assertion_failed_exception__(char* message) : message_(message)
-    {
-    }
+    test_assertion_failed_exception__(const char* message) : message_(message) {}
 
-    std::string get_message() const
+    ~test_assertion_failed_exception__() throw() {}
+
+    const char* what() const throw()
     {
-        return message_;
+        return message_.c_str();
     }
 
 private:
@@ -23,7 +23,7 @@ private:
 };
 
 #define TEST_FIXTURE_START \
-    int main(int argc, char* argv)\
+    int main(int argc, char** argv)\
     {\
         bool all_tests_passed__ = true;
 
@@ -37,11 +37,12 @@ private:
     {
 
 #define TEST_END \
+        std::cout << "passed" << std::endl;\
     }\
     catch(test_assertion_failed_exception__ &e)\
     {\
         std::cout << "failed" << std::endl;\
-        std::cout << e.get_message() << std::endl;\
+        std::cout << e.what() << std::endl;\
         all_tests_passed__ = false;\
     }
 
@@ -55,5 +56,5 @@ private:
         throw test_assertion_failed_exception__(message.str().c_str());\
     }\
 
-// __TEST_H
+#endif // __TEST_H
 

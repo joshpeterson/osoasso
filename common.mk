@@ -44,8 +44,9 @@ NACL_TOOLCHAIN_DIR = toolchain/$(PLATFORM)_$(TARGET)
 CC = $(NACL_SDK_ROOT)/$(NACL_TOOLCHAIN_DIR)/bin/nacl-gcc
 CPP = $(NACL_SDK_ROOT)/$(NACL_TOOLCHAIN_DIR)/bin/nacl-g++
 NACL_STRIP = $(NACL_SDK_ROOT)/$(NACL_TOOLCHAIN_DIR)/bin/nacl-strip
+NACL_SEL_LDR32 = $(NACL_SDK_ROOT)/toolchain/win_x86/bin/nacl-sel_ldr
 
-CFLAGS = -Wall -Wno-long-long -pthread -Werror
+CFLAGS = -Wall -Wno-long-long -pthread -Werror -std=c++0x
 OPT_FLAGS = -O2
 DEBUG_FLAGS = -g
 
