@@ -3,7 +3,7 @@
 .PHONY: all clean
 
 # The files the project starts with.  Add your code files here!
-CCFILES = src/osoasso.cc src/blob.cc test/test_blob.cc test/stress_test_blob.cc
+CCFILES = src/osoasso.cc test/test_blob.cc test/stress_test_blob.cc
 
 #Add your includes here.
 INCLUDES =
@@ -52,10 +52,10 @@ osoasso_x86_32_dbg.nexe: $(OBJECTS_X86_32_DBG)
 osoasso_x86_64_dbg.nexe: $(OBJECTS_X86_64_DBG)
 	$(CPP) $^ $(LDFLAGS) -m64 -o $@
 
-test_blob_x86_32_dbg.nexe: test/test_blob_x86_32_dbg.o src/blob_x86_32_dbg.o
+test_blob_x86_32_dbg.nexe: test/test_blob_x86_32_dbg.o
 	$(CPP) $^ $(LDFLAGS) -m32 -o $@
 
-test_blob_x86_64_dbg.nexe: test/test_blob_x86_64_dbg.o src/blob_x86_64_dbg.o
+test_blob_x86_64_dbg.nexe: test/test_blob_x86_64_dbg.o
 	$(CPP) $^ $(LDFLAGS) -m64 -o $@
 
 # Run the 32-bit version of the unit test with nacl-sel_ldr.
@@ -71,10 +71,10 @@ test64: test_blob_x86_64_dbg.nexe
 # 64-bit test.
 test: test32 test64
 
-stress_test_blob_x86_32_dbg.nexe: test/stress_test_blob_x86_32_dbg.o src/blob_x86_32_dbg.o
+stress_test_blob_x86_32_dbg.nexe: test/stress_test_blob_x86_32_dbg.o
 	$(CPP) $^ $(LDFLAGS) -m32 -o $@
 
-stress_test_blob_x86_64_dbg.nexe: test/stress_test_blob_x86_64_dbg.o src/blob_x86_64_dbg.o
+stress_test_blob_x86_64_dbg.nexe: test/stress_test_blob_x86_64_dbg.o
 	$(CPP) $^ $(LDFLAGS) -m64 -o $@
 
 # Run the 32-bit version of the unit stress_test with nacl-sel_ldr.
