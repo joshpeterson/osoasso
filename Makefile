@@ -92,5 +92,7 @@ stress_test: stress_test32 stress_test64
 
 # Target to clean up
 clean:
-	-$(RM) *.nmf *.o *.obj *.nexe
+	-$(RM) *.nmf *.o *.obj *.nexe 
+	-$(RM) test/*.o 
+	-$(RM) src/*.o 
 

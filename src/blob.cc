@@ -2,19 +2,6 @@
 
 using namespace osoasso;
 
-blob::blob(std::vector<double> values)
-{
-    for (auto i = values.cbegin(); i != values.cend(); ++i)
-    {
-        double_blobber blobber;
-        blobber.value = *i;
-        for (size_t j = 0; j < sizeof(double); ++j)
-        {
-            data_.push_back(blobber.bytes[j]);
-        }
-    }
-}
-
 std::vector<unsigned char> blob::data() const
 {
     return data_;
@@ -27,7 +14,7 @@ std::vector<double> blob::double_data() const
     auto i = data_.cbegin();
     while (i != data_.cend())
     {
-        double_blobber blobber;
+        blobber<double> blobber;
         for (size_t j = 0; j < sizeof(double); ++j)
         {
             blobber.bytes[j] = *i;
