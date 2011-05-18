@@ -22,13 +22,17 @@ private:
     std::string message_;
 };
 
-#define TEST_FIXTURE_START \
-    int main(int argc, char* argv)\
+#define RUN_TEST_FIXTURE(test_fixture_name__) \
+    if (!test_fixture_name__())\
+        all_tests_passed__ = false;\
+
+#define TEST_FIXTURE_START(test_fixture_name__) \
+    bool test_fixture_name__()\
     {\
-        bool all_tests_passed__ = true;
+        bool all_tests_passed__ = true;\
 
 #define TEST_FIXTURE_END \
-        return all_tests_passed__ ? 0 : 1;\
+        return all_tests_passed__\
     }
 
 #define TEST_START(test_name__) \
