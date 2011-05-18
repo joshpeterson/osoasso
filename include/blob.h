@@ -37,24 +37,24 @@ public:
         return data_;
     }
 
-    std::vector<double> double_data() const
+    std::vector<T> values() const
     {
-        std::vector<double> doubles;
+        std::vector<T> values;
 
         auto i = data_.cbegin();
         while (i != data_.cend())
         {
-            blobber<double> blobber;
-            for (size_t j = 0; j < sizeof(double); ++j)
+            blobber<T> blobber;
+            for (size_t j = 0; j < sizeof(T); ++j)
             {
                 blobber.bytes[j] = *i;
                 ++i;
             }
 
-            doubles.push_back(blobber.value);
+            values.push_back(blobber.value);
         }
 
-        return doubles;
+        return values;
     }
 
 private:

@@ -27,7 +27,7 @@ TEST_START("VerifyConversionBackToDoubles")
 
     blob<double> test_blob(input_vector.cbegin(), input_vector.cend());
 
-    std::vector<double> actual_vector = test_blob.double_data();
+    std::vector<double> actual_vector = test_blob.values();
 
     for (size_t i = 0; i < input_vector.size(); ++i)
     {
