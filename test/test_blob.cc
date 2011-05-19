@@ -4,9 +4,9 @@
 
 using namespace osoasso;
 
-TEST_FIXTURE_START
+TEST_FIXTURE_START(TestBlob)
 
-TEST_START("VerifyDataWithDoubles")
+TEST_START(VerifyDataWithDoubles)
 
     std::vector<double> input_vector = { 3.14, 2.72, 4.5 };
     std::vector<unsigned char> expected_data = { 31, 133, 235, 81, 184, 30, 9, 64, 195, 245, 40, 92, 143, 194, 5, 64, 0, 0, 0, 0, 0, 0, 18, 64 };
@@ -21,7 +21,7 @@ TEST_START("VerifyDataWithDoubles")
 
 TEST_END
 
-TEST_START("VerifyConversionBackToDoubles")
+TEST_START(VerifyConversionBackToDoubles)
 
     std::vector<double> input_vector = { 3.14, 2.72, 4.5 };
 

@@ -86,6 +86,17 @@ OBJECTS_X86_64 = $(CFILES:%.c=%_x86_64.o) $(CCFILES:%.cc=%_x86_64.o)
 OBJECTS_X86_32_DBG = $(CFILES:%.c=%_x86_32_dbg.o) $(CCFILES:%.cc=%_x86_32_dbg.o)
 OBJECTS_X86_64_DBG = $(CFILES:%.c=%_x86_64_dbg.o) $(CCFILES:%.cc=%_x86_64_dbg.o)
 
+TEST_OBJECTS_X86_32 = $(TEST_CCFILES:%.cc=%_x86_32.o)
+TEST_OBJECTS_X86_64 = $(TEST_CCFILES:%.cc=%_x86_64.o)
+TEST_OBJECTS_X86_32_DBG = $(TEST_CCFILES:%.cc=%_x86_32_dbg.o)
+TEST_OBJECTS_X86_64_DBG = $(TEST_CCFILES:%.cc=%_x86_64_dbg.o)
+
+STRESS_TEST_OBJECTS_X86_32 = $(STRESS_TEST_CCFILES:%.cc=%_x86_32.o)
+STRESS_TEST_OBJECTS_X86_64 = $(STRESS_TEST_CCFILES:%.cc=%_x86_64.o)
+STRESS_TEST_OBJECTS_X86_32_DBG = $(STRESS_TEST_CCFILES:%.cc=%_x86_32_dbg.o)
+STRESS_TEST_OBJECTS_X86_64_DBG = $(STRESS_TEST_CCFILES:%.cc=%_x86_64_dbg.o)
+
+
 # Make sure certain variables are defined.  This rule is set as a dependency
 # for all the .nexe builds in the examples.
 check_variables:

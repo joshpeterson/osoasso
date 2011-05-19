@@ -3,7 +3,9 @@
 .PHONY: all clean
 
 # The files the project starts with.  Add your code files here!
-CCFILES = src/osoasso.cc test/test_blob.cc test/stress_test_blob.cc
+CCFILES = src/osoasso.cc
+TEST_CCFILES = test_harness/test.cc test/test_blob.cc
+STRESS_TEST_CCFILES = test_harness/stress_test.cc test/stress_test_blob.cc
 
 #Add your includes here.
 INCLUDES =
@@ -52,42 +54,42 @@ osoasso_x86_32_dbg.nexe: $(OBJECTS_X86_32_DBG)
 osoasso_x86_64_dbg.nexe: $(OBJECTS_X86_64_DBG)
 	$(CPP) $^ $(LDFLAGS) -m64 -o $@
 
-test_blob_x86_32_dbg.nexe: test/test_blob_x86_32_dbg.o
+test_x86_32_dbg.nexe: $(TEST_OBJECTS_X86_32_DBG)
 	$(CPP) $^ $(LDFLAGS) -m32 -o $@
 
-test_blob_x86_64_dbg.nexe: test/test_blob_x86_64_dbg.o
+test_x86_64_dbg.nexe: $(TEST_OBJECTS_X86_64_DBG)
 	$(CPP) $^ $(LDFLAGS) -m64 -o $@
 
 # Run the 32-bit version of the unit test with nacl-sel_ldr.
-test32: test_blob_x86_32_dbg.nexe
-	$(NACL_SEL_LDR32) test_blob_x86_32_dbg.nexe
+test32: test_x86_32_dbg.nexe
+	$(NACL_SEL_LDR32) test_x86_32_dbg.nexe
 
 # Run the 64-bit version of the unit test with nacl64-sel_ldr.
-test64: test_blob_x86_64_dbg.nexe
-	$(NACL_SEL_LDR64) test_blob_x86_64_dbg.nexe
+test64: test_x86_64_dbg.nexe
+	$(NACL_SEL_LDR64) test_x86_64_dbg.nexe
 
 # Run both the 32-bit and the 64-bit version of the tests.  Note that this is
 # not included in the 'all' target because 32-bit platforms won't support the
 # 64-bit test.
 test: test32 test64
 
-stress_test_blob_x86_32_dbg.nexe: test/stress_test_blob_x86_32_dbg.o
+stress_test_blob_x86_32_dbg.nexe: $(STRESS_TEST_OBJECTS_X86_32_DBG)
 	$(CPP) $^ $(LDFLAGS) -m32 -o $@
 
-stress_test_blob_x86_64_dbg.nexe: test/stress_test_blob_x86_64_dbg.o
+stress_test_blob_x86_64_dbg.nexe: $(STRESS_TEST_OBJECTS_X86_32_DBG)
 	$(CPP) $^ $(LDFLAGS) -m64 -o $@
 
-# Run the 32-bit version of the unit stress_test with nacl-sel_ldr.
+# Run the 32-bit version of the stress test with nacl-sel_ldr.
 stress_test32: stress_test_blob_x86_32_dbg.nexe
 	$(NACL_SEL_LDR32) stress_test_blob_x86_32_dbg.nexe
 
-# Run the 64-bit version of the unit stress_test with nacl64-sel_ldr.
+# Run the 64-bit version of the stress test with nacl64-sel_ldr.
 stress_test64: stress_test_blob_x86_64_dbg.nexe
 	$(NACL_SEL_LDR64) stress_test_blob_x86_64_dbg.nexe
 
-# Run both the 32-bit and the 64-bit version of the stress_tests.  Note that this is
+# Run both the 32-bit and the 64-bit version of the stress tests.  Note that this is
 # not included in the 'all' target because 32-bit platforms won't support the
-# 64-bit stress_test.
+# 64-bit stress test.
 stress_test: stress_test32 stress_test64
 
 # Target to clean up
