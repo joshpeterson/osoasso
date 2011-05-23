@@ -2,6 +2,7 @@
 #define __BLOB_H
 
 #include <vector>
+#include "sha1.h"
 
 namespace osoasso
 {
@@ -18,7 +19,7 @@ class blob
 {
 public:
     template <typename U>
-    blob(U start, U end)
+    blob(U start, U end, const char* parent) : parent_(parent != NULL ? parent : std::string())
     {
         static_assert(std::is_same<typename U::value_type, T>::value, "The template parameter for the blob be the same as the value_type of the iterator.");
         for (U i = start; i != end; ++i)
@@ -30,6 +31,19 @@ public:
                 data_.push_back(blobber.bytes[j]);
             }
         }
+
+        sha1 hasher;
+        name_ = hasher.hash(data_);
+    }
+
+    std::string parent() const
+    {
+        return parent_;
+    }
+
+    std::string name() const
+    {
+        return name_;
     }
 
     std::vector<unsigned char> data() const
@@ -58,6 +72,8 @@ public:
     }
 
 private:
+    std::string parent_;
+    std::string name_;
     std::vector<unsigned char> data_;
 };
 
