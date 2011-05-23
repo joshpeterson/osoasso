@@ -6,6 +6,7 @@ int main(int argc, char** argv)
 
     // Add RUN_TEST_FIXTURE statements here to run tests.
     RUN_TEST_FIXTURE(TestBlob)
+    RUN_TEST_FIXTURE(TestSHA1)
 
     return all_tests_passed__ ? 0 : 1;
 }
