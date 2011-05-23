@@ -11,7 +11,7 @@ TEST_START(VerifyDataWithDoubles)
     std::vector<double> input_vector = { 3.14, 2.72, 4.5 };
     std::vector<unsigned char> expected_data = { 31, 133, 235, 81, 184, 30, 9, 64, 195, 245, 40, 92, 143, 194, 5, 64, 0, 0, 0, 0, 0, 0, 18, 64 };
 
-    blob<double> test_blob(input_vector.cbegin(), input_vector.cend());
+    blob<double> test_blob(input_vector.cbegin(), input_vector.cend(), NULL);
 
     std::vector<unsigned char> actual_data = test_blob.data();
     for (size_t i = 0; i < expected_data.size(); ++i)
@@ -25,7 +25,7 @@ TEST_START(VerifyConversionBackToDoubles)
 
     std::vector<double> input_vector = { 3.14, 2.72, 4.5 };
 
-    blob<double> test_blob(input_vector.cbegin(), input_vector.cend());
+    blob<double> test_blob(input_vector.cbegin(), input_vector.cend(), NULL);
 
     std::vector<double> actual_vector = test_blob.values();
 
@@ -33,6 +33,22 @@ TEST_START(VerifyConversionBackToDoubles)
     {
         ASSERT_EQUAL(input_vector[i], actual_vector[i]);
     }
+
+TEST_END
+
+TEST_START(VerifyBlobName)
+
+    std::vector<double> input_vector = { 3.14, 2.72, 4.5 };
+    blob<double> test_blob(input_vector.cbegin(), input_vector.cend(), NULL);
+    ASSERT_EQUAL("6cb55993 6305f293 2afa1187 a2e3ef96 edd191b7", test_blob.name())
+
+TEST_END
+
+TEST_START(VerifyBlobParent)
+
+    std::vector<double> input_vector = { 3.14, 2.72, 4.5 };
+    blob<double> test_blob(input_vector.cbegin(), input_vector.cend(), "8ab55993 6305f293 2afa1187 a2e3ef96 edd191b7");
+    ASSERT_EQUAL("8ab55993 6305f293 2afa1187 a2e3ef96 edd191b7", test_blob.parent())
 
 TEST_END
 
