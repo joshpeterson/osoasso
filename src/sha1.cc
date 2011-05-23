@@ -1,11 +1,13 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include "../include/sha1.h"
 
 using namespace osoasso;
 
 sha1::sha1()
 {
-    SHA1_CTX* context = new SHA1_CTX;
+    context = new SHA1_CTX;
 
     context->state[0] = 0x67452301;
     context->state[1] = 0xEFCDAB89;
@@ -13,7 +15,6 @@ sha1::sha1()
     context->state[3] = 0x10325476;
     context->state[4] = 0xC3D2E1F0;
     context->count[0] = context->count[1] = 0;
-    
 }
 
 sha1::~sha1()
@@ -155,7 +156,7 @@ void sha1::digest_to_hex(const uint8_t digest[SHA1_DIGEST_SIZE], char *output)
 
     for (i = 0; i < SHA1_DIGEST_SIZE/4; i++) {
         for (j = 0; j < 4; j++) {
-            sprintf(c,"%02X", digest[i*4+j]);
+            sprintf(c,"%02x", digest[i*4+j]);
             c += 2;
         }
         sprintf(c, " ");
