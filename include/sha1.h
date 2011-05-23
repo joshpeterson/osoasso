@@ -1,6 +1,8 @@
 #ifndef __SHA1_H
 #define __SHA1_H
 
+// Taken from Steve Reid's public domain SHA1 implementation
+
 #include <vector>
 #include <string>
 
@@ -43,13 +45,13 @@ private:
         uint32_t state[5];
         uint32_t count[2];
         uint8_t  buffer[64];
-    } SHA1_CTX;
+    } sha1_ctx;
 
-    SHA1_CTX* context;
+    sha1_ctx* context;
 
-    void SHA1_Update(const uint8_t* data, const size_t len);
-    void SHA1_Final(uint8_t digest[SHA1_DIGEST_SIZE]);
-    void SHA1_Transform(uint32_t state[5], const uint8_t buffer[64]);
+    void update(const uint8_t* data, const size_t len);
+    void final(uint8_t digest[SHA1_DIGEST_SIZE]);
+    void transform(uint32_t state[5], const uint8_t buffer[64]);
     void digest_to_hex(const uint8_t digest[SHA1_DIGEST_SIZE], char *output);
 };
 

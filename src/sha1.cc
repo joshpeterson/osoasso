@@ -3,11 +3,13 @@
 #include <string.h>
 #include "../include/sha1.h"
 
+// Taken from Steve Reid's public domain SHA1 implementation
+
 using namespace osoasso;
 
 sha1::sha1()
 {
-    context = new SHA1_CTX;
+    context = new sha1_ctx;
 
     context->state[0] = 0x67452301;
     context->state[1] = 0xEFCDAB89;
@@ -27,14 +29,14 @@ std::string sha1::hash(const std::vector<unsigned char>& data)
     uint8_t digest[20];
     char output[80];
     
-    SHA1_Update((uint8_t*)&data[0], (int)data.size());
-    SHA1_Final(digest);
+    update((uint8_t*)&data[0], (int)data.size());
+    final(digest);
 	digest_to_hex(digest, output);
     
     return std::string(output);
 }
 
-void sha1::SHA1_Update(const uint8_t* data, const size_t len)
+void sha1::update(const uint8_t* data, const size_t len)
 {
     size_t i, j;
 
@@ -47,9 +49,9 @@ void sha1::SHA1_Update(const uint8_t* data, const size_t len)
     context->count[1] += (len >> 29);
     if ((j + len) > 63) {
         memcpy(&context->buffer[j], data, (i = 64-j));
-        SHA1_Transform(context->state, context->buffer);
+        transform(context->state, context->buffer);
         for ( ; i + 63 < len; i += 64) {
-            SHA1_Transform(context->state, data + i);
+            transform(context->state, data + i);
         }
         j = 0;
     }
@@ -61,7 +63,7 @@ void sha1::SHA1_Update(const uint8_t* data, const size_t len)
 #endif
 }
 
-void sha1::SHA1_Final(uint8_t digest[SHA1_DIGEST_SIZE])
+void sha1::final(uint8_t digest[SHA1_DIGEST_SIZE])
 {
     uint32_t i;
     uint8_t  finalcount[8];
@@ -70,11 +72,11 @@ void sha1::SHA1_Final(uint8_t digest[SHA1_DIGEST_SIZE])
         finalcount[i] = (unsigned char)((context->count[(i >= 4 ? 0 : 1)]
          >> ((3-(i & 3)) * 8) ) & 255);  /* Endian independent */
     }
-    SHA1_Update((uint8_t *)"\200", 1);
+    update((uint8_t *)"\200", 1);
     while ((context->count[0] & 504) != 448) {
-        SHA1_Update((uint8_t *)"\0", 1);
+        update((uint8_t *)"\0", 1);
     }
-    SHA1_Update(finalcount, 8);  /* Should cause a SHA1_Transform() */
+    update(finalcount, 8);  /* Should cause a transform() */
     for (i = 0; i < SHA1_DIGEST_SIZE; i++) {
         digest[i] = (uint8_t)
          ((context->state[i>>2] >> ((3-(i & 3)) * 8) ) & 255);
@@ -86,13 +88,9 @@ void sha1::SHA1_Final(uint8_t digest[SHA1_DIGEST_SIZE])
     memset(context->state, 0, 20);
     memset(context->count, 0, 8);
     memset(finalcount, 0, 8);	/* SWR */
-
-#ifdef SHA1HANDSOFF  /* make SHA1Transform overwrite its own static vars */
-    SHA1_Transform(context->state, context->buffer);
-#endif
 }
 
-void sha1::SHA1_Transform(uint32_t state[5], const uint8_t buffer[64])
+void sha1::transform(uint32_t state[5], const uint8_t buffer[64])
 {
     uint32_t a, b, c, d, e;
     typedef union {
@@ -101,13 +99,7 @@ void sha1::SHA1_Transform(uint32_t state[5], const uint8_t buffer[64])
     } CHAR64LONG16;
     CHAR64LONG16* block;
 
-#ifdef SHA1HANDSOFF
-    static uint8_t workspace[64];
-    block = (CHAR64LONG16*)workspace;
-    memcpy(block, buffer, 64);
-#else
     block = (CHAR64LONG16*)buffer;
-#endif
 
     /* Copy context->state[] to working vars */
     a = state[0];
