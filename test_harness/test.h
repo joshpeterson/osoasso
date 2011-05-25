@@ -23,6 +23,7 @@ private:
 };
 
 #define RUN_TEST_FIXTURE(test_fixture_name__) \
+    std::cout << #test_fixture_name__ << ":" << std::endl;\
     bool test_fixture_name__();\
     if (!test_fixture_name__())\
         all_tests_passed__ = false;
@@ -37,7 +38,7 @@ private:
     }
 
 #define TEST_START(test_name__) \
-    std::cout << #test_name__ << ": ";\
+    std::cout << "\t" << #test_name__ << ": ";\
     try\
     {
 
