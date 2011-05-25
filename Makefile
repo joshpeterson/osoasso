@@ -3,8 +3,8 @@
 .PHONY: all clean
 
 # The files the project starts with.  Add your code files here!
-CCFILES = src/osoasso.cc src/blob.cc src/sha1.cc
-TEST_CCFILES = test_harness/test.cc test/test_blob.cc test/test_sha1.cc src/sha1.cc
+CCFILES = src/osoasso.cc src/blob.cc src/sha1.cc src/commit.cc
+TEST_CCFILES = test_harness/test.cc test/test_blob.cc test/test_sha1.cc test/test_commit.cc src/sha1.cc src/commit.cc
 STRESS_TEST_CCFILES = test_harness/stress_test.cc test/stress_test_blob.cc src/sha1.cc
 
 #Add your includes here.
@@ -95,6 +95,7 @@ stress_test: stress_test32 stress_test64
 # Target to clean up
 clean:
 	-$(RM) *.nmf *.o *.obj *.nexe 
+	-$(RM) test_harness/*.o 
 	-$(RM) test/*.o 
 	-$(RM) src/*.o 
 
