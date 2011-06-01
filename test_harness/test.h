@@ -56,8 +56,8 @@ private:
     if (expected != actual)\
     {\
         std::stringstream message;\
-        message << "Expected: " << expected << std::endl;\
-        message << "Actual: " << actual << std::endl;\
+        message << "\t\tExpected: " << expected << std::endl;\
+        message << "\t\tActual:   " << actual << std::endl;\
         message << __FILE__ << ":" << __LINE__ << std::endl;\
         throw test_assertion_failed_exception__(message.str().c_str());\
     }
