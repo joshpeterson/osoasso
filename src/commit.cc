@@ -23,5 +23,5 @@ std::string commit::time() const
     std::string time(asctime(time_info));
 
     // Strip off the trailing newline character.
-    return time.substr(0, time.size()-1);
+    return time.substr(0, time.size()-1) + " GMT";
 }
