@@ -14,10 +14,24 @@ TEST_START(VerifyAction)
 
 TEST_END
 
+TEST_START(VerifyComplexAction)
+
+    commit test_commit("x = inverse(a)", "me", 0); 
+    ASSERT_EQUAL("x = inverse(a)", test_commit.action())
+
+TEST_END
+
 TEST_START(VerifyUser)
 
     commit test_commit("foo", "me", 0); 
     ASSERT_EQUAL("me", test_commit.user())
+
+TEST_END
+
+TEST_START(VerifyComplexUser)
+
+    commit test_commit("foo", "josh@mine.com", 0); 
+    ASSERT_EQUAL("josh@mine.com", test_commit.user())
 
 TEST_END
 

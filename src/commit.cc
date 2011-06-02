@@ -3,18 +3,18 @@
 
 using namespace osoasso;
 
-commit::commit(std::string contents, std::string committer, time_t time) : time_(time)
+commit::commit(std::string action, std::string user, time_t time) : action_(action), user_(user), time_(time)
 {
 }
 
 std::string commit::action() const
 {
-    return "foo";
+    return action_;
 }
 
 std::string commit::user() const
 {
-    return "me";
+    return user_;
 }
 
 std::string commit::time() const

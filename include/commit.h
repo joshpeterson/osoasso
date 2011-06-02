@@ -9,13 +9,15 @@ namespace osoasso
 class commit
 {
 public:
-    commit(std::string contents, std::string committer, time_t time);
+    commit(std::string action, std::string user_, time_t time);
 
     std::string action() const;
     std::string user() const;
     std::string time() const;
 
 private:
+    std::string action_;
+    std::string user_;
     time_t time_;
 };
 
