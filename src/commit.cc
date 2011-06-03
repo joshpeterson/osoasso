@@ -3,8 +3,8 @@
 
 using namespace osoasso;
 
-commit::commit(std::string action, std::string user, time_t time, const std::vector<std::string>& inputs) : 
-    action_(action), user_(user), time_(time), inputs_(inputs)
+commit::commit(std::string action, std::string user, time_t time, const std::vector<std::string>& inputs, std::string output) : 
+    action_(action), user_(user), time_(time), inputs_(inputs), output_(output)
 {
 }
 
@@ -30,4 +30,9 @@ std::string commit::time() const
 std::vector<std::string> commit::inputs() const
 {
     return inputs_;
+}
+
+std::string commit::output() const
+{
+    return output_;
 }
