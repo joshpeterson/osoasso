@@ -17,6 +17,7 @@ public:
     std::string time() const;
     std::vector<std::string> inputs() const;
     std::string output() const;
+    std::string name() const;
 
 private:
     std::string action_;
@@ -24,6 +25,7 @@ private:
     time_t time_;
     std::vector<std::string> inputs_;
     std::string output_;
+    std::string name_;
 };
 
 }

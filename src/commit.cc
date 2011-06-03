@@ -1,11 +1,13 @@
 #include <ctime>
 #include "../include/commit.h"
+#include "../include/sha1.h"
 
 using namespace osoasso;
 
 commit::commit(std::string action, std::string user, time_t time, const std::vector<std::string>& inputs, std::string output) : 
     action_(action), user_(user), time_(time), inputs_(inputs), output_(output)
 {
+    name_ = "";
 }
 
 std::string commit::action() const
@@ -35,4 +37,9 @@ std::vector<std::string> commit::inputs() const
 std::string commit::output() const
 {
     return output_;
+}
+
+std::string commit::name() const
+{
+    return name_;
 }
