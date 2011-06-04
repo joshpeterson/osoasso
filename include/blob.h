@@ -11,7 +11,7 @@ template <typename T>
 union blobber
 {
     T value;
-    unsigned char bytes[sizeof(double)];
+    unsigned char bytes[sizeof(T)];
 };
 
 template<typename T>

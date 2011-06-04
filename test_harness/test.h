@@ -23,6 +23,7 @@ private:
 };
 
 #define RUN_TEST_FIXTURE(test_fixture_name__) \
+    std::cout << #test_fixture_name__ << ":" << std::endl;\
     bool test_fixture_name__();\
     if (!test_fixture_name__())\
         all_tests_passed__ = false;
@@ -37,7 +38,7 @@ private:
     }
 
 #define TEST_START(test_name__) \
-    std::cout << #test_name__ << ": ";\
+    std::cout << "\t" << #test_name__ << ": ";\
     try\
     {
 
@@ -55,8 +56,8 @@ private:
     if (expected != actual)\
     {\
         std::stringstream message;\
-        message << "Expected: " << expected << std::endl;\
-        message << "Actual: " << actual << std::endl;\
+        message << "\t\tExpected: " << expected << std::endl;\
+        message << "\t\tActual:   " << actual << std::endl;\
         message << __FILE__ << ":" << __LINE__ << std::endl;\
         throw test_assertion_failed_exception__(message.str().c_str());\
     }
