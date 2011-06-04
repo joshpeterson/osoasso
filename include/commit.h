@@ -3,6 +3,8 @@
 
 #include <string>
 #include <vector>
+#include <ostream>
+#include "../include/blob.h"
 
 namespace osoasso
 {
@@ -19,13 +21,16 @@ public:
     std::string output() const;
     std::string name() const;
 
+    blob<char> make_blob() const;
+
 private:
     std::string action_;
     std::string user_;
     time_t time_;
     std::vector<std::string> inputs_;
     std::string output_;
-    std::string name_;
+
+    void serialize_string(std::ostream& stream, std::string value) const;
 };
 
 }

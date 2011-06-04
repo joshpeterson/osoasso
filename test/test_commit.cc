@@ -77,8 +77,18 @@ TEST_START(VerifyName)
     std::vector<std::string> test_inputs = { "input1", "input2", "input3" };
     commit test_commit("foo", "me", 1306927186, test_inputs, "TestOutput");
 
-    std::cout << test_commit.name();
-    ASSERT_EQUAL("", test_commit.name())
+    ASSERT_EQUAL("b12c6f97 37cb129c b99b4d12 53c190d9 450325af", test_commit.name())
+
+TEST_END
+
+TEST_START(VerifyMakeBlob)
+
+    std::vector<std::string> test_inputs = { "input1", "input2", "input3" };
+    commit test_commit("foo", "me", 1306927186, test_inputs, "TestOutput");
+
+    blob<char> test_blob = test_commit.make_blob();
+
+    ASSERT_EQUAL("b12c6f97 37cb129c b99b4d12 53c190d9 450325af", test_blob.name())
 
 TEST_END
 
