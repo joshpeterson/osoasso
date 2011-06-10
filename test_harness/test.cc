@@ -9,6 +9,7 @@ int main(int argc, char** argv)
     RUN_TEST_FIXTURE(TestSHA1)
     RUN_TEST_FIXTURE(TestCommit)
     RUN_TEST_FIXTURE(TestObjectRepository)
+    RUN_TEST_FIXTURE(CommandParser)
 
     return all_tests_passed__ ? 0 : 1;
 }
