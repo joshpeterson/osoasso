@@ -10,7 +10,7 @@ namespace osoasso
 class command_parser
 {
 public:
-    command_parser(std::string command);
+    command_parser(const std::string& command);
     std::string name() const;
     std::vector<std::string> inputs() const;
 

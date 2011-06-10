@@ -12,7 +12,7 @@ namespace osoasso
 class commit
 {
 public:
-    commit(std::string action, std::string user_, time_t time, std::string parent, const std::vector<std::string>& inputs, std::string output);
+    commit(const std::string& action, const std::string& user, time_t time, const std::string& parent, const std::vector<std::string>& inputs, const std::string& output);
 
     std::string action() const;
     std::string user() const;
@@ -32,7 +32,7 @@ private:
     std::vector<std::string> inputs_;
     std::string output_;
 
-    void serialize_string(std::ostream& stream, std::string value) const;
+    void serialize_string(std::ostream& stream, const std::string& value) const;
 };
 
 }
