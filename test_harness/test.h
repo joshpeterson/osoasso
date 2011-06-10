@@ -24,32 +24,29 @@ private:
 
 #define RUN_TEST_FIXTURE(test_fixture_name__) \
     std::cout << #test_fixture_name__ << ":" << std::endl;\
-    bool test_fixture_name__();\
-    if (!test_fixture_name__())\
-        all_tests_passed__ = false;
-
-#define TEST_FIXTURE_START(test_fixture_name__) \
-    bool test_fixture_name__()\
+    void test_fixture_name__();\
+    try\
     {\
-        bool all_tests_passed__ = true;
-
-#define TEST_FIXTURE_END \
-        return all_tests_passed__;\
+        test_fixture_name__();\
+    }\
+    catch(const test_assertion_failed_exception__& e)\
+    {\
+        std::cout << "Failed:" << std::endl;\
+        std::cout << e.what() << std::endl;\
+        all_tests_passed__ = false;\
     }
 
-#define TEST_START(test_name__) \
-    std::cout << "\t" << #test_name__ << ": ";\
-    try\
-    {
+#define Define(test_fixture_name__) void test_fixture_name__()
 
-#define TEST_END \
-        std::cout << "passed" << std::endl;\
-    }\
+#define It(test_name__) \
+    std::cout << "\t - " << test_name__;\
+
+#define Done \
     catch(test_assertion_failed_exception__ &e)\
     {\
         std::cout << "failed" << std::endl;\
         std::cout << e.what() << std::endl;\
-        all_tests_passed__ = false;\
+        throw;\
     }
 
 #define ASSERT_EQUAL(expected, actual) \
