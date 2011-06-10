@@ -2,7 +2,7 @@
 
 using namespace osoasso;
 
-command_parser::command_parser(std::string command) : command_segments_()
+command_parser::command_parser(const std::string& command) : command_segments_()
 {
     std::string delimiters = "(,)";
     std::string::size_type pos, lastPos = 0;

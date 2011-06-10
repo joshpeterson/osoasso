@@ -15,7 +15,7 @@ public:
         objects_.insert(std::make_pair(object->name(), object));
     }
 
-    std::shared_ptr<RepositoryValueType> get(std::string name)
+    std::shared_ptr<RepositoryValueType> get(const std::string& name)
     {
         auto found_object = objects_.find(name);
         return found_object != objects_.end() ? found_object->second : std::shared_ptr<RepositoryValueType>();

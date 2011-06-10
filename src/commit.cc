@@ -4,7 +4,7 @@
 
 using namespace osoasso;
 
-commit::commit(std::string action, std::string user, time_t time, std::string parent, const std::vector<std::string>& inputs, std::string output) : 
+commit::commit(const std::string& action, const std::string& user, time_t time, const std::string& parent, const std::vector<std::string>& inputs, const std::string& output) : 
     action_(action), user_(user), time_(time), parent_(parent), inputs_(inputs), output_(output)
 {
 }
@@ -64,7 +64,7 @@ blob<char> commit::make_blob() const
     return blob<char>(commit_string.begin(), commit_string.end());
 }
 
-void commit::serialize_string(std::ostream& stream, std::string value) const
+void commit::serialize_string(std::ostream& stream, const std::string& value) const
 {
     stream << value.size() << value;
 }
