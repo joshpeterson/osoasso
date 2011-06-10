@@ -14,7 +14,7 @@ command_parser::command_parser(std::string command) : command_segments_()
             pos = command.length();
             if(pos != lastPos)
             {
-                command_segments_.push_back(std::string(command.data()+lastPos, pos-lastPos));
+                command_segments_.push_back(this->trim(std::string(command.data()+lastPos, pos-lastPos)));
             }
 
             break;
@@ -23,7 +23,7 @@ command_parser::command_parser(std::string command) : command_segments_()
         {
             if(pos != lastPos)
             {
-                command_segments_.push_back(std::string(command.data()+lastPos, pos-lastPos));
+                command_segments_.push_back(this->trim(std::string(command.data()+lastPos, pos-lastPos)));
             }
         }
 
@@ -50,3 +50,17 @@ std::vector<std::string> command_parser::inputs() const
 
     return std::vector<std::string>();
 }
+
+std::string command_parser::trim(const std::string& value) const
+{
+    std::string::size_type first_non_whitespace = value.find_first_not_of(" \t\n\r");
+    if (first_non_whitespace == std::string::npos)
+    {
+        return std::string();
+    }
+
+    std::string::size_type last_non_whitespace= value.find_last_not_of(" \t\n\r");
+
+    return value.substr(first_non_whitespace, last_non_whitespace - first_non_whitespace + 1);
+}
+;

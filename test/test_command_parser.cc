@@ -55,4 +55,33 @@ TEST_START(ReturnsEmptyInputsWhenCommandNameIsEmpty)
 
 TEST_END
 
+TEST_START(TrimsSpacesFromInputs)
+
+    command_parser test_parser("foo( 1 , [2 3] )");
+    std::vector<std::string> actual_inputs = test_parser.inputs();
+    
+    ASSERT_EQUAL(2, actual_inputs.size())
+    ASSERT_EQUAL("1", actual_inputs[0])
+    ASSERT_EQUAL("[2 3]", actual_inputs[1])
+
+TEST_END
+
+TEST_START(TrimsWhiteSpaceFromInputs)
+
+    command_parser test_parser("foo( 1\t, \r[2 3]\n )");
+    std::vector<std::string> actual_inputs = test_parser.inputs();
+    
+    ASSERT_EQUAL(2, actual_inputs.size())
+    ASSERT_EQUAL("1", actual_inputs[0])
+    ASSERT_EQUAL("[2 3]", actual_inputs[1])
+
+TEST_END
+
+TEST_START(TrimsWhiteSpaceFromCommandName)
+
+    command_parser test_parser(" \tfoo\r\n(1, [2 3])");
+    ASSERT_EQUAL("foo", test_parser.name());
+
+TEST_END
+
 TEST_FIXTURE_END

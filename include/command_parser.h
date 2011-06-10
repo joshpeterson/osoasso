@@ -16,6 +16,8 @@ public:
 
 private:
     std::vector<std::string> command_segments_;
+
+    std::string trim(const std::string& value) const;
 };
 
 }
