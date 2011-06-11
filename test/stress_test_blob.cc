@@ -19,7 +19,7 @@ Define(StressTestBlob)
         blob<double> test_blob(input_vector.cbegin(), input_vector.cend());
 
         std::cout << " Time to blob: " << blob_timer.elapsed() << "s" << std::endl;
-    }
+    } Done
 
     It("Converts Blob Of 1 Million Doubles Back To Doubles")
     {
@@ -32,5 +32,5 @@ Define(StressTestBlob)
         std::vector<double> doubles = test_blob.values();
 
         std::cout << " Time to convert: " << values_timer.elapsed() << "s" << std::endl;
-    }
+    } Done
 }
