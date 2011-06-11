@@ -5,9 +5,9 @@
 
 using namespace osoasso;
 
-Define(TestObjectRepository)
+Define(ObjectRepository)
 {
-    It("VerifyAdd")
+    It("An object can be added")
     {
 
         auto object1 = std::make_shared<mock_named_object>("Object 1");
@@ -18,7 +18,7 @@ Define(TestObjectRepository)
 
     } Done
 
-    It("VerifyGetReturnsNULLForInvalidName")
+    It("Get returns NULL for an invalid object name")
     {
 
         object_repository<mock_named_object> test_repo;
@@ -26,9 +26,8 @@ Define(TestObjectRepository)
 
     } Done
 
-    It("VerifyAddWithTwoObjects")
+    It("Add works with two objects")
     {
-
         auto object1 = std::make_shared<mock_named_object>("Object 1");
         auto object2 = std::make_shared<mock_named_object>("Object 2");
 

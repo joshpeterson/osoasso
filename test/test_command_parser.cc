@@ -5,7 +5,7 @@ using namespace osoasso;
 
 Define(CommandParser)
 {
-    It("ReturnsTheNameOfTheCommand")
+    It("Returns the name of the command")
     {
 
         command_parser test_parser("foo");
@@ -13,7 +13,7 @@ Define(CommandParser)
 
     } Done
 
-    It("ReturnsTheNameofTheCommandWithInputsInParanthesis")
+    It("Returns the name of the command with inputs in paranthesis")
     {
 
         command_parser test_parser("bar(1,2)");
@@ -21,7 +21,7 @@ Define(CommandParser)
 
     } Done
 
-    It("ReturnsEmptyNameForEmptyCommand")
+    It("Returns empty name for empty command")
     {
 
         command_parser test_parser("");
@@ -29,7 +29,7 @@ Define(CommandParser)
 
     } Done
 
-    It("ReturnsCorrectInputsWithoutSpaceAfterComma")
+    It("Returns correct inputs without space after comma")
     {
 
         command_parser test_parser("bar(1,2)");
@@ -41,7 +41,7 @@ Define(CommandParser)
 
     } Done
 
-    It("ReturnsEmptyInputsWhenCommandNameOnlyIsGiven")
+    It("Returns empty inputs when command name only is given")
     {
 
         command_parser test_parser("foo");
@@ -51,7 +51,7 @@ Define(CommandParser)
 
     } Done
 
-    It("ReturnsEmptyInputsWhenCommandNameIsEmpty")
+    It("Returns empty inputs when command name is empty")
     {
 
         command_parser test_parser("");
@@ -61,7 +61,7 @@ Define(CommandParser)
 
     } Done
 
-    It("TrimsSpacesFromInputs")
+    It("Trims spaces from inputs")
     {
 
         command_parser test_parser("foo( 1 , [2 3] )");
@@ -73,7 +73,7 @@ Define(CommandParser)
 
     } Done
 
-    It("TrimsWhiteSpaceFromInputs")
+    It("Trims white space from inputs")
     {
 
         command_parser test_parser("foo( 1\t, \r[2 3]\n )");
@@ -85,7 +85,7 @@ Define(CommandParser)
 
     } Done
 
-    It("TrimsWhiteSpaceFromCommandName")
+    It("Trims white space from command name")
     {
 
         command_parser test_parser(" \tfoo\r\n(1, [2 3])");

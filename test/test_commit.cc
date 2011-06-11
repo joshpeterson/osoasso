@@ -6,9 +6,9 @@
 
 using namespace osoasso;
 
-Define(TestCommit)
+Define(Commit)
 {
-    It("VerifyAction")
+    It("Returns the correct action")
     {
 
         commit test_commit("foo", "me", 0, "", std::vector<std::string>(), ""); 
@@ -16,7 +16,7 @@ Define(TestCommit)
 
     } Done
 
-    It("VerifyComplexAction")
+    It("Handles a complex action")
     {
 
         commit test_commit("x = inverse(a)", "me", 0, "", std::vector<std::string>(), ""); 
@@ -24,7 +24,7 @@ Define(TestCommit)
 
     } Done
 
-    It("VerifyUser")
+    It("Returns the correct user")
     {
 
         commit test_commit("foo", "me", 0, "", std::vector<std::string>(), ""); 
@@ -32,7 +32,7 @@ Define(TestCommit)
 
     } Done
 
-    It("VerifyComplexUser")
+    It("Handles a complex user")
     {
 
         commit test_commit("foo", "josh@mine.com", 0, "", std::vector<std::string>(), ""); 
@@ -40,7 +40,7 @@ Define(TestCommit)
 
     } Done
 
-    It("VerifyTime")
+    It("Returns the correct time")
     {
 
         commit test_commit("foo", "me", 1306927001, "", std::vector<std::string>(), "");
@@ -48,7 +48,7 @@ Define(TestCommit)
 
     } Done
 
-    It("VerifyAnotherTime")
+    It("Returns the correct time for a different time value")
     {
 
         commit test_commit("foo", "me", 1306927186, "", std::vector<std::string>(), "");
@@ -56,7 +56,7 @@ Define(TestCommit)
 
     } Done
 
-    It("VerifyInputs")
+    It("Returns the correct inputs")
     {
 
         std::vector<std::string> test_inputs = { "input1", "input2", "input3" };
@@ -71,7 +71,7 @@ Define(TestCommit)
 
     } Done
 
-    It("VerifyOutput")
+    It("Returns the correct output")
     {
 
         commit test_commit("foo", "me", 0, "", std::vector<std::string>(), "TestOutput");
@@ -80,7 +80,7 @@ Define(TestCommit)
 
     } Done
 
-    It("VerifyName")
+    It("Returns the correct SHA1")
     {
 
         std::vector<std::string> test_inputs = { "input1", "input2", "input3" };
@@ -90,7 +90,7 @@ Define(TestCommit)
 
     } Done
 
-    It("VerifyMakeBlob")
+    It("Can be made into a blob")
     {
 
         std::vector<std::string> test_inputs = { "input1", "input2", "input3" };
@@ -102,7 +102,7 @@ Define(TestCommit)
 
     } Done
 
-    It("VerifyParent")
+    It("Returns the correct parent")
     {
 
         commit test_commit("foo", "me", 1306927186, "parent", std::vector<std::string>(), "");

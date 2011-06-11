@@ -4,9 +4,9 @@
 
 using namespace osoasso;
 
-Define(TestBlob)
+Define(Blob)
 {
-    It("VerifyDataWithDoubles")
+    It("Generates the correct data with doubles as input")
     {
 
         std::vector<double> input_vector = { 3.14, 2.72, 4.5 };
@@ -22,7 +22,7 @@ Define(TestBlob)
 
     } Done
 
-    It("VerifyConversionBackToDoubles")
+    It("Converts from a blob back to a vector of doubles")
     {
 
         std::vector<double> input_vector = { 3.14, 2.72, 4.5 };
@@ -38,7 +38,7 @@ Define(TestBlob)
 
     } Done
 
-    It("VerifyBlobName")
+    It("Generates the correct SHA1 hash for the data")
     {
 
         std::vector<double> input_vector = { 3.14, 2.72, 4.5 };

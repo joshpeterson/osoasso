@@ -4,9 +4,9 @@
 
 using namespace osoasso;
 
-Define(TestSHA1)
+Define(SHA1)
 {
-    It("VerifyShortString")
+    It("Hashes a short string")
     {
 
         sha1 hasher;
@@ -15,7 +15,7 @@ Define(TestSHA1)
 
     } Done
 
-    It("VerifyLongString")
+    It("Hashes a long string")
     {
 
         sha1 hasher;
