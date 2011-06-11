@@ -5,35 +5,37 @@
 
 using namespace osoasso;
 
-TEST_FIXTURE_START(TestObjectRepository)
+Define(TestObjectRepository)
+{
+    It("VerifyAdd")
+    {
 
-TEST_START(VerifyAdd)
+        auto object1 = std::make_shared<mock_named_object>("Object 1");
 
-    auto object1 = std::make_shared<mock_named_object>("Object 1");
+        object_repository<mock_named_object> test_repo;
+        test_repo.add(object1);
+        ASSERT_EQUAL(object1, test_repo.get("Object 1"))
 
-    object_repository<mock_named_object> test_repo;
-    test_repo.add(object1);
-    ASSERT_EQUAL(object1, test_repo.get("Object 1"))
+    } Done
 
-TEST_END
+    It("VerifyGetReturnsNULLForInvalidName")
+    {
 
-TEST_START(VerifyGetReturnsNULLForInvalidName)
+        object_repository<mock_named_object> test_repo;
+        ASSERT_EQUAL(NULL, test_repo.get("Object 1"))
 
-    object_repository<mock_named_object> test_repo;
-    ASSERT_EQUAL(NULL, test_repo.get("Object 1"))
+    } Done
 
-TEST_END
+    It("VerifyAddWithTwoObjects")
+    {
 
-TEST_START(VerifyAddWithTwoObjects)
+        auto object1 = std::make_shared<mock_named_object>("Object 1");
+        auto object2 = std::make_shared<mock_named_object>("Object 2");
 
-    auto object1 = std::make_shared<mock_named_object>("Object 1");
-    auto object2 = std::make_shared<mock_named_object>("Object 2");
+        object_repository<mock_named_object> test_repo;
+        test_repo.add(object1);
+        test_repo.add(object2);
+        ASSERT_EQUAL(object2, test_repo.get("Object 2"))
 
-    object_repository<mock_named_object> test_repo;
-    test_repo.add(object1);
-    test_repo.add(object2);
-    ASSERT_EQUAL(object2, test_repo.get("Object 2"))
-
-TEST_END
-
-TEST_FIXTURE_END
+    } Done
+}

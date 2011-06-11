@@ -30,7 +30,7 @@ private:
 #define Define(test_fixture_name__) void test_fixture_name__(bool& all_tests_passed__)
 
 #define It(test_name__) \
-    std::cout << "\t - " << test_name__;\
+    std::cout << "\t - " << test_name__ << std::endl;\
     try\
 
 #define Done \
