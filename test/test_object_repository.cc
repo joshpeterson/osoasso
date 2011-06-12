@@ -9,21 +9,17 @@ Define(ObjectRepository)
 {
     It("An object can be added")
     {
-
         auto object1 = std::make_shared<mock_named_object>("Object 1");
 
         object_repository<mock_named_object> test_repo;
         test_repo.add(object1);
-        ASSERT_EQUAL(object1, test_repo.get("Object 1"))
-
+        AssertEqual<std::shared_ptr<mock_named_object>>(object1, test_repo.get("Object 1"));
     } Done
 
     It("Get returns NULL for an invalid object name")
     {
-
         object_repository<mock_named_object> test_repo;
-        ASSERT_EQUAL(NULL, test_repo.get("Object 1"))
-
+        AssertEqual<std::shared_ptr<mock_named_object>>(std::shared_ptr<mock_named_object>(), test_repo.get("Object 1"));
     } Done
 
     It("Add works with two objects")
@@ -34,7 +30,6 @@ Define(ObjectRepository)
         object_repository<mock_named_object> test_repo;
         test_repo.add(object1);
         test_repo.add(object2);
-        ASSERT_EQUAL(object2, test_repo.get("Object 2"))
-
+        AssertEqual<std::shared_ptr<mock_named_object>>(object2, test_repo.get("Object 2"));
     } Done
 }
