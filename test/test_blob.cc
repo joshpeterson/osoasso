@@ -13,7 +13,7 @@ Define(Blob)
 
         blob<double> test_blob(input_vector.cbegin(), input_vector.cend());
 
-        AssertElementsEqual<std::vector<unsigned char>>(expected_data, test_blob.data());
+        AssertElementsEqual(expected_data, test_blob.data());
     } Done
 
     It("Converts from a blob back to a vector of doubles")
@@ -22,13 +22,14 @@ Define(Blob)
 
         blob<double> test_blob(input_vector.cbegin(), input_vector.cend());
 
-        AssertElementsEqual<std::vector<double>>(input_vector, test_blob.values());
+        AssertElementsEqual(input_vector, test_blob.values());
     } Done
 
     It("Generates the correct SHA1 hash for the data")
     {
         std::vector<double> input_vector = { 3.14, 2.72, 4.5 };
         blob<double> test_blob(input_vector.cbegin(), input_vector.cend());
-        AssertEqual<std::string>("6cb55993 6305f293 2afa1187 a2e3ef96 edd191b7", test_blob.name());
+        AssertEqual("6cb55993 6305f293 2afa1187 a2e3ef96 edd191b7", test_blob.name());
     } Done
 }
+

@@ -42,101 +42,47 @@ private:
         all_tests_passed__ = false;\
     }
 
+void AssertEqual(std::string expected, std::string actual);
+void AssertTrue(bool value);
+
 template <typename ComparisonType>
-class AssertEqual
+void AssertEqual(ComparisonType expected, ComparisonType actual)
 {
-public:
-    AssertEqual(ComparisonType expected, ComparisonType actual)
-    {
-        if (expected != actual)
-        {
-            std::stringstream message;
-            message << "\t\t\tExpected: " << expected << std::endl;
-            message << "\t\t\tActual:   " << actual << std::endl;
-            throw test_assertion_failed_exception__(message.str().c_str());
-        }
-    }
-};
-
-template <>
-class AssertEqual<std::string>
-{
-public:
-    AssertEqual(std::string expected, std::string actual)
-    {
-        if (expected != actual)
-        {
-            std::stringstream message;
-            message << "\t\t\tExpected: " << expected << std::endl;
-            message << "\t\t\tActual:   " << actual << std::endl;
-
-            if (expected.size() != actual.size())
-            {
-                message << "\t\t\tStrings differ in length, expected: " << expected.size() << " actual: " << actual.size() << std::endl;
-            }
-            else
-            {
-                message << "\t\t\t          ";
-                for (size_t i = 0; i < expected.size(); ++i)
-                {
-                    if (expected[i] != actual[i])
-                    {
-                        message << "^" << std::endl;
-                        message << "\t\t\tStrings differ at index " << i << std::endl;
-                        break;
-                    }
-                    message << " ";
-                }
-            }
-
-            throw test_assertion_failed_exception__(message.str().c_str());
-        }
-    }
-};
-
-template <typename ContainerType>
-class AssertElementsEqual
-{
-public:
-    AssertElementsEqual(ContainerType expected, ContainerType actual)
+    if (expected != actual)
     {
         std::stringstream message;
-        if (expected.size() != actual.size())
-        {
-            message << "\t\t\tVectors differ in length, expected: " << expected.size() << " actual: " << actual.size() << std::endl;
+        message << "\t\t\tExpected: " << expected << std::endl;
+        message << "\t\t\tActual:   " << actual << std::endl;
+        throw test_assertion_failed_exception__(message.str().c_str());
+    }
+}
 
-            throw test_assertion_failed_exception__(message.str().c_str());
-        }
-        else
+template <typename ContainerType>
+void AssertElementsEqual(ContainerType expected, ContainerType actual)
+{
+    std::stringstream message;
+    if (expected.size() != actual.size())
+    {
+        message << "\t\t\tVectors differ in length, expected: " << expected.size() << " actual: " << actual.size() << std::endl;
+
+        throw test_assertion_failed_exception__(message.str().c_str());
+    }
+    else
+    {
+        for (size_t i = 0; i != expected.size(); ++i)
         {
-            for (size_t i = 0; i != expected.size(); ++i)
+            if (expected[i] != actual[i])
             {
-                if (expected[i] != actual[i])
-                {
-                    message << "\t\t\tVectors differ at index " << i << std::endl;
-                    message << "\t\t\tExpected: " << expected[i] << std::endl;
-                    message << "\t\t\tActual:   " << actual[i] << std::endl;
+                message << "\t\t\tVectors differ at index " << i << std::endl;
+                message << "\t\t\tExpected: " << expected[i] << std::endl;
+                message << "\t\t\tActual:   " << actual[i] << std::endl;
 
-                    throw test_assertion_failed_exception__(message.str().c_str());
-                }
+                throw test_assertion_failed_exception__(message.str().c_str());
             }
         }
     }
-};
+}
 
-class AssertTrue
-{
-public:
-    AssertTrue(bool value)
-    {
-        if (!value)
-        {
-            std::stringstream message;
-            message << "\t\t\tExpected true, but was false" << std::endl;
 
-            throw test_assertion_failed_exception__(message.str().c_str());
-        }
-    }
-};
 #endif // __TEST_H
 

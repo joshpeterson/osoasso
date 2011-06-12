@@ -11,37 +11,37 @@ Define(Commit)
     It("Returns the correct action")
     {
         commit test_commit("foo", "me", 0, "", std::vector<std::string>(), ""); 
-        AssertEqual<std::string>("foo", test_commit.action());
+        AssertEqual("foo", test_commit.action());
     } Done
 
     It("Handles a complex action")
     {
         commit test_commit("x = inverse(a)", "me", 0, "", std::vector<std::string>(), ""); 
-        AssertEqual<std::string>("x = inverse(a)", test_commit.action());
+        AssertEqual("x = inverse(a)", test_commit.action());
     } Done
 
     It("Returns the correct user")
     {
         commit test_commit("foo", "me", 0, "", std::vector<std::string>(), ""); 
-        AssertEqual<std::string>("me", test_commit.user());
+        AssertEqual("me", test_commit.user());
     } Done
 
     It("Handles a complex user")
     {
         commit test_commit("foo", "josh@mine.com", 0, "", std::vector<std::string>(), ""); 
-        AssertEqual<std::string>("josh@mine.com", test_commit.user());
+        AssertEqual("josh@mine.com", test_commit.user());
     } Done
 
     It("Returns the correct time")
     {
         commit test_commit("foo", "me", 1306927001, "", std::vector<std::string>(), "");
-        AssertEqual<std::string>("Wed Jun  1 11:16:41 2011 GMT", test_commit.time());
+        AssertEqual("Wed Jun  1 11:16:41 2011 GMT", test_commit.time());
     } Done
 
     It("Returns the correct time for a different time value")
     {
         commit test_commit("foo", "me", 1306927186, "", std::vector<std::string>(), "");
-        AssertEqual<std::string>("Wed Jun  1 11:19:46 2011 GMT", test_commit.time());
+        AssertEqual("Wed Jun  1 11:19:46 2011 GMT", test_commit.time());
     } Done
 
     It("Returns the correct inputs")
@@ -50,20 +50,20 @@ Define(Commit)
         commit test_commit("foo", "me", 0, "", test_inputs, "");
 
         std::vector<std::string> actual_inputs = test_commit.inputs();
-        AssertElementsEqual<std::vector<std::string>>(test_inputs, actual_inputs);
+        AssertElementsEqual(test_inputs, actual_inputs);
     } Done
 
     It("Returns the correct output")
     {
         commit test_commit("foo", "me", 0, "", std::vector<std::string>(), "TestOutput");
-        AssertEqual<std::string>("TestOutput", test_commit.output());
+        AssertEqual("TestOutput", test_commit.output());
     } Done
 
     It("Returns the correct SHA1")
     {
         std::vector<std::string> test_inputs = { "input1", "input2", "input3" };
         commit test_commit("foo", "me", 1306927186, "", test_inputs, "TestOutput");
-        AssertEqual<std::string>("b12c6f97 37cb129c b99b4d12 53c190d9 450325af", test_commit.name());
+        AssertEqual("b12c6f97 37cb129c b99b4d12 53c190d9 450325af", test_commit.name());
     } Done
 
     It("Can be made into a blob")
@@ -72,12 +72,12 @@ Define(Commit)
         commit test_commit("foo", "me", 1306927186, "", test_inputs, "TestOutput");
 
         blob<char> test_blob = test_commit.make_blob();
-        AssertEqual<std::string>("b12c6f97 37cb129c b99b4d12 53c190d9 450325af", test_blob.name());
+        AssertEqual("b12c6f97 37cb129c b99b4d12 53c190d9 450325af", test_blob.name());
     } Done
 
     It("Returns the correct parent")
     {
         commit test_commit("foo", "me", 1306927186, "parent", std::vector<std::string>(), "");
-        AssertEqual<std::string>("parent", test_commit.parent());
+        AssertEqual("parent", test_commit.parent());
     } Done
 }
