@@ -6,98 +6,78 @@
 
 using namespace osoasso;
 
-TEST_FIXTURE_START(TestCommit)
-
-TEST_START(VerifyAction)
-
-    commit test_commit("foo", "me", 0, "", std::vector<std::string>(), ""); 
-    ASSERT_EQUAL("foo", test_commit.action())
-
-TEST_END
-
-TEST_START(VerifyComplexAction)
-
-    commit test_commit("x = inverse(a)", "me", 0, "", std::vector<std::string>(), ""); 
-    ASSERT_EQUAL("x = inverse(a)", test_commit.action())
-
-TEST_END
-
-TEST_START(VerifyUser)
-
-    commit test_commit("foo", "me", 0, "", std::vector<std::string>(), ""); 
-    ASSERT_EQUAL("me", test_commit.user())
-
-TEST_END
-
-TEST_START(VerifyComplexUser)
-
-    commit test_commit("foo", "josh@mine.com", 0, "", std::vector<std::string>(), ""); 
-    ASSERT_EQUAL("josh@mine.com", test_commit.user())
-
-TEST_END
-
-TEST_START(VerifyTime)
-
-    commit test_commit("foo", "me", 1306927001, "", std::vector<std::string>(), "");
-    ASSERT_EQUAL(std::string("Wed Jun  1 11:16:41 2011 GMT"), test_commit.time())
-
-TEST_END
-
-TEST_START(VerifyAnotherTime)
-
-    commit test_commit("foo", "me", 1306927186, "", std::vector<std::string>(), "");
-    ASSERT_EQUAL(std::string("Wed Jun  1 11:19:46 2011 GMT"), test_commit.time())
-
-TEST_END
-
-TEST_START(VerifyInputs)
-
-    std::vector<std::string> test_inputs = { "input1", "input2", "input3" };
-    commit test_commit("foo", "me", 0, "", test_inputs, "");
-
-    std::vector<std::string> actual_inputs = test_commit.inputs();
-    ASSERT_EQUAL(test_inputs.size(), actual_inputs.size())
-    for (auto i = test_inputs.cbegin(), j = actual_inputs.cbegin(); i != test_inputs.cend(); ++i, ++j)
+Define(Commit)
+{
+    It("Returns the correct action")
     {
-        ASSERT_EQUAL(*i, *j)
-    }
+        commit test_commit("foo", "me", 0, "", std::vector<std::string>(), ""); 
+        AssertEqual<std::string>("foo", test_commit.action());
+    } Done
 
-TEST_END
+    It("Handles a complex action")
+    {
+        commit test_commit("x = inverse(a)", "me", 0, "", std::vector<std::string>(), ""); 
+        AssertEqual<std::string>("x = inverse(a)", test_commit.action());
+    } Done
 
-TEST_START(VerifyOutput)
+    It("Returns the correct user")
+    {
+        commit test_commit("foo", "me", 0, "", std::vector<std::string>(), ""); 
+        AssertEqual<std::string>("me", test_commit.user());
+    } Done
 
-    commit test_commit("foo", "me", 0, "", std::vector<std::string>(), "TestOutput");
+    It("Handles a complex user")
+    {
+        commit test_commit("foo", "josh@mine.com", 0, "", std::vector<std::string>(), ""); 
+        AssertEqual<std::string>("josh@mine.com", test_commit.user());
+    } Done
 
-    ASSERT_EQUAL("TestOutput", test_commit.output())
+    It("Returns the correct time")
+    {
+        commit test_commit("foo", "me", 1306927001, "", std::vector<std::string>(), "");
+        AssertEqual<std::string>("Wed Jun  1 11:16:41 2011 GMT", test_commit.time());
+    } Done
 
-TEST_END
+    It("Returns the correct time for a different time value")
+    {
+        commit test_commit("foo", "me", 1306927186, "", std::vector<std::string>(), "");
+        AssertEqual<std::string>("Wed Jun  1 11:19:46 2011 GMT", test_commit.time());
+    } Done
 
-TEST_START(VerifyName)
+    It("Returns the correct inputs")
+    {
+        std::vector<std::string> test_inputs = { "input1", "input2", "input3" };
+        commit test_commit("foo", "me", 0, "", test_inputs, "");
 
-    std::vector<std::string> test_inputs = { "input1", "input2", "input3" };
-    commit test_commit("foo", "me", 1306927186, "", test_inputs, "TestOutput");
+        std::vector<std::string> actual_inputs = test_commit.inputs();
+        AssertElementsEqual<std::vector<std::string>>(test_inputs, actual_inputs);
+    } Done
 
-    ASSERT_EQUAL("b12c6f97 37cb129c b99b4d12 53c190d9 450325af", test_commit.name())
+    It("Returns the correct output")
+    {
+        commit test_commit("foo", "me", 0, "", std::vector<std::string>(), "TestOutput");
+        AssertEqual<std::string>("TestOutput", test_commit.output());
+    } Done
 
-TEST_END
+    It("Returns the correct SHA1")
+    {
+        std::vector<std::string> test_inputs = { "input1", "input2", "input3" };
+        commit test_commit("foo", "me", 1306927186, "", test_inputs, "TestOutput");
+        AssertEqual<std::string>("b12c6f97 37cb129c b99b4d12 53c190d9 450325af", test_commit.name());
+    } Done
 
-TEST_START(VerifyMakeBlob)
+    It("Can be made into a blob")
+    {
+        std::vector<std::string> test_inputs = { "input1", "input2", "input3" };
+        commit test_commit("foo", "me", 1306927186, "", test_inputs, "TestOutput");
 
-    std::vector<std::string> test_inputs = { "input1", "input2", "input3" };
-    commit test_commit("foo", "me", 1306927186, "", test_inputs, "TestOutput");
+        blob<char> test_blob = test_commit.make_blob();
+        AssertEqual<std::string>("b12c6f97 37cb129c b99b4d12 53c190d9 450325af", test_blob.name());
+    } Done
 
-    blob<char> test_blob = test_commit.make_blob();
-
-    ASSERT_EQUAL("b12c6f97 37cb129c b99b4d12 53c190d9 450325af", test_blob.name())
-
-TEST_END
-
-TEST_START(VerifyParent)
-
-    commit test_commit("foo", "me", 1306927186, "parent", std::vector<std::string>(), "");
-
-    ASSERT_EQUAL("parent", test_commit.parent())
-
-TEST_END
-
-TEST_FIXTURE_END
+    It("Returns the correct parent")
+    {
+        commit test_commit("foo", "me", 1306927186, "parent", std::vector<std::string>(), "");
+        AssertEqual<std::string>("parent", test_commit.parent());
+    } Done
+}

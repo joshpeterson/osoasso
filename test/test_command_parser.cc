@@ -3,85 +3,75 @@
 
 using namespace osoasso;
 
-TEST_FIXTURE_START(CommandParser)
+Define(CommandParser)
+{
+    It("Returns the name of the command")
+    {
+        command_parser test_parser("foo");
+        AssertEqual<std::string>("foo", test_parser.name());
+    } Done
 
-TEST_START(ReturnsTheNameOfTheCommand)
+    It("Returns the name of the command with inputs in paranthesis")
+    {
+        command_parser test_parser("bar(1,2)");
+        AssertEqual<std::string>("bar", test_parser.name());
+    } Done
 
-    command_parser test_parser("foo");
-    ASSERT_EQUAL("foo", test_parser.name())
+    It("Returns empty name for empty command")
+    {
+        command_parser test_parser("");
+        AssertEqual<std::string>("", test_parser.name());
+    } Done
 
-TEST_END
+    It("Returns correct inputs without space after comma")
+    {
+        command_parser test_parser("bar(1,2)");
+        std::vector<std::string> actual_inputs = test_parser.inputs();
+        
+        AssertEqual<size_t>(2, actual_inputs.size());
+        AssertEqual<std::string>("1", actual_inputs[0]);
+        AssertEqual<std::string>("2", actual_inputs[1]);
+    } Done
 
-TEST_START(ReturnsTheNameofTheCommandWithInputsInParanthesis)
+    It("Returns empty inputs when command name only is given")
+    {
+        command_parser test_parser("foo");
+        std::vector<std::string> actual_inputs = test_parser.inputs();
+        
+        AssertTrue(actual_inputs.empty());
+    } Done
 
-    command_parser test_parser("bar(1,2)");
-    ASSERT_EQUAL("bar", test_parser.name())
+    It("Returns empty inputs when command name is empty")
+    {
+        command_parser test_parser("");
+        std::vector<std::string> actual_inputs = test_parser.inputs();
+        
+        AssertTrue(actual_inputs.empty());
+    } Done
 
-TEST_END
+    It("Trims spaces from inputs")
+    {
+        command_parser test_parser("foo( 1 , [2 3] )");
+        std::vector<std::string> actual_inputs = test_parser.inputs();
+        
+        AssertEqual<size_t>(2, actual_inputs.size());
+        AssertEqual<std::string>("1", actual_inputs[0]);
+        AssertEqual<std::string>("[2 3]", actual_inputs[1]);
+    } Done
 
-TEST_START(ReturnsEmptyNameForEmptyCommand)
+    It("Trims white space from inputs")
+    {
+        command_parser test_parser("foo( 1\t, \r[2 3]\n )");
+        std::vector<std::string> actual_inputs = test_parser.inputs();
+        
+        AssertEqual<size_t>(2, actual_inputs.size());
+        AssertEqual<std::string>("1", actual_inputs[0]);
+        AssertEqual<std::string>("[2 3]", actual_inputs[1]);
+    } Done
 
-    command_parser test_parser("");
-    ASSERT_EQUAL("", test_parser.name())
-
-TEST_END
-
-TEST_START(ReturnsCorrectInputsWithoutSpaceAfterComma)
-
-    command_parser test_parser("bar(1,2)");
-    std::vector<std::string> actual_inputs = test_parser.inputs();
-    
-    ASSERT_EQUAL(2, actual_inputs.size())
-    ASSERT_EQUAL("1", actual_inputs[0])
-    ASSERT_EQUAL("2", actual_inputs[1])
-
-TEST_END
-
-TEST_START(ReturnsEmptyInputsWhenCommandNameOnlyIsGiven)
-
-    command_parser test_parser("foo");
-    std::vector<std::string> actual_inputs = test_parser.inputs();
-    
-    ASSERT_EQUAL(true, actual_inputs.empty())
-
-TEST_END
-
-TEST_START(ReturnsEmptyInputsWhenCommandNameIsEmpty)
-
-    command_parser test_parser("");
-    std::vector<std::string> actual_inputs = test_parser.inputs();
-    
-    ASSERT_EQUAL(true, actual_inputs.empty())
-
-TEST_END
-
-TEST_START(TrimsSpacesFromInputs)
-
-    command_parser test_parser("foo( 1 , [2 3] )");
-    std::vector<std::string> actual_inputs = test_parser.inputs();
-    
-    ASSERT_EQUAL(2, actual_inputs.size())
-    ASSERT_EQUAL("1", actual_inputs[0])
-    ASSERT_EQUAL("[2 3]", actual_inputs[1])
-
-TEST_END
-
-TEST_START(TrimsWhiteSpaceFromInputs)
-
-    command_parser test_parser("foo( 1\t, \r[2 3]\n )");
-    std::vector<std::string> actual_inputs = test_parser.inputs();
-    
-    ASSERT_EQUAL(2, actual_inputs.size())
-    ASSERT_EQUAL("1", actual_inputs[0])
-    ASSERT_EQUAL("[2 3]", actual_inputs[1])
-
-TEST_END
-
-TEST_START(TrimsWhiteSpaceFromCommandName)
-
-    command_parser test_parser(" \tfoo\r\n(1, [2 3])");
-    ASSERT_EQUAL("foo", test_parser.name());
-
-TEST_END
-
-TEST_FIXTURE_END
+    It("Trims white space from command name")
+    {
+        command_parser test_parser(" \tfoo\r\n(1, [2 3])");
+        AssertEqual<std::string>("foo", test_parser.name());
+    } Done
+}
