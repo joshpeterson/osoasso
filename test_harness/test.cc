@@ -10,6 +10,7 @@ int main(int argc, char** argv)
     RUN_TEST_FIXTURE(Commit)
     RUN_TEST_FIXTURE(ObjectRepository)
     RUN_TEST_FIXTURE(CommandParser)
+    RUN_TEST_FIXTURE(Matrix)
 
     return all_tests_passed__ ? 0 : 1;
 }

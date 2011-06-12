@@ -4,7 +4,7 @@
 
 # The files the project starts with.  Add your code files here!
 CCFILES = src/osoasso.cc src/blob.cc src/sha1.cc src/commit.cc
-TEST_CCFILES = test_harness/test.cc test/test_blob.cc test/test_sha1.cc test/test_commit.cc test/test_object_repository.cc test/test_command_parser.cc src/sha1.cc src/commit.cc src/command_parser.cc
+TEST_CCFILES = test_harness/test.cc test/test_blob.cc test/test_sha1.cc test/test_commit.cc test/test_object_repository.cc test/test_command_parser.cc test/test_matrix.cc src/sha1.cc src/commit.cc src/command_parser.cc
 STRESS_TEST_CCFILES = test_harness/stress_test.cc test/stress_test_blob.cc src/sha1.cc
 
 #Add your includes here.
