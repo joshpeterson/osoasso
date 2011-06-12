@@ -13,13 +13,13 @@ Define(ObjectRepository)
 
         object_repository<mock_named_object> test_repo;
         test_repo.add(object1);
-        AssertEqual<std::shared_ptr<mock_named_object>>(object1, test_repo.get("Object 1"));
+        AssertEqual(object1, test_repo.get("Object 1"));
     } Done
 
     It("Get returns NULL for an invalid object name")
     {
         object_repository<mock_named_object> test_repo;
-        AssertEqual<std::shared_ptr<mock_named_object>>(std::shared_ptr<mock_named_object>(), test_repo.get("Object 1"));
+        AssertEqual(std::shared_ptr<mock_named_object>(), test_repo.get("Object 1"));
     } Done
 
     It("Add works with two objects")
@@ -30,7 +30,7 @@ Define(ObjectRepository)
         object_repository<mock_named_object> test_repo;
         test_repo.add(object1);
         test_repo.add(object2);
-        AssertEqual<std::shared_ptr<mock_named_object>>(object2, test_repo.get("Object 2"));
+        AssertEqual(object2, test_repo.get("Object 2"));
     } Done
 
     It("Allows intialization with a list")
@@ -40,7 +40,7 @@ Define(ObjectRepository)
 
         object_repository<mock_named_object> test_repo = { object1, object2 };
 
-        AssertEqual<std::shared_ptr<mock_named_object>>(object1, test_repo.get("Object 1"));
-        AssertEqual<std::shared_ptr<mock_named_object>>(object2, test_repo.get("Object 2"));
+        AssertEqual(object1, test_repo.get("Object 1"));
+        AssertEqual(object2, test_repo.get("Object 2"));
     } Done
 }
