@@ -32,4 +32,15 @@ Define(ObjectRepository)
         test_repo.add(object2);
         AssertEqual<std::shared_ptr<mock_named_object>>(object2, test_repo.get("Object 2"));
     } Done
+
+    It("Allows intialization with a list")
+    {
+        auto object1 = std::make_shared<mock_named_object>("Object 1");
+        auto object2 = std::make_shared<mock_named_object>("Object 2");
+
+        object_repository<mock_named_object> test_repo = { object1, object2 };
+
+        AssertEqual<std::shared_ptr<mock_named_object>>(object1, test_repo.get("Object 1"));
+        AssertEqual<std::shared_ptr<mock_named_object>>(object2, test_repo.get("Object 2"));
+    } Done
 }
