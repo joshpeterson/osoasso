@@ -10,6 +10,18 @@ template <typename RepositoryValueType>
 class object_repository
 {
 public:
+    object_repository()
+    {
+    }
+
+    object_repository(std::initializer_list<std::shared_ptr<RepositoryValueType>> list)
+    {
+        for (auto i = list.begin(); i != list.end(); ++i)
+        {
+            this->add(*i);
+        }
+    }
+
     void add(std::shared_ptr<RepositoryValueType> object)
     {
         objects_.insert(std::make_pair(object->name(), object));
