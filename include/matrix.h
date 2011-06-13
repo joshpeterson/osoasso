@@ -2,6 +2,7 @@
 #define __MATRIX_H
 
 #include <stdexcept>
+#include <sstream>
 
 namespace osoasso
 {
@@ -12,12 +13,21 @@ class matrix
 public:
     matrix(std::initializer_list<std::initializer_list<ValueType>> list) : rows_(list.size()), columns_(0)
     {
+        int row_number = 1;
         for (auto i = list.begin(); i != list.end(); ++i)
         {
             if (columns_ == 0)
             {
                 columns_ = i->size();
             }
+            else if (columns_ != i->size())
+            {
+                std::stringstream message;
+                message << "Invalid number of columns in row " << row_number << " - Expected: " << columns_ << " Actual: " << i->size() << std::endl;
+                throw std::invalid_argument(message.str());
+            }
+
+            row_number++;
         }
     }
 

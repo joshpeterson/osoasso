@@ -1,3 +1,4 @@
+#include <stdexcept>
 #include "../test_harness/test.h"
 #include "../include/matrix.h"
 
@@ -33,5 +34,20 @@ Define(Matrix)
 
         AssertEqual<size_t>(2, test_matrix.rows());
         AssertEqual<size_t>(3, test_matrix.columns());
+    } Done
+
+    It("Throws an exception when created with invalid dimensions")
+    {
+        bool exception_occurred = false;
+        try
+        {
+            matrix<double> test_matrix = { { 3.14, 1.0 }, { 2.72, 8.9, 5.42} };
+        }
+        catch (const std::invalid_argument&)
+        {
+            exception_occurred = true;
+        }
+        
+        AssertTrue(exception_occurred);
     } Done
 }
