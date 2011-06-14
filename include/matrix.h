@@ -3,6 +3,7 @@
 
 #include <stdexcept>
 #include <sstream>
+#include <vector>
 
 namespace osoasso
 {
@@ -11,7 +12,7 @@ template<typename ValueType>
 class matrix
 {
 public:
-    matrix(std::initializer_list<std::initializer_list<ValueType>> list) : rows_(list.size()), columns_(0)
+    matrix(std::initializer_list<std::initializer_list<ValueType>> list) : rows_(list.size()), columns_(0), data_()
     {
         int row_number = 1;
         for (auto i = list.begin(); i != list.end(); ++i)
@@ -27,13 +28,11 @@ public:
                 throw std::invalid_argument(message.str());
             }
 
+            data_.push_back(std::vector<ValueType>(i->begin(), i->end()));
+
             row_number++;
         }
     }
-
-    matrix(size_t rows, size_t columns) : rows_(rows), columns_(columns)
-    {
-    };
 
     size_t rows() const
     {
@@ -45,9 +44,33 @@ public:
         return columns_;
     }
 
+    ValueType operator()(size_t row, size_t column)
+    {
+        if (column == 0 || column > columns_)
+        {
+            std::stringstream message;
+            message << "Invalid index - actual number of columns: " << columns_ << " requested index:  " << column << std::endl;
+            throw std::invalid_argument(message.str());
+        }
+        else if (row == 0 || row > rows_)
+        {
+            std::stringstream message;
+            message << "Invalid index - actual number of rows: " << columns_ << " requested index:  " << column << std::endl;
+            throw std::invalid_argument(message.str());
+        }
+
+        return data_[row-1][column-1];
+    }
+
 private:
     size_t rows_;
     size_t columns_;
+    std::vector<std::vector<ValueType>> data_;
+
+    // Prevent default construction, copy construction, and assignment
+    matrix();
+    matrix(const matrix& other);
+    matrix& operator=(const matrix& other);
 };
 
 }
