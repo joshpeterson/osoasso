@@ -62,6 +62,25 @@ public:
         return data_[row-1][column-1];
     }
 
+    class iterator : public std::iterator<std::forward_iterator_tag, ValueType, ptrdiff_t, const ValueType*, const ValueType&>
+    {
+    public:
+        iterator(const matrix<ValueType>& matrix)
+        {
+        }
+
+        const ValueType& operator*() const
+        {
+            return 3.14;
+        }
+
+        //const ValueType* operator->() const;
+        //iterator& operator++();
+        //iterator operator++(int);
+        //bool equal(iterator const& rhs) const;
+    };
+
+
 private:
     size_t rows_;
     size_t columns_;
@@ -72,6 +91,14 @@ private:
     matrix(const matrix& other);
     matrix& operator=(const matrix& other);
 };
+
+/*
+template<typename T>
+inline bool operator==(iterator<T> const& lhs, iterator<T> const& rhs)
+{
+    return lhs.equal(rhs);
+}
+*/
 
 }
 

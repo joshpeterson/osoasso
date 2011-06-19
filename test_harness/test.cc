@@ -11,6 +11,7 @@ int main(int argc, char** argv)
     RUN_TEST_FIXTURE(ObjectRepository)
     RUN_TEST_FIXTURE(CommandParser)
     RUN_TEST_FIXTURE(Matrix)
+    RUN_TEST_FIXTURE(MatrixIterator)
 
     return all_tests_passed__ ? 0 : 1;
 }
