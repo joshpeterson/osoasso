@@ -65,19 +65,35 @@ public:
     class iterator : public std::iterator<std::forward_iterator_tag, ValueType, ptrdiff_t, const ValueType*, const ValueType&>
     {
     public:
-        iterator(const matrix<ValueType>& matrix)
+        iterator(const matrix<ValueType>& matrix) : matrix_(matrix), current_row_index_(0), current_column_index_(0)
         {
         }
 
         const ValueType& operator*() const
         {
-            return 3.14;
+            return matrix_.data_[current_row_index_][current_column_index_];
         }
 
         //const ValueType* operator->() const;
         //iterator& operator++();
-        //iterator operator++(int);
+
+        iterator operator++(int)
+        {
+            current_column_index_++;
+            if (current_column_index_ >= matrix_.columns_)
+            {
+                current_column_index_ = 0;
+                current_row_index_++;
+            }
+
+            return *this;
+        }
+
         //bool equal(iterator const& rhs) const;
+    private:
+        const matrix<ValueType>& matrix_;
+        size_t current_row_index_;
+        size_t current_column_index_;
     };
 
 
