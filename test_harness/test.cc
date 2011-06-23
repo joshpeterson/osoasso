@@ -57,3 +57,14 @@ void AssertTrue(bool value)
         throw test_assertion_failed_exception__(message.str().c_str());
     }
 }
+
+void AssertFalse(bool value)
+{
+    if (value)
+    {
+        std::stringstream message;
+        message << "\t\t\tExpected false, but was true" << std::endl;
+
+        throw test_assertion_failed_exception__(message.str().c_str());
+    }
+}

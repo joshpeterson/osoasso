@@ -78,7 +78,11 @@ public:
             return matrix_->data_[current_row_index_][current_column_index_];
         }
 
-        //const ValueType* operator->() const;
+        const ValueType* operator->() const
+        {
+            return &(*this);
+        }
+
         iterator& operator++()
         {
             ++current_column_index_;
@@ -99,7 +103,16 @@ public:
             return previous;
         }
 
-        //bool equal(iterator const& rhs) const;
+        bool equal(const iterator& other) const
+        {
+            return matrix_ == other.matrix_ && current_row_index_ == other.current_row_index_ && current_column_index_ == other.current_column_index_;
+        }
+
+        bool operator==(const iterator& other) const
+        {
+            return equal(other);
+        }
+
     private:
         const matrix<ValueType>* matrix_;
         size_t current_row_index_;
@@ -117,14 +130,6 @@ private:
     matrix(const matrix& other);
     matrix& operator=(const matrix& other);
 };
-
-/*
-template<typename T>
-inline bool operator==(iterator<T> const& lhs, iterator<T> const& rhs)
-{
-    return lhs.equal(rhs);
-}
-*/
 
 }
 

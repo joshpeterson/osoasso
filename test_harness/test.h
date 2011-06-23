@@ -44,6 +44,7 @@ private:
 
 void AssertEqual(std::string expected, std::string actual);
 void AssertTrue(bool value);
+void AssertFalse(bool value);
 
 template <typename ComparisonType>
 void AssertEqual(ComparisonType expected, ComparisonType actual)
