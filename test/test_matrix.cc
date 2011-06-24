@@ -1,4 +1,5 @@
 #include <stdexcept>
+#include <iostream>
 #include "../test_harness/test.h"
 #include "../include/matrix.h"
 
@@ -107,5 +108,31 @@ Define(Matrix)
             exception_occurred = true;
         }
         AssertTrue(exception_occurred);
+    } Done
+
+    It("Provides a starting iterator")
+    {
+        matrix<double> test_matrix = { { 3.14, 1.0, 3.19 }, { 2.72, 8.9, 5.42} };
+        auto it = test_matrix.begin();
+
+        AssertEqual(3.14, *it);
+    } Done
+
+    It("Provides an ending iterator")
+    {
+        matrix<double> test_matrix = { { 3.14, 1.0, 3.19 }, { 2.72, 8.9, 5.42} };
+        auto it = test_matrix.end();
+    } Done
+
+    It("Can be iterated")
+    {
+        std::vector<double> expected = { 3.14, 1.0, 3.19, 2.72, 8.9, 5.42 };
+        std::vector<double> actual;
+
+        matrix<double> test_matrix = { { 3.14, 1.0, 3.19 }, { 2.72, 8.9, 5.42} };
+
+        std::copy(test_matrix.begin(), test_matrix.end(), std::back_inserter(actual));
+
+        AssertElementsEqual(expected, actual);
     } Done
 }

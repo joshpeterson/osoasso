@@ -11,6 +11,7 @@ int main(int argc, char** argv)
     RUN_TEST_FIXTURE(ObjectRepository)
     RUN_TEST_FIXTURE(CommandParser)
     RUN_TEST_FIXTURE(Matrix)
+    RUN_TEST_FIXTURE(MatrixIterator)
 
     return all_tests_passed__ ? 0 : 1;
 }
@@ -52,6 +53,17 @@ void AssertTrue(bool value)
     {
         std::stringstream message;
         message << "\t\t\tExpected true, but was false" << std::endl;
+
+        throw test_assertion_failed_exception__(message.str().c_str());
+    }
+}
+
+void AssertFalse(bool value)
+{
+    if (value)
+    {
+        std::stringstream message;
+        message << "\t\t\tExpected false, but was true" << std::endl;
 
         throw test_assertion_failed_exception__(message.str().c_str());
     }
