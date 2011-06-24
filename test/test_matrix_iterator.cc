@@ -112,4 +112,18 @@ Define(MatrixIterator)
 
         AssertTrue(it == it2);
     } Done
+
+    It ("Can be iterated to the end iterator")
+    {
+        matrix<double> test_matrix = { { 3.14, 1.0 }, { 2.72, 8.9 } };
+        auto it = matrix<double>::iterator(&test_matrix);
+        matrix<double>::iterator end;
+
+        ++it;
+        ++it;
+        ++it;
+        ++it;
+
+        AssertTrue(it == end);
+    } Done
 }

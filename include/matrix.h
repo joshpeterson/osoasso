@@ -92,6 +92,14 @@ public:
                 ++current_row_index_;
             }
 
+            if (current_row_index_ >= matrix_->rows_)
+            {
+                // Signal the end iterator
+                matrix_ = NULL;
+                current_row_index_ = 0;
+                current_column_index_ = 0;
+            }
+
             return *this;
         }
 
@@ -113,12 +121,26 @@ public:
             return equal(other);
         }
 
+        bool operator!=(const iterator& other) const
+        {
+            return !equal(other);
+        }
+
     private:
         const matrix<ValueType>* matrix_;
         size_t current_row_index_;
         size_t current_column_index_;
     };
 
+    iterator begin() const
+    {
+        return iterator(this);
+    }
+
+    iterator end() const
+    {
+        return iterator();
+    }
 
 private:
     size_t rows_;
