@@ -4,6 +4,7 @@
 #include <stdexcept>
 #include <sstream>
 #include <vector>
+#include "blob.h"
 
 namespace osoasso
 {
@@ -32,6 +33,8 @@ public:
 
             row_number++;
         }
+
+        name_ = make_blob().name();
     }
 
     size_t rows() const
@@ -42,6 +45,11 @@ public:
     size_t columns() const
     {
         return columns_;
+    }
+
+    std::string name() const
+    {
+        return name_;
     }
 
     ValueType operator()(size_t row, size_t column)
@@ -69,7 +77,7 @@ public:
         {
         }
 
-        iterator(const matrix<ValueType>* matrix) : matrix_(matrix), current_row_index_(0), current_column_index_(0)
+        explicit iterator(const matrix<ValueType>* matrix) : matrix_(matrix), current_row_index_(0), current_column_index_(0)
         {
         }
 
@@ -126,8 +134,10 @@ public:
             return !equal(other);
         }
 
-    private:
+    protected:
         const matrix<ValueType>* matrix_;
+
+    private:
         size_t current_row_index_;
         size_t current_column_index_;
     };
@@ -142,9 +152,15 @@ public:
         return iterator();
     }
 
+    blob<double> make_blob() const
+    {
+        return blob<double>(begin(), end());
+    }
+
 private:
     size_t rows_;
     size_t columns_;
+    std::string name_;
     std::vector<std::vector<ValueType>> data_;
 
     // Prevent default construction, copy construction, and assignment
