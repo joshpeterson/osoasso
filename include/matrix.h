@@ -52,7 +52,7 @@ public:
         return name_;
     }
 
-    ValueType operator()(size_t row, size_t column)
+    ValueType operator()(size_t row, size_t column) const
     {
         if (column == 0 || column > columns_)
         {

@@ -6,6 +6,7 @@
 #include <iostream>
 #include <sstream>
 #include <vector>
+#include "../include/matrix.h"
 
 class test_assertion_failed_exception__ : public std::exception
 {
@@ -83,7 +84,6 @@ void AssertElementsEqual(ContainerType expected, ContainerType actual)
         }
     }
 }
-
 
 #endif // __TEST_H
 
