@@ -8,6 +8,7 @@
 
 namespace osoasso
 {
+template <typename T> class matrix_builder;
 
 template<typename ValueType>
 class matrix
@@ -157,14 +158,19 @@ public:
         return blob<double>(begin(), end());
     }
 
+    template <typename T> friend class matrix_builder;
+
 private:
     size_t rows_;
     size_t columns_;
     std::string name_;
     std::vector<std::vector<ValueType>> data_;
 
-    // Prevent default construction, copy construction, and assignment
-    matrix();
+    matrix() : rows_(0), columns_(0), data_()
+    {
+    }
+
+    // Prevent copy construction, and assignment
     matrix(const matrix& other);
     matrix& operator=(const matrix& other);
 };

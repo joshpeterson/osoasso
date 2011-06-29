@@ -13,6 +13,7 @@ int main(int argc, char** argv)
     RUN_TEST_FIXTURE(Matrix)
     RUN_TEST_FIXTURE(MatrixIterator)
     RUN_TEST_FIXTURE(MatrixParser)
+    RUN_TEST_FIXTURE(MatrixBuilder)
 
     return all_tests_passed__ ? 0 : 1;
 }
@@ -70,36 +71,3 @@ void AssertFalse(bool value)
     }
 }
 
-void AssertElementsEqual(const osoasso::matrix<double>& expected, const osoasso::matrix<double>& actual)
-{
-    std::stringstream message;
-    if (expected.rows() != actual.rows())
-    {
-        message << "\t\t\tMatrices differ in number of rows, expected: " << expected.rows() << " actual: " << actual.rows() << std::endl;
-
-        throw test_assertion_failed_exception__(message.str().c_str());
-    }
-    else if (expected.columns() != actual.columns())
-    {
-        message << "\t\t\tMatrices differ in number of columns, expected: " << expected.columns() << " actual: " << actual.columns() << std::endl;
-
-        throw test_assertion_failed_exception__(message.str().c_str());
-    }
-    else
-    {
-        for (size_t i = 1; i <= expected.rows(); ++i)
-        {
-            for (size_t j = 1; j <= expected.columns(); ++j)
-            {
-                if (expected(i,j) != actual(i,j))
-                {
-                    message << "\t\t\tMatrices differ at index " << i << "," << j << std::endl;
-                    message << "\t\t\tExpected: " << expected(i,j) << std::endl;
-                    message << "\t\t\tActual:   " << actual(i,j) << std::endl;
-
-                    throw test_assertion_failed_exception__(message.str().c_str());
-                }
-            }
-        }
-    }
-}
