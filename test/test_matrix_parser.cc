@@ -6,10 +6,19 @@ using namespace osoasso;
 
 Define(MatrixParser)
 {
-    It("Parses a vector delimited by [] and spaces")
+    It("Parses a row vector delimited by [] and spaces")
     {
         matrix<double> expected = { { 3.14, 1, 9.6, 3.5 } };
-        //matrix_parser<double> parser("[3.14 1 9.6 3.5]");
-        //AssertElementsEqual(expected, *(parser.foo()));
+        matrix_parser<double> parser("[[3.14 1 9.6 3.5]]");
+
+        AssertElementsEqual(expected, *(parser.parse()));
+    } Done
+
+    It("Parses a column vector delimited by [] and spaces")
+    {
+        matrix<double> expected = { { 3.14 }, { 1 } };
+        matrix_parser<double> parser("[[3.14] [1]]");
+
+        AssertElementsEqual(expected, *(parser.parse()));
     } Done
 }
