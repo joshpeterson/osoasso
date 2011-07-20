@@ -23,7 +23,7 @@ public:
         current_row_.push_back(value);
         if (current_row_.size() > matrix_->columns_)
         {
-            if (matrix_->rows_ == 0)
+            if (matrix_->rows_ == 1)
             {
                 // This is still the first row, keep adding columns
                 ++matrix_->columns_;
@@ -40,8 +40,11 @@ public:
     void new_row()
     {
         ++matrix_->rows_;
-        matrix_->data_.push_back(current_row_);
-        current_row_.clear();
+        if (matrix_->rows_ > 1)
+        {
+            matrix_->data_.push_back(current_row_);
+            current_row_.clear();
+        }
     }
 
     std::shared_ptr<matrix<ValueType>> done()
@@ -52,7 +55,10 @@ public:
         }
 
         done_called_ = true;
-        this->new_row();
+
+        matrix_->data_.push_back(current_row_);
+        current_row_.clear();
+
         return matrix_;
     }
 

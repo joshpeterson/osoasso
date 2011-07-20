@@ -12,6 +12,7 @@ Define(MatrixBuilder)
         matrix<double> expected = { { 3.14, 4.2 } };
 
         matrix_builder<double> test_builder;
+        test_builder.new_row();
         test_builder.add(3.14);
         test_builder.add(4.2);
 
@@ -23,6 +24,7 @@ Define(MatrixBuilder)
         matrix<double> expected = { { 3.14 }, { 4.2 } };
 
         matrix_builder<double> test_builder;
+        test_builder.new_row();
         test_builder.add(3.14);
         test_builder.new_row();
         test_builder.add(4.2);
@@ -35,6 +37,7 @@ Define(MatrixBuilder)
         matrix<double> expected = { { 3.14, 6.24 }, { 4.2, 89.5 } };
 
         matrix_builder<double> test_builder;
+        test_builder.new_row();
         test_builder.add(3.14);
         test_builder.add(6.24);
         test_builder.new_row();
@@ -47,6 +50,7 @@ Define(MatrixBuilder)
     It("Throws exception for matrix with invalid size")
     {
         matrix_builder<double> test_builder;
+        test_builder.new_row();
         test_builder.add(3.14);
         test_builder.add(6.24);
         test_builder.new_row();
@@ -69,6 +73,7 @@ Define(MatrixBuilder)
     It("Throws exception when done is called more than once")
     {
         matrix_builder<double> test_builder;
+        test_builder.new_row();
         test_builder.add(3.14);
         test_builder.done();
 

@@ -24,19 +24,10 @@ public:
     {
         matrix_builder<ValueType> builder;
 
-        bool first_row = true;
         size_t row_start_bracket_position = value_to_parse_.find_first_of('[', 1);
         while (row_start_bracket_position != std::string::npos)
         {
-            if (!first_row)
-            {
-                builder.new_row();
-            }
-            else
-            {
-                first_row = false;
-            }
-
+            builder.new_row();
             size_t row_end_bracket_position = value_to_parse_.find_first_of(']', row_start_bracket_position);
             if (row_end_bracket_position != std::string::npos)
             {
