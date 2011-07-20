@@ -8,6 +8,7 @@
 #include <iterator>
 #include "matrix.h"
 #include "matrix_builder.h"
+#include "trim.h"
 
 namespace osoasso
 {
@@ -24,19 +25,22 @@ public:
     {
         matrix_builder<ValueType> builder;
 
-        size_t row_start_bracket_position = value_to_parse_.find_first_of('[', 1);
+        std::string trimmed_value = trim(value_to_parse_);
+
+        size_t row_start_bracket_position = trimmed_value.find_first_of('[', 1);
         while (row_start_bracket_position != std::string::npos)
         {
             builder.new_row();
-            size_t row_end_bracket_position = value_to_parse_.find_first_of(']', row_start_bracket_position);
+            size_t row_end_bracket_position = trimmed_value.find_first_of(']', row_start_bracket_position);
             if (row_end_bracket_position != std::string::npos)
             {
-                std::string row_string_without_brackets = value_to_parse_.substr(row_start_bracket_position+1,
-                                                                                 row_end_bracket_position - (row_start_bracket_position+1));
+                std::string row_string_without_brackets = 
+                    trimmed_value.substr(row_start_bracket_position+1,
+                                           row_end_bracket_position - (row_start_bracket_position+1));
                 parse_row(row_string_without_brackets, builder);
             }
 
-            row_start_bracket_position = value_to_parse_.find_first_of('[', row_end_bracket_position+1);
+            row_start_bracket_position = trimmed_value.find_first_of('[', row_end_bracket_position+1);
         }
 
         return builder.done();
