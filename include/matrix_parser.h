@@ -9,6 +9,7 @@
 #include "matrix.h"
 #include "matrix_builder.h"
 #include "trim.h"
+#include "parse_error.h"
 
 namespace osoasso
 {
@@ -28,6 +29,11 @@ public:
         std::string trimmed_value = trim(value_to_parse_);
 
         size_t row_start_bracket_position = trimmed_value.find_first_of('[', 1);
+        if (row_start_bracket_position == std::string::npos)
+        {
+            throw parse_error("Unable to find [ character to start thr first row.", 2);
+        }
+
         while (row_start_bracket_position != std::string::npos)
         {
             builder.new_row();

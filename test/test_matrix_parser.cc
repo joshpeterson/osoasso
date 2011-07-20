@@ -1,6 +1,7 @@
 #include "../test_harness/test.h"
 #include "../include/matrix.h"
 #include "../include/matrix_parser.h"
+#include "../include/parse_error.h"
 
 using namespace osoasso;
 
@@ -52,5 +53,25 @@ Define(MatrixParser)
         matrix_parser<double> parser("[[ 3.14   1  9.6 3.5 ]]");
 
         AssertElementsEqual(expected, *(parser.parse()));
+    } Done
+
+    It("Throws parse error when missing starting row delimiter")
+    {
+        matrix<double> expected = { { 3.14, 1, 9.6, 3.5 } };
+        matrix_parser<double> parser("[3.14 1 9.6 3.5]");
+
+        bool exception_occurred = false;
+
+        try
+        {
+            parser.parse();
+        }
+        catch (parse_error& e)
+        {
+            exception_occurred = true;
+            AssertEqual<size_t>(2, e.position());
+        }
+
+        AssertTrue(exception_occurred);
     } Done
 }
