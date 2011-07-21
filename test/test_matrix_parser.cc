@@ -55,7 +55,7 @@ Define(MatrixParser)
         AssertElementsEqual(expected, *(parser.parse()));
     } Done
 
-    It("Throws parse error when missing starting row delimiter")
+    It("Throws a parse error when missing starting row delimiter")
     {
         matrix<double> expected = { { 3.14, 1, 9.6, 3.5 } };
         matrix_parser<double> parser("[3.14 1 9.6 3.5]");
@@ -70,6 +70,46 @@ Define(MatrixParser)
         {
             exception_occurred = true;
             AssertEqual<size_t>(2, e.position());
+        }
+
+        AssertTrue(exception_occurred);
+    } Done
+
+    It("Throws a parse error when missing ending row delimiter")
+    {
+        matrix<double> expected = { { 3.14, 1, 9.6, 3.5 } };
+        matrix_parser<double> parser("[[3.14 1 [9.6 3.5]]");
+
+        bool exception_occurred = false;
+
+        try
+        {
+            parser.parse();
+        }
+        catch (parse_error& e)
+        {
+            exception_occurred = true;
+            AssertEqual<size_t>(9, e.position());
+        }
+
+        AssertTrue(exception_occurred);
+    } Done
+
+    It("Throws a parse error when missing ending matrix delimiter")
+    {
+        matrix<double> expected = { { 3.14, 1, 9.6, 3.5 } };
+        matrix_parser<double> parser("[[3.14 1] [9.6 3.5");
+
+        bool exception_occurred = false;
+
+        try
+        {
+            parser.parse();
+        }
+        catch (parse_error& e)
+        {
+            exception_occurred = true;
+            AssertEqual<size_t>(18, e.position());
         }
 
         AssertTrue(exception_occurred);
