@@ -12,6 +12,8 @@ int main(int argc, char** argv)
     RUN_TEST_FIXTURE(CommandParser)
     RUN_TEST_FIXTURE(Matrix)
     RUN_TEST_FIXTURE(MatrixIterator)
+    RUN_TEST_FIXTURE(MatrixParser)
+    RUN_TEST_FIXTURE(MatrixBuilder)
 
     return all_tests_passed__ ? 0 : 1;
 }
@@ -68,3 +70,4 @@ void AssertFalse(bool value)
         throw test_assertion_failed_exception__(message.str().c_str());
     }
 }
+
