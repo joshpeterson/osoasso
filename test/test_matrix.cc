@@ -6,6 +6,8 @@
 
 using namespace osoasso;
 
+matrix<double> test_move();
+
 Define(Matrix)
 {
     It("Can be created with and initializer list")
@@ -149,4 +151,17 @@ Define(Matrix)
         matrix<double> test_matrix = { { 3.14, 1.0, 3.19 }, { 2.72, 8.9, 5.42} };
         AssertEqual("2b673361 76acdc7b 22b25f30 755230e3 957559c9", test_matrix.name());
     } Done
+
+    It("Has a move constructor")
+    {
+        matrix<double> expected = { { 3.14, 1.0, 3.19 }, { 2.72, 8.9, 5.42} };
+        matrix<double> actual = test_move();
+        AssertElementsEqual(expected, actual);
+    } Done
+}
+
+matrix<double> test_move()
+{
+    matrix<double> test_matrix = { { 3.14, 1.0, 3.19 }, { 2.72, 8.9, 5.42} };
+    return test_matrix;
 }
