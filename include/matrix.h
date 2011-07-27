@@ -38,6 +38,11 @@ public:
         name_ = make_blob().name();
     }
 
+    matrix(matrix<ValueType>&& other) : rows_(other.rows_), columns_(other.columns_),
+                                        name_(std::move(other.name_)), data_(std::move(other.data_))
+    {
+    }
+
     size_t rows() const
     {
         return rows_;
