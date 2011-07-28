@@ -14,7 +14,8 @@ template<typename ValueType>
 class matrix
 {
 public:
-    matrix(std::initializer_list<std::initializer_list<ValueType>> list) : rows_(list.size()), columns_(0), data_()
+    matrix(std::initializer_list<std::initializer_list<ValueType>> list) : rows_(list.size()), columns_(0),
+                                                                           data_()
     {
         int row_number = 1;
         for (auto i = list.begin(); i != list.end(); ++i)
@@ -26,7 +27,8 @@ public:
             else if (columns_ != i->size())
             {
                 std::stringstream message;
-                message << "Invalid number of columns in row " << row_number << " - Expected: " << columns_ << " Actual: " << i->size() << std::endl;
+                message << "Invalid number of columns in row " << row_number << " - Expected: " 
+                        << columns_ << " Actual: " << i->size() << std::endl;
                 throw std::invalid_argument(message.str());
             }
 
@@ -41,6 +43,14 @@ public:
     matrix(matrix<ValueType>&& other) : rows_(other.rows_), columns_(other.columns_),
                                         name_(std::move(other.name_)), data_(std::move(other.data_))
     {
+    }
+
+    matrix(size_t rows, size_t columns) : rows_(rows), columns_(columns), data_()
+    {
+        for (size_t i = 0; i < rows_; ++i)
+        {
+            data_.push_back(std::vector<ValueType>(columns_));
+        }
     }
 
     size_t rows() const
@@ -60,30 +70,30 @@ public:
 
     ValueType operator()(size_t row, size_t column) const
     {
-        if (column == 0 || column > columns_)
-        {
-            std::stringstream message;
-            message << "Invalid index - actual number of columns: " << columns_ << " requested index:  " << column << std::endl;
-            throw std::invalid_argument(message.str());
-        }
-        else if (row == 0 || row > rows_)
-        {
-            std::stringstream message;
-            message << "Invalid index - actual number of rows: " << columns_ << " requested index:  " << column << std::endl;
-            throw std::invalid_argument(message.str());
-        }
+        validate_row(row);
+        validate_column(column);
 
         return data_[row-1][column-1];
     }
 
-    class iterator : public std::iterator<std::forward_iterator_tag, ValueType, ptrdiff_t, const ValueType*, const ValueType&>
+    ValueType& operator()(size_t row, size_t column)
+    {
+        validate_row(row);
+        validate_column(column);
+
+        return data_[row-1][column-1];
+    }
+
+    class iterator : public std::iterator<std::forward_iterator_tag, ValueType, ptrdiff_t,
+                                          const ValueType*, const ValueType&>
     {
     public:
         iterator() : matrix_(NULL), current_row_index_(0), current_column_index_(0)
         {
         }
 
-        explicit iterator(const matrix<ValueType>* matrix) : matrix_(matrix), current_row_index_(0), current_column_index_(0)
+        explicit iterator(const matrix<ValueType>* matrix) : matrix_(matrix), current_row_index_(0),
+                                                             current_column_index_(0)
         {
         }
 
@@ -127,7 +137,8 @@ public:
 
         bool equal(const iterator& other) const
         {
-            return matrix_ == other.matrix_ && current_row_index_ == other.current_row_index_ && current_column_index_ == other.current_column_index_;
+            return matrix_ == other.matrix_ && current_row_index_ == other.current_row_index_ &&
+                   current_column_index_ == other.current_column_index_;
         }
 
         bool operator==(const iterator& other) const
@@ -173,6 +184,28 @@ private:
 
     matrix() : rows_(0), columns_(0), data_()
     {
+    }
+
+    void validate_row(size_t row) const
+    {
+        if (row == 0 || row > rows_)
+        {
+            std::stringstream message;
+            message << "Invalid index - actual number of rows: " << rows_ << " requested index:  "
+                    << row << std::endl;
+            throw std::invalid_argument(message.str());
+        }
+    }
+
+    void validate_column(size_t column) const
+    {
+        if (column == 0 || column > columns_)
+        {
+            std::stringstream message;
+            message << "Invalid index - actual number of columns: " << columns_ << " requested index:  "
+                    << column << std::endl;
+            throw std::invalid_argument(message.str());
+        }
     }
 
     // Prevent copy construction, and assignment

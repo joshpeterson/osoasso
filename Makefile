@@ -7,6 +7,7 @@ CCFILES = src/osoasso.cc \
 		  src/sha1.cc \
 		  src/commit.cc \
 		  src/command_parser.cc \
+		  src/add.cc \
 
 TEST_CCFILES = test_harness/test.cc \
 				test/test_blob.cc \
@@ -18,9 +19,11 @@ TEST_CCFILES = test_harness/test.cc \
 				test/test_matrix_iterator.cc \
 				test/test_matrix_parser.cc \
 				test/test_matrix_builder.cc \
+				test/test_add.cc \
 				src/sha1.cc \
 				src/commit.cc \
 				src/command_parser.cc \
+				src/add.cc \
 
 STRESS_TEST_CCFILES = test_harness/stress_test.cc \
 						test/stress_test_blob.cc \
