@@ -10,6 +10,7 @@ class add
 {
 public:
     matrix<double> call(const matrix<double>& left, const matrix<double>& right) const;
+    int number_of_arguments() const;
 };
 
 }
