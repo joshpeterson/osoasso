@@ -139,19 +139,6 @@ Define(Matrix)
         AssertElementsEqual(expected, actual);
     } Done
 
-    It("Can be blobbed")
-    {
-        matrix<double> test_matrix = { { 3.14, 1.0, 3.19 }, { 2.72, 8.9, 5.42} };
-        blob<double> blob = test_matrix.make_blob();
-        AssertEqual("2b673361 76acdc7b 22b25f30 755230e3 957559c9", blob.name());
-    } Done
-
-    It("Has a name")
-    {
-        matrix<double> test_matrix = { { 3.14, 1.0, 3.19 }, { 2.72, 8.9, 5.42} };
-        AssertEqual("2b673361 76acdc7b 22b25f30 755230e3 957559c9", test_matrix.name());
-    } Done
-
     It("Has a move constructor")
     {
         matrix<double> expected = { { 3.14, 1.0, 3.19 }, { 2.72, 8.9, 5.42} };
