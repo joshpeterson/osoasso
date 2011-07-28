@@ -14,6 +14,8 @@ int main(int argc, char** argv)
     RUN_TEST_FIXTURE(MatrixIterator)
     RUN_TEST_FIXTURE(MatrixParser)
     RUN_TEST_FIXTURE(MatrixBuilder)
+    RUN_TEST_FIXTURE(MatrixBlobber)
+    RUN_TEST_FIXTURE(MatrixIteratorWithSize)
     RUN_TEST_FIXTURE(Add)
 
     return all_tests_passed__ ? 0 : 1;

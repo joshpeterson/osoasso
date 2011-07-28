@@ -36,12 +36,10 @@ public:
 
             row_number++;
         }
-
-        name_ = make_blob().name();
     }
 
     matrix(matrix<ValueType>&& other) : rows_(other.rows_), columns_(other.columns_),
-                                        name_(std::move(other.name_)), data_(std::move(other.data_))
+                                        data_(std::move(other.data_))
     {
     }
 
@@ -61,11 +59,6 @@ public:
     size_t columns() const
     {
         return columns_;
-    }
-
-    std::string name() const
-    {
-        return name_;
     }
 
     ValueType operator()(size_t row, size_t column) const
@@ -169,17 +162,11 @@ public:
         return iterator();
     }
 
-    blob<double> make_blob() const
-    {
-        return blob<double>(begin(), end());
-    }
-
     template <typename T> friend class matrix_builder;
 
 private:
     size_t rows_;
     size_t columns_;
-    std::string name_;
     std::vector<std::vector<ValueType>> data_;
 
     matrix() : rows_(0), columns_(0), data_()
