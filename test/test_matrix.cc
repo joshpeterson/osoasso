@@ -158,6 +158,13 @@ Define(Matrix)
         matrix<double> actual = test_move();
         AssertElementsEqual(expected, actual);
     } Done
+
+    It("Can be constructed with a given size")
+    {
+        matrix<double> test_matrix(3,4);
+        AssertEqual<size_t>(3, test_matrix.rows());
+        AssertEqual<size_t>(4, test_matrix.columns());
+    } Done
 }
 
 matrix<double> test_move()

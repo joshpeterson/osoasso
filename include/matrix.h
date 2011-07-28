@@ -43,6 +43,10 @@ public:
     {
     }
 
+    matrix(size_t rows, size_t columns) : rows_(rows), columns_(columns), data_()
+    {
+    }
+
     size_t rows() const
     {
         return rows_;
