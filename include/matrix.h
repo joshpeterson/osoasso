@@ -45,6 +45,10 @@ public:
 
     matrix(size_t rows, size_t columns) : rows_(rows), columns_(columns), data_()
     {
+        for (size_t i = 0; i < rows_; ++i)
+        {
+            data_.push_back(std::vector<ValueType>(columns_));
+        }
     }
 
     size_t rows() const
@@ -63,6 +67,24 @@ public:
     }
 
     ValueType operator()(size_t row, size_t column) const
+    {
+        if (column == 0 || column > columns_)
+        {
+            std::stringstream message;
+            message << "Invalid index - actual number of columns: " << columns_ << " requested index:  " << column << std::endl;
+            throw std::invalid_argument(message.str());
+        }
+        else if (row == 0 || row > rows_)
+        {
+            std::stringstream message;
+            message << "Invalid index - actual number of rows: " << columns_ << " requested index:  " << column << std::endl;
+            throw std::invalid_argument(message.str());
+        }
+
+        return data_[row-1][column-1];
+    }
+
+    ValueType& operator()(size_t row, size_t column)
     {
         if (column == 0 || column > columns_)
         {

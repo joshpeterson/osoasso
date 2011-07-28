@@ -165,6 +165,12 @@ Define(Matrix)
         AssertEqual<size_t>(3, test_matrix.rows());
         AssertEqual<size_t>(4, test_matrix.columns());
     } Done
+
+    It("Allows elements to be modified")
+    {
+        matrix<double> test_matrix(3,4);
+        test_matrix(1,1) = 1;
+    } Done
 }
 
 matrix<double> test_move()
