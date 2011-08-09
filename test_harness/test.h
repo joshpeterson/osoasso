@@ -7,6 +7,7 @@
 #include <sstream>
 #include <vector>
 #include "../include/matrix.h"
+#include "../include/utility.h"
 
 class test_assertion_failed_exception__ : public std::exception
 {
@@ -106,11 +107,16 @@ inline void AssertElementsEqual(const osoasso::matrix<double>& expected, const o
         {
             for (size_t j = 1; j <= expected.columns(); ++j)
             {
-                if (expected(i,j) != actual(i,j))
+                if (!osoasso::double_equal(expected(i,j), actual(i,j)))
                 {
+                    osoasso::double_bytes converter;
+                    converter.double_value = expected(i,j);
                     message << "\t\t\tMatrices differ at index " << i << "," << j << std::endl;
-                    message << "\t\t\tExpected: " << expected(i,j) << std::endl;
-                    message << "\t\t\tActual:   " << actual(i,j) << std::endl;
+                    message << "\t\t\tExpected: " << expected(i,j) << " (" << converter.int_value
+                            << ")"<< std::endl;
+                    converter.double_value = actual(i,j);
+                    message << "\t\t\tActual:   " << actual(i,j) << " (" << converter.int_value
+                            << ")" << std::endl;
 
                     throw test_assertion_failed_exception__(message.str().c_str());
                 }
