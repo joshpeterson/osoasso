@@ -27,6 +27,8 @@ public:
 private:
     const std::string name_;
     const T& value_; 
+
+    named_object() = delete;
 };
 
 }
