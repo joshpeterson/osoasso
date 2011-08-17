@@ -31,6 +31,12 @@ private:
     named_object() = delete;
 };
 
+template <typename T>
+inline named_object<T> make_named_object(std::string name, T value)
+{
+    return named_object<T>(name, value);
+}
+
 }
 
 #endif // __NAMED_OBJECT_H
