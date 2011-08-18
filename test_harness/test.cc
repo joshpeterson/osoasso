@@ -17,6 +17,7 @@ int main(int argc, char** argv)
     RUN_TEST_FIXTURE(MatrixBlobber)
     RUN_TEST_FIXTURE(MatrixIteratorWithSize)
     RUN_TEST_FIXTURE(DoubleEqual)
+    RUN_TEST_FIXTURE(CommandFactory)
     RUN_TEST_FIXTURE(Add)
     RUN_TEST_FIXTURE(Subtract)
 

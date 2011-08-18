@@ -7,6 +7,7 @@ CCFILES = src/osoasso.cc \
 		  src/sha1.cc \
 		  src/commit.cc \
 		  src/command_parser.cc \
+		  src/command_factory.cc \
 		  src/add.cc \
 		  src/subtract.cc \
 
@@ -23,11 +24,13 @@ TEST_CCFILES = test_harness/test.cc \
 				test/test_matrix_blobber.cc \
 				test/test_matrix_iterator_with_size.cc \
 				test/test_double_equal.cc \
+				test/test_command_factory.cc \
 				test/test_add.cc \
 				test/test_subtract.cc \
 				src/sha1.cc \
 				src/commit.cc \
 				src/command_parser.cc \
+				src/command_factory.cc \
 				src/add.cc \
 				src/subtract.cc \
 
