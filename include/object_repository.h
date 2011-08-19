@@ -2,6 +2,8 @@
 #include <unordered_map>
 #include <utility>
 #include <string>
+#include <sstream>
+#include <stdexcept>
 
 namespace osoasso
 {
@@ -14,7 +16,7 @@ public:
     {
     }
 
-    object_repository(std::initializer_list<std::shared_ptr<RepositoryValueType>> list)
+    object_repository(std::initializer_list<std::pair<std::string, RepositoryValueType>> list)
     {
         for (auto i = list.begin(); i != list.end(); ++i)
         {
@@ -22,19 +24,28 @@ public:
         }
     }
 
-    void add(std::shared_ptr<RepositoryValueType> object)
+    void add(std::pair<std::string, RepositoryValueType> object)
     {
-        objects_.insert(std::make_pair(object->name(), object));
+        objects_.insert(object);
     }
 
-    std::shared_ptr<RepositoryValueType> get(const std::string& name)
+    RepositoryValueType get(const std::string& name) const
     {
         auto found_object = objects_.find(name);
-        return found_object != objects_.end() ? found_object->second : std::shared_ptr<RepositoryValueType>();
+        if (found_object != objects_.end())
+        {
+            return found_object->second;
+        }
+        else
+        {
+            std::stringstream message;
+            message << "No object with found with name: " << name;
+            throw std::domain_error(message.str());
+        }
     }
 
 private:
-    std::unordered_map<std::string, std::shared_ptr<RepositoryValueType>> objects_;
+    std::unordered_map<std::string, RepositoryValueType> objects_;
 };
 
 }
