@@ -38,6 +38,11 @@ public:
         }
     }
 
+    matrix(const matrix<ValueType>& other) : rows_(other.rows_), columns_(other.columns_),
+                                             data_(other.data_)
+    {
+    }
+
     matrix(matrix<ValueType>&& other) : rows_(other.rows_), columns_(other.columns_),
                                         data_(std::move(other.data_))
     {
@@ -196,7 +201,6 @@ private:
     }
 
     // Prevent copy construction, and assignment
-    matrix(const matrix& other);
     matrix& operator=(const matrix& other);
 };
 

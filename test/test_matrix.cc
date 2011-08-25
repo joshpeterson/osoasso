@@ -158,6 +158,13 @@ Define(Matrix)
         matrix<double> test_matrix(3,4);
         test_matrix(1,1) = 1;
     } Done
+
+    It("Can be copied")
+    {
+        matrix<double> expected = { { 3.14, 1.0, 3.19 }, { 2.72, 8.9, 5.42} };
+        matrix<double> actual = expected;
+        AssertElementsEqual(expected, actual);
+    } Done
 }
 
 matrix<double> test_move()
