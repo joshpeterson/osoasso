@@ -14,6 +14,10 @@ template<typename ValueType>
 class matrix
 {
 public:
+    matrix() : rows_(0), columns_(0), data_()
+    {
+    }
+
     matrix(std::initializer_list<std::initializer_list<ValueType>> list) : rows_(list.size()), columns_(0),
                                                                            data_()
     {
@@ -54,6 +58,15 @@ public:
         {
             data_.push_back(std::vector<ValueType>(columns_));
         }
+    }
+
+    matrix& operator=(const matrix<ValueType>& other)
+    {
+        rows_ = other.rows_;
+        columns_ = other.columns_;
+        data_ = other.data_;
+
+        return *this;
     }
 
     size_t rows() const
@@ -174,10 +187,6 @@ private:
     size_t columns_;
     std::vector<std::vector<ValueType>> data_;
 
-    matrix() : rows_(0), columns_(0), data_()
-    {
-    }
-
     void validate_row(size_t row) const
     {
         if (row == 0 || row > rows_)
@@ -199,9 +208,6 @@ private:
             throw std::invalid_argument(message.str());
         }
     }
-
-    // Prevent copy construction, and assignment
-    matrix& operator=(const matrix& other);
 };
 
 }

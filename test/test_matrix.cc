@@ -165,6 +165,14 @@ Define(Matrix)
         matrix<double> actual = expected;
         AssertElementsEqual(expected, actual);
     } Done
+
+    It("Can be default assigned the value of another matrix")
+    {
+        matrix<double> expected = { { 3.14, 1.0, 3.19 }, { 2.72, 8.9, 5.42} };
+        matrix<double> actual;
+        actual = expected;
+        AssertElementsEqual(expected, actual);
+    } Done
 }
 
 matrix<double> test_move()
