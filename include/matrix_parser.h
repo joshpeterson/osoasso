@@ -2,7 +2,6 @@
 #define __MATRIX_PARSER_H
 
 #include <string>
-#include <memory>
 #include <algorithm>
 #include <sstream>
 #include <iterator>
@@ -22,7 +21,7 @@ public:
     {
     }
 
-    std::shared_ptr<matrix<ValueType>> parse() const
+    matrix<ValueType> parse() const
     {
         matrix_builder<ValueType> builder;
 
