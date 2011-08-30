@@ -95,4 +95,21 @@ Define(CommandDispatcher)
         AssertElementsEqual(expected_left, test_command->left_argument());
         AssertElementsEqual(expected_right, test_command->right_argument());
     } Done
+
+    /*
+    It("Stores the arguments to the command in the object repository")
+    {
+        std::shared_ptr<mock_dispatcher_command> test_command = std::make_shared<mock_dispatcher_command>();
+        command_factory commands = { std::make_pair("foo", std::shared_ptr<command>(test_command)) };
+
+        command_dispatcher dispatcher(commands);
+        dispatcher.input("foo([[1 2]], [[3 5]])");
+
+        matrix<double> expected_left = {{ 1, 2 }};
+        matrix<double> expected_right = {{ 3, 5 }};
+
+        AssertElementsEqual(expected_left, test_command->left_argument());
+        AssertElementsEqual(expected_right, test_command->right_argument());
+    } Done
+    */
 }
