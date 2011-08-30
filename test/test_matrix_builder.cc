@@ -16,7 +16,7 @@ Define(MatrixBuilder)
         test_builder.add(3.14);
         test_builder.add(4.2);
 
-        AssertElementsEqual(expected, test_builder.done());
+        AssertElementsEqual(expected, *(test_builder.done()));
     } Done
 
     It("Can create a column vector")
@@ -29,7 +29,7 @@ Define(MatrixBuilder)
         test_builder.new_row();
         test_builder.add(4.2);
 
-        AssertElementsEqual(expected, test_builder.done());
+        AssertElementsEqual(expected, *(test_builder.done()));
     } Done
 
     It("Can create a 2x2 matrix")
@@ -44,7 +44,7 @@ Define(MatrixBuilder)
         test_builder.add(4.2);
         test_builder.add(89.5);
 
-        AssertElementsEqual(expected, test_builder.done());
+        AssertElementsEqual(expected, *(test_builder.done()));
     } Done
 
     It("Throws exception for matrix with invalid size")
