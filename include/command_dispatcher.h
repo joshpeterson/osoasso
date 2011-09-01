@@ -1,4 +1,5 @@
 #include <string>
+#include <memory>
 #include "command_factory.h"
 
 namespace osoasso
@@ -18,7 +19,7 @@ private:
 
     void validate_number_of_inputs(const std::string& command_name, const std::vector<std::string>& inputs,
                                    std::shared_ptr<osoasso::command> command) const;
-    std::vector<osoasso::matrix<double>> unpack_arguments(const std::vector<std::string>& inputs) const;
+    std::vector<std::shared_ptr<osoasso::matrix<double>>> unpack_arguments(const std::vector<std::string>& inputs) const;
 };
 
 }

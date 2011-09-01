@@ -1,5 +1,6 @@
 #include <stdexcept>
 #include "../test_harness/test.h"
+#include "../include/command.h"
 #include "../include/command_factory.h"
 #include "../include/command_dispatcher.h"
 
@@ -12,12 +13,13 @@ public:
     {
     }
 
-    matrix<double> call(const matrix<double>& left, const matrix<double>& right) const
+    std::shared_ptr<const matrix<double>> call(std::shared_ptr<const matrix<double>> left,
+                                               std::shared_ptr<const matrix<double>> right) const
     {
         command_called_ = true;
         left_ = left;
         right_ = right;
-        matrix<double> test = {{1}, {1}};
+        auto test = std::shared_ptr<const matrix<double>>(new matrix<double>({{1}, {1}}));
         return test;
     }
 
@@ -31,12 +33,12 @@ public:
         return command_called_;
     }
 
-    matrix<double> left_argument() const
+    std::shared_ptr<const matrix<double>>left_argument() const
     {
         return left_;
     }
 
-    matrix<double> right_argument() const
+    std::shared_ptr<const matrix<double>> right_argument() const
     {
         return right_;
     }
@@ -44,8 +46,8 @@ public:
 
 private:
     mutable bool command_called_;
-    mutable matrix<double> left_;
-    mutable matrix<double> right_;
+    mutable std::shared_ptr<const matrix<double>> left_;
+    mutable std::shared_ptr<const matrix<double>> right_;
 };
 
 Define(CommandDispatcher)
@@ -92,8 +94,8 @@ Define(CommandDispatcher)
         matrix<double> expected_left = {{ 1, 2 }};
         matrix<double> expected_right = {{ 3, 5 }};
 
-        AssertElementsEqual(expected_left, test_command->left_argument());
-        AssertElementsEqual(expected_right, test_command->right_argument());
+        AssertElementsEqual(expected_left, *test_command->left_argument());
+        AssertElementsEqual(expected_right, *test_command->right_argument());
     } Done
 
     /*

@@ -4,6 +4,7 @@
 #include "../include/command_dispatcher.h"
 #include "../include/command_parser.h"
 #include "../include/matrix_parser.h"
+#include "../include/matrix.h"
 
 using namespace osoasso;
 
@@ -18,7 +19,7 @@ void command_dispatcher::input(const std::string& input) const
 
     this->validate_number_of_inputs(parser.name(), parser.inputs(), command);
 
-    std::vector<matrix<double>> matrix_inputs = this->unpack_arguments(parser.inputs());
+    std::vector<std::shared_ptr<matrix<double>>> matrix_inputs = this->unpack_arguments(parser.inputs());
 
     command->call(matrix_inputs[0], matrix_inputs[1]);
 }
@@ -46,9 +47,10 @@ void command_dispatcher::validate_number_of_inputs(const std::string& command_na
     }
 }
 
-std::vector<matrix<double>> command_dispatcher::unpack_arguments(const std::vector<std::string>& inputs) const
+std::vector<std::shared_ptr<matrix<double>>> command_dispatcher::unpack_arguments(
+                                                                const std::vector<std::string>& inputs) const
 {
-    std::vector<matrix<double>> matrix_inputs;
+    std::vector<std::shared_ptr<matrix<double>>> matrix_inputs;
     for (auto i = inputs.cbegin(); i != inputs.cend(); ++i)
     {
         matrix_parser<double> parser(*i);

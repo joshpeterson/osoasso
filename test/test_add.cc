@@ -7,21 +7,22 @@ Define(Add)
 {
     It("Adds two matrices")
     {
-        matrix<double> expected = { { 5.28, 3.0 }, { 5.82, 2.0 } };
-        matrix<double> matrix1 = { { 3.14, 1.0 }, { 2.72, 1.0 } };
-        matrix<double> matrix2 = { { 2.14, 2.0 }, { 3.10, 1.0 } };
+        auto expected = std::shared_ptr<matrix<double>>(new matrix<double>({{5.28, 3.0}, {5.82, 2.0}}));
+        auto matrix1 = std::shared_ptr<matrix<double>>(new matrix<double>({{3.14, 1.0}, {2.72, 1.0}}));
+        auto matrix2 = std::shared_ptr<matrix<double>>(new matrix<double>({{2.14, 2.0}, {3.10, 1.0}}));
 
         add add_command;
 
-        matrix<double> result = add_command.call(matrix1, matrix2);
+        std::shared_ptr<const matrix<double>> result = add_command.call(matrix1, matrix2);
 
-        AssertElementsEqual(expected, result);
+        AssertElementsEqual(*expected, *result);
     } Done
 
     It("Throws an exception when called with matrices of two different sizes")
     {
-        matrix<double> matrix1 = { { 3.14, 1.0, 3.10 }, { 2.72, 1.0, 9.41} };
-        matrix<double> matrix2 = { { 2.14, 2.0 }, { 3.10, 1.0 } };
+        auto matrix1 = std::shared_ptr<matrix<double>>(new matrix<double>({{3.14, 1.0, 3.10},
+                                                                           {2.72, 1.0, 9.41}}));
+        auto matrix2 = std::shared_ptr<matrix<double>>(new matrix<double>({{2.14, 2.0}, {3.10, 1.0}}));
 
         add add_command;
 
