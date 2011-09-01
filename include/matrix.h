@@ -14,10 +14,6 @@ template<typename ValueType>
 class matrix
 {
 public:
-    matrix() : rows_(0), columns_(0), data_()
-    {
-    }
-
     matrix(std::initializer_list<std::initializer_list<ValueType>> list) : rows_(list.size()), columns_(0),
                                                                            data_()
     {
@@ -186,6 +182,10 @@ private:
     size_t rows_;
     size_t columns_;
     std::vector<std::vector<ValueType>> data_;
+
+    matrix() : rows_(0), columns_(0), data_()
+    {
+    }
 
     void validate_row(size_t row) const
     {
