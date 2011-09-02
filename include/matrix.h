@@ -38,11 +38,6 @@ public:
         }
     }
 
-    matrix(const matrix<ValueType>& other) : rows_(other.rows_), columns_(other.columns_),
-                                             data_(other.data_)
-    {
-    }
-
     matrix(matrix<ValueType>&& other) : rows_(other.rows_), columns_(other.columns_),
                                         data_(std::move(other.data_))
     {
@@ -54,15 +49,6 @@ public:
         {
             data_.push_back(std::vector<ValueType>(columns_));
         }
-    }
-
-    matrix& operator=(const matrix<ValueType>& other)
-    {
-        rows_ = other.rows_;
-        columns_ = other.columns_;
-        data_ = other.data_;
-
-        return *this;
     }
 
     size_t rows() const
@@ -186,6 +172,9 @@ private:
     matrix() : rows_(0), columns_(0), data_()
     {
     }
+
+    matrix(const matrix<ValueType>& other);
+    matrix& operator=(const matrix<ValueType>& other);
 
     void validate_row(size_t row) const
     {
