@@ -1,3 +1,6 @@
+#ifndef __OBJECT_REPOSITORY_H
+#define __OBJECT_REPOSITORY_H
+
 #include <memory>
 #include <unordered_map>
 #include <utility>
@@ -12,11 +15,11 @@ template <typename RepositoryValueType>
 class object_repository
 {
 public:
-    object_repository()
+    object_repository<RepositoryValueType>()
     {
     }
 
-    object_repository(std::initializer_list<std::pair<std::string, RepositoryValueType>> list)
+    object_repository<RepositoryValueType>(std::initializer_list<std::pair<std::string, RepositoryValueType>> list)
     {
         for (auto i = list.begin(); i != list.end(); ++i)
         {
@@ -49,3 +52,5 @@ private:
 };
 
 }
+
+#endif //__OBJECT_REPOSITORY_H

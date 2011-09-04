@@ -4,22 +4,27 @@
 #include "../include/command_dispatcher.h"
 #include "../include/command_parser.h"
 #include "../include/matrix_parser.h"
-#include "../include/matrix.h"
+#include "../include/matrix_blobber.h"
 
 using namespace osoasso;
 
-command_dispatcher::command_dispatcher(const command_factory& commands) : commands_(commands)
+command_dispatcher::command_dispatcher(const command_factory& commands,
+                                       object_repository<std::shared_ptr<const matrix<double>>>& matrices)
+    : commands_(commands), matrices_(matrices)
 {
 }
 
-void command_dispatcher::input(const std::string& input) const
+void command_dispatcher::input(const std::string& input)
 {
     command_parser parser(input);
     std::shared_ptr<command> command = commands_.get(parser.name());
 
     this->validate_number_of_inputs(parser.name(), parser.inputs(), command);
 
-    std::vector<std::shared_ptr<matrix<double>>> matrix_inputs = this->unpack_arguments(parser.inputs());
+    std::vector<std::shared_ptr<const matrix<double>>> matrix_inputs = 
+                                                                    this->unpack_arguments(parser.inputs());
+
+    this->add_inputs_to_matrix_repository(matrix_inputs);
 
     command->call(matrix_inputs[0], matrix_inputs[1]);
 }
@@ -47,10 +52,10 @@ void command_dispatcher::validate_number_of_inputs(const std::string& command_na
     }
 }
 
-std::vector<std::shared_ptr<matrix<double>>> command_dispatcher::unpack_arguments(
+std::vector<std::shared_ptr<const matrix<double>>> command_dispatcher::unpack_arguments(
                                                                 const std::vector<std::string>& inputs) const
 {
-    std::vector<std::shared_ptr<matrix<double>>> matrix_inputs;
+    std::vector<std::shared_ptr<const matrix<double>>> matrix_inputs;
     for (auto i = inputs.cbegin(); i != inputs.cend(); ++i)
     {
         matrix_parser<double> parser(*i);
@@ -58,4 +63,15 @@ std::vector<std::shared_ptr<matrix<double>>> command_dispatcher::unpack_argument
     }
 
     return matrix_inputs;
+}
+
+void command_dispatcher::add_inputs_to_matrix_repository(
+                                            const std::vector<std::shared_ptr<const matrix<double>>>& inputs)
+{
+    matrix_blobber<double> blobber;
+    for (auto i = inputs.cbegin(); i != inputs.cend(); ++i)
+    {
+        blob<double> blob = blobber.make_blob(**i);
+        matrices_.add(std::make_pair(blob.name(), *i));
+    }
 }
