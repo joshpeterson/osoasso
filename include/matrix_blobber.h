@@ -1,6 +1,7 @@
 #ifndef __MATRIX_BLOBBER_H
 #define __MATRIX_BLOBBER_H
 
+#include <memory>
 #include "matrix.h"
 #include "blob.h"
 #include "matrix_iterator_with_size.h"
@@ -12,12 +13,12 @@ template <typename ValueType>
 class matrix_blobber
 {
 public:
-    blob<ValueType> make_blob(const matrix<ValueType>& matrix) const
+    std::shared_ptr<const blob<ValueType>> make_blob(std::shared_ptr<const matrix<ValueType>> matrix) const
     {
-        matrix_iterator_with_size<ValueType> it(&matrix);
+        matrix_iterator_with_size<ValueType> it(matrix.get());
         matrix_iterator_with_size<ValueType> end;
 
-        return blob<double>(it, end);
+        return std::shared_ptr<const blob<ValueType>>(new blob<ValueType>(it, end));
     }
 
 private:

@@ -71,7 +71,7 @@ void command_dispatcher::add_inputs_to_matrix_repository(
     matrix_blobber<double> blobber;
     for (auto i = inputs.cbegin(); i != inputs.cend(); ++i)
     {
-        blob<double> blob = blobber.make_blob(**i);
-        matrices_.add(std::make_pair(blob.name(), *i));
+        std::shared_ptr<const blob<double>> blob = blobber.make_blob(*i);
+        matrices_.add(std::make_pair(blob->name(), *i));
     }
 }

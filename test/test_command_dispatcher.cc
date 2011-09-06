@@ -116,14 +116,14 @@ Define(CommandDispatcher)
         command_dispatcher dispatcher(commands, matrices);
         dispatcher.input("foo([[1 2]], [[3 5]])");
 
-        matrix<double> expected_left = {{ 1, 2 }};
-        matrix<double> expected_right = {{ 3, 5 }};
+        auto expected_left = std::shared_ptr<const matrix<double>>(new matrix<double>({{ 1, 2 }}));
+        auto expected_right = std::shared_ptr<const matrix<double>>(new matrix<double>({{ 3, 5 }}));
 
         matrix_blobber<double> blobber;
-        blob<double> blob_left = blobber.make_blob(expected_left);
-        blob<double> blob_right = blobber.make_blob(expected_right);
+        std::shared_ptr<const blob<double>> blob_left = blobber.make_blob(expected_left);
+        std::shared_ptr<const blob<double>> blob_right = blobber.make_blob(expected_right);
 
-        AssertElementsEqual(expected_left, *matrices.get(blob_left.name()));
-        AssertElementsEqual(expected_right, *matrices.get(blob_right.name()));
+        AssertElementsEqual(*expected_left, *matrices.get(blob_left->name()));
+        AssertElementsEqual(*expected_right, *matrices.get(blob_right->name()));
     } Done
 }
