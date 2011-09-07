@@ -26,6 +26,7 @@ private:
                                                             const std::vector<std::string>& inputs) const;
     void add_inputs_to_matrix_repository(
                                 const std::vector<std::shared_ptr<const osoasso::matrix<double>>>& inputs);
+    void add_to_repository(std::shared_ptr<const osoasso::matrix<double>> value);
 };
 
 }
