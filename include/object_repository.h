@@ -47,6 +47,11 @@ public:
         }
     }
 
+    size_t size() const
+    {
+        return objects_.size();
+    }
+
 private:
     std::unordered_map<std::string, RepositoryValueType> objects_;
 };
