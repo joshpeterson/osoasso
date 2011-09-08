@@ -5,29 +5,30 @@
 
 using namespace osoasso;
 
-matrix<double> add::call(const matrix<double>& left, const matrix<double>& right) const
+std::shared_ptr<const matrix<double>> add::call(std::shared_ptr<const matrix<double>> left,
+                                                std::shared_ptr<const matrix<double>> right) const
 {
-    if (left.rows() != right.rows())
+    if (left->rows() != right->rows())
     {
         std::stringstream message;
-        message << "Matrices do not have the same number of rows left: " << left.rows() 
-                << " right: " << right.rows();
+        message << "Matrices do not have the same number of rows left: " << left->rows() 
+                << " right: " << right->rows();
         throw std::invalid_argument(message.str());
     }
-    else if (left.columns() != right.columns())
+    else if (left->columns() != right->columns())
     {
         std::stringstream message;
-        message << "Matrices do not have the same number of columns left: " << left.columns() 
-                << " right: " << right.columns();
+        message << "Matrices do not have the same number of columns left: " << left->columns() 
+                << " right: " << right->columns();
         throw std::invalid_argument(message.str());
     }
 
-    matrix<double> result(left.rows(), left.columns());
-    for (size_t i = 1; i <= left.rows(); ++i)
+    auto result = std::shared_ptr<matrix<double>>(new matrix<double>(left->rows(), left->columns()));
+    for (size_t i = 1; i <= left->rows(); ++i)
     {
-        for (size_t j = 1; j <= left.columns(); ++j)
+        for (size_t j = 1; j <= left->columns(); ++j)
         {
-            result(i,j) = left(i,j) + right(i,j);
+            (*result)(i,j) = (*left)(i,j) + (*right)(i,j);
         }
     }
 

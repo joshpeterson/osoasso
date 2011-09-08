@@ -173,6 +173,9 @@ private:
     {
     }
 
+    matrix(const matrix<ValueType>& other);
+    matrix& operator=(const matrix<ValueType>& other);
+
     void validate_row(size_t row) const
     {
         if (row == 0 || row > rows_)
@@ -194,10 +197,6 @@ private:
             throw std::invalid_argument(message.str());
         }
     }
-
-    // Prevent copy construction, and assignment
-    matrix(const matrix& other);
-    matrix& operator=(const matrix& other);
 };
 
 }

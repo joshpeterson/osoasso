@@ -17,11 +17,12 @@ public:
     {
     }
 
-    explicit matrix_iterator_with_size(const matrix<ValueType>* matrix) : rows_(matrix->rows()),
-                                                                          row_size_returned_(false),
-                                                                          columns_(matrix->columns()),
-                                                                          column_size_returned_(false),
-                                                                          matrix_iterator_(matrix)
+    explicit matrix_iterator_with_size(const matrix<ValueType>* matrix) : 
+        rows_(matrix->rows()),
+        row_size_returned_(false),
+        columns_(matrix->columns()),
+        column_size_returned_(false),
+        matrix_iterator_(matrix)
     {
     }
 
