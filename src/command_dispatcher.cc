@@ -14,7 +14,7 @@ command_dispatcher::command_dispatcher(const command_factory& commands,
 {
 }
 
-void command_dispatcher::input(const std::string& input)
+std::string command_dispatcher::input(const std::string& input)
 {
     command_parser parser(input);
     std::shared_ptr<command> command = commands_.get(parser.name());
@@ -28,7 +28,7 @@ void command_dispatcher::input(const std::string& input)
 
     auto result = command->call(matrix_inputs[0], matrix_inputs[1]);
 
-    this->add_to_repository(result);
+    return this->add_to_repository(result);
 }
 
 void command_dispatcher::validate_number_of_inputs(const std::string& command_name,
@@ -76,9 +76,11 @@ void command_dispatcher::add_inputs_to_matrix_repository(
     }
 }
 
-void command_dispatcher::add_to_repository(std::shared_ptr<const matrix<double>> value)
+std::string command_dispatcher::add_to_repository(std::shared_ptr<const matrix<double>> value)
 {
     matrix_blobber<double> blobber;
     std::shared_ptr<const blob<double>> blob = blobber.make_blob(value);
     matrices_.add(std::make_pair(blob->name(), value));
+
+    return blob->name();
 }

@@ -14,7 +14,7 @@ class command_dispatcher
 public:
     command_dispatcher(const command_factory& commands,
                        object_repository<std::shared_ptr<const matrix<double>>>& matrices);
-    void input(const std::string& input);
+    std::string input(const std::string& input);
 
 private:
     const command_factory& commands_;
@@ -26,7 +26,7 @@ private:
                                                             const std::vector<std::string>& inputs) const;
     void add_inputs_to_matrix_repository(
                                 const std::vector<std::shared_ptr<const osoasso::matrix<double>>>& inputs);
-    void add_to_repository(std::shared_ptr<const osoasso::matrix<double>> value);
+    std::string add_to_repository(std::shared_ptr<const osoasso::matrix<double>> value);
 };
 
 }

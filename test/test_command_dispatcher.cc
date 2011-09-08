@@ -144,4 +144,21 @@ Define(CommandDispatcher)
 
         AssertElementsEqual(*expected_result, *matrices.get(blob_result->name()));
     } Done
+
+    It("Input returns the name of the result matrix")
+    {
+        std::shared_ptr<mock_dispatcher_command> test_command = std::make_shared<mock_dispatcher_command>();
+
+        command_factory commands = { std::make_pair("foo", std::shared_ptr<command>(test_command)) };
+        object_repository<std::shared_ptr<const matrix<double>>> matrices;
+
+        auto expected_result = std::shared_ptr<const matrix<double>>(new matrix<double>({{1}, {1}}));
+
+        matrix_blobber<double> blobber;
+        std::shared_ptr<const blob<double>> blob_result = blobber.make_blob(expected_result);
+
+        command_dispatcher dispatcher(commands, matrices);
+        AssertEqual(blob_result->name(), dispatcher.input("foo([[1 2]], [[3 5]])"));
+
+    } Done
 }
