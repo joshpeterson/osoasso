@@ -60,8 +60,15 @@ std::vector<std::shared_ptr<const matrix<double>>> command_dispatcher::unpack_ar
     std::vector<std::shared_ptr<const matrix<double>>> matrix_inputs;
     for (auto i = inputs.cbegin(); i != inputs.cend(); ++i)
     {
-        matrix_parser<double> parser(*i);
-        matrix_inputs.push_back(parser.parse()); 
+        if (i->length() != 0 && (*i)[0] != '[')
+        {
+            matrix_inputs.push_back(matrices_.get(*i));
+        }
+        else
+        {
+            matrix_parser<double> parser(*i);
+            matrix_inputs.push_back(parser.parse()); 
+        }
     }
 
     return matrix_inputs;

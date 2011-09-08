@@ -1,4 +1,6 @@
 #include <stdexcept>
+#include <string>
+#include <sstream>
 #include "../test_harness/test.h"
 #include "../include/command.h"
 #include "../include/command_factory.h"
@@ -145,7 +147,7 @@ Define(CommandDispatcher)
         AssertElementsEqual(*expected_result, *matrices.get(blob_result->name()));
     } Done
 
-    It("Input returns the name of the result matrix")
+    It("Returns the name of the result matrix")
     {
         std::shared_ptr<mock_dispatcher_command> test_command = std::make_shared<mock_dispatcher_command>();
 
@@ -160,5 +162,28 @@ Define(CommandDispatcher)
         command_dispatcher dispatcher(commands, matrices);
         AssertEqual(blob_result->name(), dispatcher.input("foo([[1 2]], [[3 5]])"));
 
+    } Done
+
+    It("Finds an input by name in the object repository")
+    {
+        std::shared_ptr<mock_dispatcher_command> test_command = std::make_shared<mock_dispatcher_command>();
+
+        command_factory commands = { std::make_pair("foo", std::shared_ptr<command>(test_command)) };
+
+        auto expected_left = std::shared_ptr<const matrix<double>>(new matrix<double>({{ 1, 2 }}));
+
+        matrix_blobber<double> blobber;
+        std::shared_ptr<const blob<double>> blob_left = blobber.make_blob(expected_left);
+
+        object_repository<std::shared_ptr<const matrix<double>>> matrices;
+        matrices.add(std::make_pair(blob_left->name(), expected_left));
+
+        std::stringstream input;
+        input << "foo(" << blob_left->name() << ", [[3 5]])";
+
+        command_dispatcher dispatcher(commands, matrices);
+        dispatcher.input(input.str());
+
+        AssertElementsEqual(*expected_left, *matrices.get(blob_left->name()));
     } Done
 }
