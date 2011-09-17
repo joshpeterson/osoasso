@@ -27,6 +27,7 @@ TEST_CCFILES = test_harness/test.cc \
 				test/test_double_equal.cc \
 				test/test_command_factory.cc \
 				test/test_command_dispatcher.cc \
+				test/test_tree.cc \
 				test/test_add.cc \
 				test/test_subtract.cc \
 				src/sha1.cc \
