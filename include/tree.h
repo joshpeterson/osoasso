@@ -14,6 +14,7 @@ template <typename T>
 struct node
 {
     T value;
+    size_t parent;
     std::vector<size_t> children;
 };
 
@@ -37,6 +38,7 @@ public:
     {
         node<T> node;
         node.value = value;
+        node.parent = head_index_;
 
         // The child will always have the index at the end of the vector.
         nodes_[head_index_].children.push_back(nodes_.size());
@@ -168,6 +170,77 @@ public:
     iterator end() const
     {
         return iterator();
+    }
+
+    class head_branch_iterator : public std::iterator<std::forward_iterator_tag, T, ptrdiff_t, const T*, const T&>
+    {
+    public:
+        head_branch_iterator() : tree_(NULL), current_index_(0)
+        {
+        }
+
+        explicit head_branch_iterator(const tree<T>* tree) : tree_(tree), current_index_(tree->head_index_)
+        {
+        }
+
+        const T& operator*() const
+        {
+            return tree_->nodes_[current_index_].value;
+        }
+
+        const T* operator->() const
+        {
+            return &(*this);
+        }
+
+        head_branch_iterator& operator++()
+        {
+            current_index_ = tree_->nodes_[current_index_].parent;
+            if (current_index_ == 0)
+            {
+                // Signal the end iterator
+                tree_ = NULL;
+            }
+
+            return *this;
+        }
+
+        head_branch_iterator operator++(int)
+        {
+            iterator previous = *this;
+            ++(*this);
+
+            return previous;
+        }
+
+        bool equal(const head_branch_iterator& other) const
+        {
+            return tree_ == other.tree_ && current_index_ == other.current_index_;
+        }
+
+        bool operator==(const head_branch_iterator& other) const
+        {
+            return equal(other);
+        }
+
+        bool operator!=(const head_branch_iterator& other) const
+        {
+            return !equal(other);
+        }
+
+    private:
+        const tree<T>* tree_;
+        size_t current_index_;
+    };
+
+    head_branch_iterator head_branch_begin() const
+    {
+        return head_branch_iterator(this);
+    }
+
+    head_branch_iterator head_branch_end() const
+    {
+        return head_branch_iterator();
     }
 
 private:

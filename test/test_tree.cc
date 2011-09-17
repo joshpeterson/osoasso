@@ -165,4 +165,58 @@ Define(Tree)
 
         AssertTrue(i == test_tree.end());
     } Done
+
+    It("Has an iterator that starts at the head node")
+    {
+        tree<std::string> test_tree;
+        test_tree.insert("Foo");
+        test_tree.insert("Bar");
+
+        auto i = test_tree.head_branch_begin();
+
+        AssertEqual("Bar", *i);
+    } Done
+
+    It("Has a head branch iterator that returns the parent of the head node")
+    {
+        tree<std::string> test_tree;
+        test_tree.insert("Foo");
+        test_tree.insert("Bar");
+
+        auto i = test_tree.head_branch_begin();
+        ++i;
+
+        AssertEqual("Foo", *i);
+    } Done
+
+    It("Has a head branch iterator that ends at the root node")
+    {
+        tree<std::string> test_tree;
+        test_tree.insert("Foo");
+        test_tree.insert("Bar");
+        test_tree.insert("Baz");
+
+        auto i = test_tree.head_branch_begin();
+        ++i; // Bar
+        ++i; // Foo
+        ++i;
+
+        AssertTrue(i == test_tree.head_branch_end());
+    } Done
+
+    It("Has a head branch iterator that skips nodes not on the head branch")
+    {
+        tree<std::string> test_tree;
+        test_tree.insert("Foo");
+        test_tree.insert("Bar");
+        test_tree.insert("Boo");
+        test_tree.set_head("Foo");
+
+        test_tree.insert("Baz");
+
+        auto i = test_tree.head_branch_begin();
+        ++i;
+
+        AssertEqual("Foo", *i);
+    } Done
 }
