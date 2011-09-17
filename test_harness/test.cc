@@ -19,6 +19,7 @@ int main(int argc, char** argv)
     RUN_TEST_FIXTURE(DoubleEqual)
     RUN_TEST_FIXTURE(CommandFactory)
     RUN_TEST_FIXTURE(CommandDispatcher)
+    RUN_TEST_FIXTURE(Tree)
     RUN_TEST_FIXTURE(Add)
     RUN_TEST_FIXTURE(Subtract)
 
