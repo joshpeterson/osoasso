@@ -1,5 +1,7 @@
 #include <string>
 #include <memory>
+#include <utility>
+#include <vector>
 #include "../include/object_repository.h"
 #include "../include/command_factory.h"
 
@@ -14,7 +16,7 @@ class command_dispatcher
 public:
     command_dispatcher(const command_factory& commands,
                        object_repository<std::shared_ptr<const matrix<double>>>& matrices);
-    std::string input(const std::string& input);
+    std::pair<std::string, std::vector<std::string>> input(const std::string& input);
 
 private:
     const command_factory& commands_;
@@ -24,7 +26,7 @@ private:
                                    std::shared_ptr<osoasso::command> command) const;
     std::vector<std::shared_ptr<const osoasso::matrix<double>>> unpack_arguments(
                                                             const std::vector<std::string>& inputs) const;
-    void add_inputs_to_matrix_repository(
+    std::vector<std::string> add_inputs_to_matrix_repository(
                                 const std::vector<std::shared_ptr<const osoasso::matrix<double>>>& inputs);
     std::string add_to_repository(std::shared_ptr<const osoasso::matrix<double>> value);
 };

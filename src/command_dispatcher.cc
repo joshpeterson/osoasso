@@ -14,7 +14,7 @@ command_dispatcher::command_dispatcher(const command_factory& commands,
 {
 }
 
-std::string command_dispatcher::input(const std::string& input)
+std::pair<std::string, std::vector<std::string>> command_dispatcher::input(const std::string& input)
 {
     command_parser parser(input);
     std::shared_ptr<command> command = commands_.get(parser.name());
@@ -24,11 +24,11 @@ std::string command_dispatcher::input(const std::string& input)
     std::vector<std::shared_ptr<const matrix<double>>> matrix_inputs = 
                                                                     this->unpack_arguments(parser.inputs());
 
-    this->add_inputs_to_matrix_repository(matrix_inputs);
+    std::vector<std::string> input_names = this->add_inputs_to_matrix_repository(matrix_inputs);
 
     auto result = command->call(matrix_inputs[0], matrix_inputs[1]);
 
-    return this->add_to_repository(result);
+    return std::make_pair(this->add_to_repository(result), input_names);
 }
 
 void command_dispatcher::validate_number_of_inputs(const std::string& command_name,
@@ -74,13 +74,16 @@ std::vector<std::shared_ptr<const matrix<double>>> command_dispatcher::unpack_ar
     return matrix_inputs;
 }
 
-void command_dispatcher::add_inputs_to_matrix_repository(
+std::vector<std::string> command_dispatcher::add_inputs_to_matrix_repository(
                                             const std::vector<std::shared_ptr<const matrix<double>>>& inputs)
 {
+    std::vector<std::string> input_names;
     for (auto i = inputs.cbegin(); i != inputs.cend(); ++i)
     {
-        this->add_to_repository(*i);
+        input_names.push_back(this->add_to_repository(*i));
     }
+
+    return input_names;
 }
 
 std::string command_dispatcher::add_to_repository(std::shared_ptr<const matrix<double>> value)
