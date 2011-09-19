@@ -4,8 +4,9 @@
 
 using namespace osoasso;
 
-commit::commit(const std::string& action, const std::string& user, time_t time, const std::string& parent, const std::vector<std::string>& inputs, const std::string& output) : 
-    action_(action), user_(user), time_(time), parent_(parent), inputs_(inputs), output_(output)
+commit::commit(const std::string& action, const std::string& user, time_t time,
+               const std::vector<std::string>& inputs, const std::string& output) : 
+    action_(action), user_(user), time_(time), inputs_(inputs), output_(output)
 {
 }
 
@@ -26,11 +27,6 @@ std::string commit::time() const
 
     // Strip off the trailing newline character.
     return time.substr(0, time.size()-1) + " GMT";
-}
-
-std::string commit::parent() const
-{
-    return parent_;
 }
 
 std::vector<std::string> commit::inputs() const
