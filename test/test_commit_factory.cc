@@ -14,7 +14,7 @@ Define(CommitFactory)
 
         std::vector<std::string> inputs;
 
-        commit result = factory.create("x = foo(1)", "", inputs, "");
+        commit result = factory.create("x = foo(1)", "", 0, inputs, "");
 
         AssertEqual("x = foo(1)", result.action());
     } Done
@@ -25,7 +25,7 @@ Define(CommitFactory)
 
         std::vector<std::string> inputs;
 
-        commit result = factory.create("", "me", inputs, "");
+        commit result = factory.create("", "me", 0, inputs, "");
 
         AssertEqual("me", result.user());
     } Done
@@ -36,7 +36,7 @@ Define(CommitFactory)
 
         std::vector<std::string> inputs = { "input1", "input2", "input3" };
 
-        commit result = factory.create("", "", inputs, "");
+        commit result = factory.create("", "", 0, inputs, "");
 
         AssertElementsEqual(inputs, result.inputs());
     } Done
@@ -47,7 +47,7 @@ Define(CommitFactory)
 
         std::vector<std::string> inputs;
 
-        commit result = factory.create("", "", inputs, "output");
+        commit result = factory.create("", "", 0, inputs, "output");
 
         AssertEqual("output", result.output());
     } Done
@@ -58,8 +58,19 @@ Define(CommitFactory)
 
         std::vector<std::string> inputs;
 
-        commit result = factory.create("", "", inputs, "output");
+        commit result = factory.create("", "", 0, inputs, "output");
 
         AssertEqual("output", result.output());
+    } Done
+
+    It("Accepts a time and creates a commit")
+    {
+        commit_factory factory;
+
+        std::vector<std::string> inputs;
+
+        commit result = factory.create("", "", 1306927186, inputs, "");
+
+        AssertEqual("Wed Jun  1 11:19:46 2011 GMT", result.time());
     } Done
 }

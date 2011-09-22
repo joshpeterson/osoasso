@@ -11,7 +11,7 @@ namespace osoasso
 class commit_factory
 {
 public:
-    osoasso::commit create(const std::string& action, const std::string& user,
+    osoasso::commit create(const std::string& action, const std::string& user, time_t time,
                            const std::vector<std::string>& inputs, const std::string& output) const;
 };
 
