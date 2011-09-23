@@ -3,7 +3,9 @@
 
 #include <string>
 #include <vector>
+#include <memory>
 #include "commit.h"
+#include "object_repository.h"
 
 namespace osoasso
 {
@@ -11,8 +13,12 @@ namespace osoasso
 class commit_factory
 {
 public:
+    commit_factory(osoasso::object_repository<std::shared_ptr<const osoasso::commit>>& commits);
     osoasso::commit create(const std::string& action, const std::string& user, time_t time,
-                           const std::vector<std::string>& inputs, const std::string& output) const;
+                           const std::vector<std::string>& inputs, const std::string& output);
+
+private:
+    osoasso::object_repository<std::shared_ptr<const osoasso::commit>>& commits_;
 };
 
 }

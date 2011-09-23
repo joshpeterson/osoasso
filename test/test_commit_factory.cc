@@ -1,8 +1,10 @@
 #include <string>
 #include <vector>
+#include <memory>
 #include "../test_harness/test.h"
 #include "../include/commit_factory.h"
 #include "../include/commit.h"
+#include "../include/object_repository.h"
 
 using namespace osoasso;
 
@@ -10,7 +12,8 @@ Define(CommitFactory)
 {
     It("Accepts an input string and creates a commit")
     {
-        commit_factory factory;
+        object_repository<std::shared_ptr<const commit>> commits;
+        commit_factory factory(commits);
 
         std::vector<std::string> inputs;
 
@@ -21,7 +24,8 @@ Define(CommitFactory)
 
     It("Accepts a user and creates a commit")
     {
-        commit_factory factory;
+        object_repository<std::shared_ptr<const commit>> commits;
+        commit_factory factory(commits);
 
         std::vector<std::string> inputs;
 
@@ -32,7 +36,8 @@ Define(CommitFactory)
 
     It("Accepts a list of inputs and creates a commit")
     {
-        commit_factory factory;
+        object_repository<std::shared_ptr<const commit>> commits;
+        commit_factory factory(commits);
 
         std::vector<std::string> inputs = { "input1", "input2", "input3" };
 
@@ -43,7 +48,8 @@ Define(CommitFactory)
 
     It("Accepts an output and creates a commit")
     {
-        commit_factory factory;
+        object_repository<std::shared_ptr<const commit>> commits;
+        commit_factory factory(commits);
 
         std::vector<std::string> inputs;
 
@@ -54,7 +60,8 @@ Define(CommitFactory)
 
     It("Accepts an output and creates a commit")
     {
-        commit_factory factory;
+        object_repository<std::shared_ptr<const commit>> commits;
+        commit_factory factory(commits);
 
         std::vector<std::string> inputs;
 
@@ -65,12 +72,27 @@ Define(CommitFactory)
 
     It("Accepts a time and creates a commit")
     {
-        commit_factory factory;
+        object_repository<std::shared_ptr<const commit>> commits;
+        commit_factory factory(commits);
 
         std::vector<std::string> inputs;
 
         commit result = factory.create("", "", 1306927186, inputs, "");
 
         AssertEqual("Wed Jun  1 11:19:46 2011 GMT", result.time());
+    } Done
+
+    It("Adds the commit to the commit repository")
+    {
+        object_repository<std::shared_ptr<const commit>> commits;
+        commit_factory factory(commits);
+
+        std::vector<std::string> inputs = { "input1", "input2", "input3" };
+
+        commit result = factory.create("foo", "me", 1306927186, inputs, "output");
+
+        std::string expected_commit_name = result.make_blob().name();
+
+        AssertTrue(commits.get(expected_commit_name) != NULL);
     } Done
 }
