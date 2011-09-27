@@ -1,8 +1,12 @@
+#include <iostream>
+#include <ctime>
 #include "test.h"
 
 int main(int argc, char** argv)
 {
     bool all_tests_passed__ = true;
+
+    clock_t start = std::clock();
 
     // Add RUN_TEST_FIXTURE statements here to run tests.
     RUN_TEST_FIXTURE(Blob)
@@ -23,6 +27,11 @@ int main(int argc, char** argv)
     RUN_TEST_FIXTURE(CommitFactory)
     RUN_TEST_FIXTURE(Add)
     RUN_TEST_FIXTURE(Subtract)
+
+    double elapsed_time = double(std::clock() - start) / CLOCKS_PER_SEC;
+
+    if (all_tests_passed__)
+        std::cout << "\nTests required " << elapsed_time << "s.\n";
 
     return all_tests_passed__ ? 0 : 1;
 }
