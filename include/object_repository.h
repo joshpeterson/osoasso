@@ -42,7 +42,7 @@ public:
         else
         {
             std::stringstream message;
-            message << "No object with found with name: " << name;
+            message << "No object found with name: " << name;
             throw std::domain_error(message.str());
         }
     }

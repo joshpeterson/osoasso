@@ -12,12 +12,12 @@ namespace osoasso
 class commit
 {
 public:
-    commit(const std::string& action, const std::string& user, time_t time, const std::string& parent, const std::vector<std::string>& inputs, const std::string& output);
+    commit(const std::string& action, const std::string& user, time_t time,
+           const std::vector<std::string>& inputs, const std::string& output);
 
     std::string action() const;
     std::string user() const;
     std::string time() const;
-    std::string parent() const;
     std::vector<std::string> inputs() const;
     std::string output() const;
     std::string name() const;
@@ -28,7 +28,6 @@ private:
     std::string action_;
     std::string user_;
     time_t time_;
-    std::string parent_;
     std::vector<std::string> inputs_;
     std::string output_;
 

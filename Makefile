@@ -9,6 +9,7 @@ CCFILES = src/osoasso.cc \
 		  src/command_parser.cc \
 		  src/command_factory.cc \
 		  src/command_dispatcher.cc \
+		  src/commit_factory.cc \
 		  src/add.cc \
 		  src/subtract.cc \
 
@@ -28,6 +29,7 @@ TEST_CCFILES = test_harness/test.cc \
 				test/test_command_factory.cc \
 				test/test_command_dispatcher.cc \
 				test/test_tree.cc \
+				test/test_commit_factory.cc \
 				test/test_add.cc \
 				test/test_subtract.cc \
 				src/sha1.cc \
@@ -35,6 +37,7 @@ TEST_CCFILES = test_harness/test.cc \
 				src/command_parser.cc \
 				src/command_factory.cc \
 				src/command_dispatcher.cc \
+				src/commit_factory.cc \
 				src/add.cc \
 				src/subtract.cc \
 

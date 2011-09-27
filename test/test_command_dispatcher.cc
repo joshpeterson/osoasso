@@ -1,6 +1,8 @@
 #include <stdexcept>
 #include <string>
 #include <sstream>
+#include <utility>
+#include <vector>
 #include "../test_harness/test.h"
 #include "../include/command.h"
 #include "../include/command_factory.h"
@@ -147,7 +149,7 @@ Define(CommandDispatcher)
         AssertElementsEqual(*expected_result, *matrices.get(blob_result->name()));
     } Done
 
-    It("Returns the name of the result matrix")
+    It("Returns the name of the result matrix as the first part of a pair")
     {
         std::shared_ptr<mock_dispatcher_command> test_command = std::make_shared<mock_dispatcher_command>();
 
@@ -160,7 +162,30 @@ Define(CommandDispatcher)
         std::shared_ptr<const blob<double>> blob_result = blobber.make_blob(expected_result);
 
         command_dispatcher dispatcher(commands, matrices);
-        AssertEqual(blob_result->name(), dispatcher.input("foo([[1 2]], [[3 5]])"));
+        std::pair<std::string, std::vector<std::string>> result = dispatcher.input("foo([[1 2]], [[3 5]])");
+        AssertEqual(blob_result->name(), result.first);
+
+    } Done
+
+    It("Returns the name of the input matrices as the second part of a pair")
+    {
+        std::shared_ptr<mock_dispatcher_command> test_command = std::make_shared<mock_dispatcher_command>();
+
+        command_factory commands = { std::make_pair("foo", std::shared_ptr<command>(test_command)) };
+        object_repository<std::shared_ptr<const matrix<double>>> matrices;
+
+        auto left = std::shared_ptr<const matrix<double>>(new matrix<double>({{1, 2}}));
+        auto right = std::shared_ptr<const matrix<double>>(new matrix<double>({{3, 5}}));
+
+        matrix_blobber<double> blobber;
+        std::shared_ptr<const blob<double>> blob_left = blobber.make_blob(left);
+        std::shared_ptr<const blob<double>> blob_right = blobber.make_blob(right);
+
+        command_dispatcher dispatcher(commands, matrices);
+        std::pair<std::string, std::vector<std::string>> result = dispatcher.input("foo([[1 2]], [[3 5]])");
+
+        AssertEqual(blob_left->name(), result.second[0]);
+        AssertEqual(blob_right->name(), result.second[1]);
 
     } Done
 
