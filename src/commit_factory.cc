@@ -4,7 +4,8 @@
 
 using namespace osoasso;
 
-commit_factory::commit_factory(object_repository<std::shared_ptr<const commit>>& commits) : commits_(commits)
+commit_factory::commit_factory(object_repository<std::shared_ptr<const commit>>& commits,
+                               tree<std::string>& commit_tree) : commits_(commits), commit_tree_(commit_tree)
 {
 }
 
@@ -13,9 +14,9 @@ commit commit_factory::create(const std::string& action, const std::string& user
 {
     std::shared_ptr<const commit> new_commit = std::shared_ptr<const commit>(new commit(action, user, time,
                                                                                         inputs, output));
-
-    commits_.add(std::make_pair(new_commit->make_blob().name(), new_commit));
-
+    std::string new_commit_name = new_commit->make_blob().name();
+    commits_.add(std::make_pair(new_commit_name, new_commit));
+    commit_tree_.insert(new_commit_name);
 
     return *new_commit;
 }
