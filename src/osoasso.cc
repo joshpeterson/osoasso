@@ -108,18 +108,6 @@ class OsoassoInstance : public pp::Instance {
   explicit OsoassoInstance(PP_Instance instance) : pp::Instance(instance)
   {}
   virtual ~OsoassoInstance() {}
-
-  /// The browser calls this function to get a handle, in form of a pp::Var,
-  /// to the plugin-side scriptable object.  The pp::Var takes over ownership
-  /// of said scriptable, meaning the browser can call its destructor.  The
-  /// OsoassoScriptableObject is the plugin-side representation of that
-  /// scriptable object.
-  /// @return The browser's handle to the plugin side instance.
-  virtual pp::Var GetInstanceObject() {
-    OsoassoScriptableObject* hw_object =
-        new OsoassoScriptableObject();
-    return pp::Var(this, hw_object);
-  }
 };
 
 /// The Module class.  The browser calls the CreateInstance() method to create

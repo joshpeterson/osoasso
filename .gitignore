@@ -2,3 +2,5 @@
 *.nexe
 *.swp
 *~
+*.dblite
+*.nmf
