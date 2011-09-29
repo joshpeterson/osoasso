@@ -19,7 +19,8 @@ class command_dispatcher
 public:
     command_dispatcher(const command_factory& commands,
                        object_repository<std::shared_ptr<const matrix<double>>>& matrices);
-    std::pair<std::string, std::vector<std::string>> input(const std::string& input);
+    virtual ~command_dispatcher() {}
+    virtual std::pair<std::string, std::vector<std::string>> input(const std::string& input);
 
 private:
     const command_factory& commands_;

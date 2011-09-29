@@ -23,6 +23,7 @@ sources = ['src/osoasso.cc',
            'src/command_factory.cc',
            'src/command_dispatcher.cc',
            'src/commit_factory.cc',
+           'src/project_manager.cc',
            'src/add.cc',
            'src/subtract.cc']
 
@@ -43,6 +44,7 @@ test_sources = ['test_harness/test.cc',
                 'test/test_command_dispatcher.cc',
                 'test/test_tree.cc',
                 'test/test_commit_factory.cc',
+                'test/test_project_manager.cc',
                 'test/test_add.cc',
                 'test/test_subtract.cc',
                 'src/sha1.cc',
@@ -51,6 +53,7 @@ test_sources = ['test_harness/test.cc',
                 'src/command_factory.cc',
                 'src/command_dispatcher.cc',
                 'src/commit_factory.cc',
+                'src/project_manager.cc',
                 'src/add.cc',
                 'src/subtract.cc']
 

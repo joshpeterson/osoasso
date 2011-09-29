@@ -25,6 +25,7 @@ int main(int argc, char** argv)
     RUN_TEST_FIXTURE(CommandDispatcher)
     RUN_TEST_FIXTURE(Tree)
     RUN_TEST_FIXTURE(CommitFactory)
+    RUN_TEST_FIXTURE(ProjectManager)
     RUN_TEST_FIXTURE(Add)
     RUN_TEST_FIXTURE(Subtract)
 
