@@ -72,17 +72,17 @@ nacl_test_64.NaClTestProgram(test_sources,
                              module_name='osoasso_test',
                              target_name='test64')
 
-#nacl_test_32 = nacl_env.Clone()
-#nacl_test_32.NaClTestProgram(test_sources,
-#                             nacl_utils.ARCH_SPECS['x86-32'],
-#                             module_name='osoasso_stress_test',
-#                             target_name='stress_test32')
-#
-#nacl_test_64 = nacl_env.Clone()
-#nacl_test_64.NaClTestProgram(test_sources,
-#                             nacl_utils.ARCH_SPECS['x86-64'],
-#                             module_name='osoasso_stress_test',
-#                             target_name='stress_test64')
+nacl_stress_test_32 = nacl_env.Clone()
+nacl_stress_test_32.NaClTestProgram(stress_test_sources,
+                             nacl_utils.ARCH_SPECS['x86-32'],
+                             module_name='osoasso_stress_test',
+                             target_name='stress_test32')
+
+nacl_stress_test_64 = nacl_env.Clone()
+nacl_stress_test_64.NaClTestProgram(stress_test_sources,
+                             nacl_utils.ARCH_SPECS['x86-64'],
+                             module_name='osoasso_stress_test',
+                             target_name='stress_test64')
 
 # This target is used by the SDK build system to provide a prebuilt version
 # of the example in the SDK installer.
