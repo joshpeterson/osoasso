@@ -38,8 +38,25 @@ Define(ProjectManager)
         project_manager manager;
         manager.input("add([[1]], [[1]])", "me");
 
-        // Since the exact time will change, at least make sure it ii GMT
+        // Since the exact time will change, at least make sure it is GMT.
         std::string time = manager.get_last_commit().time;
         AssertEqual("GMT", time.substr(time.length() - 3));
+    } Done
+
+    It("Returns the name of the output of the last commit")
+    {
+        project_manager manager;
+        manager.input("add([[1]], [[1]])", "me");
+
+        AssertEqual("c155be83 bedce48e f48618cf 2cc4cbdf 7c569897", manager.get_last_commit().output);
+    } Done
+
+    It("Returns a non-empty string for the name of the last commit")
+    {
+        project_manager manager;
+        manager.input("add([[1]], [[1]])", "me");
+
+        // The name of the commit will change each time we run.
+        AssertTrue(manager.get_last_commit().name != std::string());
     } Done
 }

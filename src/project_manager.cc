@@ -33,6 +33,8 @@ commit_data project_manager::get_last_commit() const
     data.action = head_commit->action();
     data.user = head_commit->user();
     data.time = head_commit->time();
+    data.output = head_commit->output();
+    data.name = head_commit->name();
 
     return data;
 }
