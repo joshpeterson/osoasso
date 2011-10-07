@@ -55,7 +55,7 @@ inline bool double_equal(double lhs, double rhs)
     std::cout << "lhs int 2: " << rhs_int << std::endl;
 #endif
 
-    int64_t int_diff = abs(lhs_int - rhs_int);
+    int64_t int_diff = lhs_int - rhs_int;
 
 #ifdef DEBUG_OUTPUT
     std::cout << "int diff: " << int_diff << std::endl;
@@ -63,7 +63,7 @@ inline bool double_equal(double lhs, double rhs)
 
     // Use maxUlps of 4 based on comments from Google Test implementation:
     // http://code.google.com/p/googletest/source/browse/trunk/include/gtest/internal/gtest-internal.h
-    if (int_diff <= 4)
+    if (int_diff <= 4 && int_diff >= -4)
     {
         return true;
     }
