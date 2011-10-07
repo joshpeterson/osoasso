@@ -28,6 +28,7 @@ public:
     project_manager();
     void input(const std::string& action, const std::string& user);
     commit_data get_last_commit() const;
+    std::shared_ptr<const matrix<double>> get_matrix(std::string name) const;
 
 private:
     command_factory commands_;

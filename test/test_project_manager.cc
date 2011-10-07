@@ -4,6 +4,7 @@
 #include <memory>
 #include "../test_harness/test.h"
 #include "../include/project_manager.h"
+#include "../include/matrix.h"
 
 using namespace osoasso;
 
@@ -58,5 +59,18 @@ Define(ProjectManager)
 
         // The name of the commit will change each time we run.
         AssertTrue(manager.get_last_commit().name != std::string());
+    } Done
+
+    It("Provides access to the matrix repository")
+    {
+        matrix<double> expected_output = { { 3.0, 7.0 } };
+        project_manager manager;
+        manager.input("add([[1 2]], [[2 5]])", "me");
+
+        std::string output = manager.get_last_commit().output;
+
+        std::shared_ptr<const matrix<double>> actual_output = manager.get_matrix(output);
+
+        AssertElementsEqual(expected_output, *actual_output);
     } Done
 }

@@ -38,3 +38,8 @@ commit_data project_manager::get_last_commit() const
 
     return data;
 }
+
+std::shared_ptr<const matrix<double>> project_manager::get_matrix(std::string name) const
+{
+    return matrices_.get(name);
+}
