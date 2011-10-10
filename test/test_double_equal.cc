@@ -10,6 +10,11 @@ Define(DoubleEqual)
         AssertTrue(double_equal(0.38, 0.38));
     } Done
 
+    It("Should compare two unequal literal ints not equal")
+    {
+        AssertFalse(double_equal(6, 7));
+    } Done
+
     It("Should compare two doubles four ulps apart equal when rhs > lhs")
     {
         double_bytes converter;

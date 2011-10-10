@@ -1,3 +1,6 @@
+#ifndef __COMMAND_DISPATCHER_H
+#define __COMMAND_DISPATCHER_H
+
 #include <string>
 #include <memory>
 #include <utility>
@@ -32,3 +35,5 @@ private:
 };
 
 }
+
+#endif //__COMMAND_DISPATCHER_H
