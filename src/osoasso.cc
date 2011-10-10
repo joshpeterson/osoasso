@@ -23,108 +23,122 @@
 
 /// These are the method names as JavaScript sees them.  Add any methods for
 /// your class here.
-namespace {
-// A method consists of a const char* for the method ID and the method's
-// declaration and implementation.
-// TODO(sdk_user): 1. Add the declarations of your method IDs.
+namespace osoasso{
 
-// TODO(sdk_user): 2. Implement the methods that correspond to your method IDs.
-}  // namespace
+const char* const inputMethodId = "input";
+const char* const getMatrixMethodId = "getMatrix";
+const char* const getLastCommitMethodId = "getLastCommit";
 
-// Note to the user: This glue code reflects the current state of affairs.  It
-// may change.  In particular, interface elements marked as deprecated will
-// disappear sometime in the near future and replaced with more elegant
-// interfaces.  As of the time of this writing, the new interfaces are not
-// available so we have to provide this code as it is written below.
+static const char messageArgumentSeparator = ':';
 
-/// This class exposes the scripting interface for this NaCl module.  The
-/// HasMethod method is called by the browser when executing a method call on
-/// the object.  The name of the JavaScript function (e.g. "fortyTwo") is
-/// passed in the |method| paramter as a string pp::Var.  If HasMethod()
-/// returns |true|, then the browser will call the Call() method to actually
-/// invoke the method.
-class OsoassoScriptableObject : public pp::deprecated::ScriptableObject {
- public:
-  /// Called by the browser to decide whether @a method is provided by this
-  /// plugin's scriptable interface.
-  /// @param[in] method The name of the method
-  /// @param[out] exception A pointer to an exception.  May be used to notify
-  ///     the browser if an exception occurs.
-  /// @return true iff @a method is one of the exposed method names.
-  virtual bool HasMethod(const pp::Var& method, pp::Var* exception);
-
-  /// Invoke the function associated with @a method.  The argument list passed
-  /// in via JavaScript is marshalled into a vector of pp::Vars.  None of the
-  /// functions in this example take arguments, so this vector is always empty.
-  /// @param[in] method The name of the method to be invoked.
-  /// @param[in] args The arguments to be passed to the method.
-  /// @param[out] exception A pointer to an exception.  May be used to notify
-  ///     the browser if an exception occurs.
-  /// @return true iff @a method was called successfully.
-  virtual pp::Var Call(const pp::Var& method,
-                       const std::vector<pp::Var>& args,
-                       pp::Var* exception);
-};
-
-bool OsoassoScriptableObject::HasMethod(const pp::Var& method,
-                                             pp::Var* exception) {
-  if (!method.is_string()) {
-    return false;
-  }
-  std::string method_name = method.AsString();
-  // TODO(sdk_user): 3. Make this function return true iff method_name is equal
-  // to any of your method IDs.
-  bool has_method = false;
-  return has_method;
+std::string inputPlaceHolder(const std::string& action)
+{
+    return "bar";
 }
 
-pp::Var OsoassoScriptableObject::Call(const pp::Var& method,
-                                           const std::vector<pp::Var>& args,
-                                           pp::Var* exception) {
-  if (!method.is_string()) {
-    return pp::Var();
-  }
-  std::string method_name = method.AsString();
-  // TODO(sdk_user): 4. Make this function call whatever method has method_name
-  // as its method ID.
-  return pp::Var();
+double getMatrixPlaceholder(const std::string name)
+{
+    return 2.72;
+}
+
+std::string getLastCommitPlaceholder()
+{
+    return "foo";
+}
+
+pp::Var MarshallInput(const std::string& action)
+{
+    return pp::Var(inputPlaceHolder(action));
+}
+
+pp::Var MarshallGetMatrix(const std::string name)
+{
+    return pp::Var(getMatrixPlaceholder(name));
+}
+
+pp::Var MarshallGetLastCommit()
+{
+    return pp::Var(getLastCommitPlaceholder());
 }
 
 /// The Instance class.  One of these exists for each instance of your NaCl
 /// module on the web page.  The browser will ask the Module object to create
-/// a new Instance for each occurence of the <embed> tag that has these
+/// a new Instance for each occurrence of the <embed> tag that has these
 /// attributes:
+/// <pre>
 ///     type="application/x-nacl"
-///     nexes="ARM: osoasso_arm.nexe
-///            ..."
-/// The Instance can return a ScriptableObject representing itself.  When the
-/// browser encounters JavaScript that wants to access the Instance, it calls
-/// the GetInstanceObject() method.  All the scripting work is done though
-/// the returned ScriptableObject.
+///     nacl="hello_world.nmf"
+/// </pre>
 class OsoassoInstance : public pp::Instance {
  public:
-  /// The constructor creates the plugin-side instance.
-  /// @param[in] instance the handle to the browser-side plugin instance.
-  explicit OsoassoInstance(PP_Instance instance) : pp::Instance(instance)
-  {}
+  explicit OsoassoInstance(PP_Instance instance) : pp::Instance(instance) {}
   virtual ~OsoassoInstance() {}
+
+  /// Called by the browser to handle the postMessage() call in Javascript.
+  /// Detects which method is being called from the message contents, and
+  /// calls the appropriate function.  Posts the result back to the browser
+  /// asynchronously.
+  /// @param[in] var_message The message posted by the browser.  The possible
+  ///     messages are 'fortyTwo' and 'reverseText:Hello World'.  Note that
+  ///     the 'reverseText' form contains the string to reverse following a ':'
+  ///     separator.
+  virtual void HandleMessage(const pp::Var& var_message);
 };
+
+void OsoassoInstance::HandleMessage(const pp::Var& var_message) {
+  if (!var_message.is_string()) {
+    return;
+  }
+  std::string message = var_message.AsString();
+  pp::Var return_var;
+  if (message == getLastCommitMethodId)
+  {
+    return_var = MarshallGetLastCommit();
+  }
+  else if (message.find(inputMethodId) == 0)
+  {
+    // The argument to input is everything after the first ':'.
+    size_t sep_pos = message.find_first_of(messageArgumentSeparator);
+    if (sep_pos != std::string::npos) {
+      std::string string_arg = message.substr(sep_pos + 1);
+      return_var = MarshallInput(string_arg);
+    }
+  }
+  else if (message.find(getMatrixMethodId) == 0)
+  {
+    // The argument to get_matrix is everything after the first ':'.
+    size_t sep_pos = message.find_first_of(messageArgumentSeparator);
+    if (sep_pos != std::string::npos) {
+      std::string string_arg = message.substr(sep_pos + 1);
+      return_var = MarshallGetMatrix(string_arg);
+    }
+  }
+  // Post the return result back to the browser.  Note that HandleMessage() is
+  // always called on the main thread, so it's OK to post the return message
+  // directly from here.  The return post is asynhronous: PostMessage returns
+  // immediately.
+  PostMessage(return_var);
+}
 
 /// The Module class.  The browser calls the CreateInstance() method to create
 /// an instance of your NaCl module on the web page.  The browser creates a new
-/// instance for each <embed> tag with type="application/x-nacl".
+/// instance for each <embed> tag with
+/// <code>type="application/x-nacl"</code>.
 class OsoassoModule : public pp::Module {
  public:
   OsoassoModule() : pp::Module() {}
   virtual ~OsoassoModule() {}
 
-  /// Create and return a OsoassoInstance object.
-  /// @param[in] instance The browser-side instance.
-  /// @return the plugin-side instance.
+  /// Create and return a HelloWorldInstance object.
+  /// @param[in] instance a handle to a plug-in instance.
+  /// @return a newly created HelloWorldInstance.
+  /// @note The browser is responsible for calling @a delete when done.
   virtual pp::Instance* CreateInstance(PP_Instance instance) {
     return new OsoassoInstance(instance);
   }
 };
+}  // namespace osoasso
+
 
 namespace pp {
 /// Factory function called by the browser when the module is first loaded.
@@ -132,7 +146,10 @@ namespace pp {
 /// CreateInstance() method on the object you return to make instances.  There
 /// is one instance per <embed> tag on the page.  This is the main binding
 /// point for your NaCl module with the browser.
+/// @return new HelloWorldModule.
+/// @note The browser is responsible for deleting returned @a Module.
 Module* CreateModule() {
-  return new OsoassoModule();
+  return new osoasso::OsoassoModule();
 }
 }  // namespace pp
+
