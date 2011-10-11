@@ -20,10 +20,19 @@
 #include <ppapi/cpp/var.h>
 #include <cstdio>
 #include <string>
+#include "../include/osoasso.h"
 
 /// These are the method names as JavaScript sees them.  Add any methods for
 /// your class here.
 namespace osoasso{
+
+osoasso_instance::osoasso_instance(project_manager_itf& manager)
+{
+}
+
+void osoasso_instance::handle_message(const std::string& method_id)
+{
+}
 
 const char* const inputMethodId = "input";
 const char* const getMatrixMethodId = "getMatrix";
