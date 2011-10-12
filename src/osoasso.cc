@@ -26,19 +26,30 @@
 /// your class here.
 namespace osoasso{
 
-osoasso_instance::osoasso_instance(project_manager_itf& manager)
+static const char message_argument_separator = ':';
+
+osoasso_instance::osoasso_instance(project_manager_itf& manager) : manager_(manager)
 {
 }
 
-void osoasso_instance::handle_message(const std::string& method_id)
+void osoasso_instance::handle_message(const std::string& message)
 {
+    size_t first_separator = message.find_first_of(message_argument_separator);
+    if (first_separator != std::string::npos)
+    {
+        size_t second_separator = message.find(message_argument_separator, first_separator + 1);
+        if (second_separator != std::string::npos)
+        {
+            std::string action = message.substr(first_separator + 1, second_separator - first_separator - 1);
+            std::string user = message.substr(second_separator + 1);
+            manager_.input(action, user);
+        }
+    }
 }
 
 const char* const inputMethodId = "input";
 const char* const getMatrixMethodId = "getMatrix";
 const char* const getLastCommitMethodId = "getLastCommit";
-
-static const char messageArgumentSeparator = ':';
 
 std::string inputPlaceHolder(const std::string& action)
 {
@@ -107,7 +118,7 @@ void OsoassoInstance::HandleMessage(const pp::Var& var_message) {
   else if (message.find(inputMethodId) == 0)
   {
     // The argument to input is everything after the first ':'.
-    size_t sep_pos = message.find_first_of(messageArgumentSeparator);
+    size_t sep_pos = message.find_first_of(message_argument_separator);
     if (sep_pos != std::string::npos) {
       std::string string_arg = message.substr(sep_pos + 1);
       return_var = MarshallInput(string_arg);
@@ -116,7 +127,7 @@ void OsoassoInstance::HandleMessage(const pp::Var& var_message) {
   else if (message.find(getMatrixMethodId) == 0)
   {
     // The argument to get_matrix is everything after the first ':'.
-    size_t sep_pos = message.find_first_of(messageArgumentSeparator);
+    size_t sep_pos = message.find_first_of(message_argument_separator);
     if (sep_pos != std::string::npos) {
       std::string string_arg = message.substr(sep_pos + 1);
       return_var = MarshallGetMatrix(string_arg);
