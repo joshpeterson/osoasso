@@ -11,11 +11,13 @@ public:
     {
     }
 
-    void input(const std::string& action, const std::string& user)
+    commit_data input(const std::string& action, const std::string& user)
     {
         input_called_ = true;
         action_ = action;
         user_ = user;
+
+        return commit_data();
     }
     
     bool input_called() const

@@ -4,10 +4,28 @@
 namespace osoasso
 {
 
+struct commit_data
+{
+    commit_data()
+    {
+    }
+
+    commit_data(commit_data&& other) : action(std::move(other.action)), user(std::move(other.user)),
+        time(std::move(other.time)), output(std::move(other.output)), name(std::move(other.name))
+    {
+    }
+
+    std::string action;
+    std::string user;
+    std::string time;
+    std::string output;
+    std::string name;
+};
+
 class project_manager_itf
 {
 public:
-    virtual void input(const std::string& action, const std::string& user) = 0;
+    virtual commit_data input(const std::string& action, const std::string& user) = 0;
 };
 
 }
