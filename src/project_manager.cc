@@ -26,6 +26,11 @@ commit_data project_manager::input(const std::string& action, const std::string&
     return this->get_last_commit();
 }
 
+std::shared_ptr<const matrix<double>> project_manager::get_matrix(const std::string& name) const
+{
+    return matrices_.get(name);
+}
+
 commit_data project_manager::get_last_commit() const
 {
     std::string head_commit_name = commit_tree_.head();
@@ -41,7 +46,3 @@ commit_data project_manager::get_last_commit() const
     return data;
 }
 
-std::shared_ptr<const matrix<double>> project_manager::get_matrix(std::string name) const
-{
-    return matrices_.get(name);
-}

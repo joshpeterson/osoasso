@@ -19,7 +19,7 @@ class project_manager : public project_manager_itf
 public:
     project_manager();
     commit_data input(const std::string& action, const std::string& user);
-    std::shared_ptr<const matrix<double>> get_matrix(std::string name) const;
+    std::shared_ptr<const matrix<double>> get_matrix(const std::string& name) const;
 
 private:
     command_factory commands_;

@@ -34,15 +34,27 @@ osoasso_instance::osoasso_instance(project_manager_itf& manager) : manager_(mana
 
 void osoasso_instance::handle_message(const std::string& message)
 {
-    size_t first_separator = message.find_first_of(message_argument_separator);
-    if (first_separator != std::string::npos)
+    if (message.find(input_method_id) == 0)
     {
-        size_t second_separator = message.find(message_argument_separator, first_separator + 1);
-        if (second_separator != std::string::npos)
+        size_t first_delim = message.find_first_of(message_argument_separator);
+        if (first_delim != std::string::npos)
         {
-            std::string action = message.substr(first_separator + 1, second_separator - first_separator - 1);
-            std::string user = message.substr(second_separator + 1);
-            manager_.input(action, user);
+            size_t second_delim = message.find(message_argument_separator, first_delim + 1);
+            if (second_delim != std::string::npos)
+            {
+                std::string action = message.substr(first_delim + 1, second_delim - first_delim - 1);
+                std::string user = message.substr(second_delim + 1);
+                manager_.input(action, user);
+            }
+        }
+    }
+    else if (message.find(get_matrix_method_id) == 0)
+    {
+        size_t first_delim = message.find_first_of(message_argument_separator);
+        if (first_delim != std::string::npos)
+        {
+            std::string name = message.substr(first_delim + 1);
+            manager_.get_matrix(name);
         }
     }
 }

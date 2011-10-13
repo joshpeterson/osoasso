@@ -1,6 +1,10 @@
 #ifndef __PROJECT_MANAGER_ITF_H
 #define __PROJECT_MANAGER_ITF_H
 
+#include <string>
+#include <memory>
+#include "matrix.h"
+
 namespace osoasso
 {
 
@@ -26,6 +30,7 @@ class project_manager_itf
 {
 public:
     virtual commit_data input(const std::string& action, const std::string& user) = 0;
+    virtual std::shared_ptr<const matrix<double>> get_matrix(const std::string& name) const = 0;
 };
 
 }
