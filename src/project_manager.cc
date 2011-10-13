@@ -13,7 +13,7 @@ project_manager::project_manager()
 {
 }
 
-void project_manager::input(const std::string& action, const std::string& user)
+commit_data project_manager::input(const std::string& action, const std::string& user)
 {
     time_t commit_time = time(NULL);
 
@@ -22,6 +22,8 @@ void project_manager::input(const std::string& action, const std::string& user)
 
     commit_factory factory(commits_, commit_tree_);
     factory.create(action, user, commit_time, command_data.second, command_data.first);
+
+    return this->get_last_commit();
 }
 
 commit_data project_manager::get_last_commit() const

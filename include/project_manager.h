@@ -15,6 +15,15 @@ namespace osoasso
 
 struct commit_data
 {
+    commit_data()
+    {
+    }
+
+    commit_data(commit_data&& other) : action(std::move(other.action)), user(std::move(other.user)),
+        time(std::move(other.time)), output(std::move(other.output)), name(std::move(other.name))
+    {
+    }
+
     std::string action;
     std::string user;
     std::string time;
@@ -26,8 +35,7 @@ class project_manager
 {
 public:
     project_manager();
-    void input(const std::string& action, const std::string& user);
-    commit_data get_last_commit() const;
+    commit_data input(const std::string& action, const std::string& user);
     std::shared_ptr<const matrix<double>> get_matrix(std::string name) const;
 
 private:
@@ -35,6 +43,8 @@ private:
     object_repository<std::shared_ptr<const matrix<double>>> matrices_;
     object_repository<std::shared_ptr<const commit>> commits_;
     tree<std::string> commit_tree_;
+
+    commit_data get_last_commit() const;
 };
 
 }
