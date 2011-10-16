@@ -20,7 +20,9 @@
 #include <ppapi/cpp/var.h>
 #include <cstdio>
 #include <string>
+#include <memory>
 #include "../include/osoasso.h"
+#include "../include/matrix.h"
 
 /// These are the method names as JavaScript sees them.  Add any methods for
 /// your class here.
@@ -32,8 +34,9 @@ osoasso_instance::osoasso_instance(project_manager_itf& manager) : manager_(mana
 {
 }
 
-void osoasso_instance::handle_message(const std::string& message)
+message_output osoasso_instance::handle_message(const std::string& message)
 {
+    message_output output;
     if (message.find(input_method_id) == 0)
     {
         size_t first_delim = message.find_first_of(message_argument_separator);
@@ -44,7 +47,8 @@ void osoasso_instance::handle_message(const std::string& message)
             {
                 std::string action = message.substr(first_delim + 1, second_delim - first_delim - 1);
                 std::string user = message.substr(second_delim + 1);
-                manager_.input(action, user);
+                commit_data data = manager_.input(action, user);
+                output.commit_string = data.action.c_str();
             }
         }
     }
@@ -54,9 +58,12 @@ void osoasso_instance::handle_message(const std::string& message)
         if (first_delim != std::string::npos)
         {
             std::string name = message.substr(first_delim + 1);
-            manager_.get_matrix(name);
+            std::shared_ptr<const matrix<double>> matrix = manager_.get_matrix(name);
+            output.matrix_value = (*matrix)(1,1);
         }
     }
+
+    return output;
 }
 
 const char* const inputMethodId = "input";
