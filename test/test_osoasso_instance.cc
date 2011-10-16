@@ -1,5 +1,5 @@
 #include "../test_harness/test.h"
-#include "../include/osoasso.h"
+#include "../include/osoasso_instance.h"
 #include "../include/project_manager_itf.h"
 
 using namespace osoasso;

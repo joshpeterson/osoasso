@@ -1,5 +1,5 @@
-#ifndef __OSOASSO_H
-#define __OSOASSO_H
+#ifndef __OSOASSO_INSTANCE_H
+#define __OSOASSO_INSTANCE_H
 
 #include <memory>
 #include <string>
@@ -32,4 +32,4 @@ private:
 
 }
 
-#endif // __OSOASSO_H
+#endif // __OSOASSO_INSTANCE_H
