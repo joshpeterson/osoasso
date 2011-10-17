@@ -12,10 +12,22 @@ namespace osoasso
 const char* const input_method_id = "input";
 const char* const get_matrix_method_id = "getMatrix";
 
-union message_output
+enum message_output_types
+{
+    message_output_string,
+    message_output_double
+};
+
+union message_output_values
 {
     const char* commit_string;
     double matrix_value;
+};
+
+struct message_output
+{
+    message_output_types type;
+    message_output_values value;
 };
 
 

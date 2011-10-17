@@ -102,10 +102,11 @@ Define(Osoasso)
         mock_project_manager manager;
         osoasso_instance instance(manager);
 
-        message_output value = instance.handle_message(
+        message_output output = instance.handle_message(
                                         std::string(input_method_id) + ":foo([[1 5]], [[1 3]]):me@bar.com");
 
-        AssertEqual(std::string("foo([[1 5]], [[1 3]])"), value.commit_string);
+        AssertEqual(message_output_string, output.type);
+        AssertEqual(std::string("foo([[1 5]], [[1 3]])"), output.value.commit_string);
     } Done
 
     It("Calls the project manager get matrix method")
@@ -133,9 +134,10 @@ Define(Osoasso)
         mock_project_manager manager;
         osoasso_instance instance(manager);
 
-        message_output value = instance.handle_message(std::string(get_matrix_method_id) + ":foosha1");
+        message_output output = instance.handle_message(std::string(get_matrix_method_id) + ":foosha1");
 
-        AssertEqual(1.0, value.matrix_value);
+        AssertEqual(message_output_double, output.type);
+        AssertEqual(1.0, output.value.matrix_value);
     } Done
 
 }
