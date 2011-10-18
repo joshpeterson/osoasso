@@ -14,6 +14,8 @@ osoasso_instance::osoasso_instance(project_manager_itf& manager) : manager_(mana
 message_output osoasso_instance::handle_message(const std::string& message)
 {
     message_output output;
+    output.type = message_output_string;
+
     if (message.find(input_method_id) == 0)
     {
         size_t first_delim = message.find_first_of(message_argument_separator);
