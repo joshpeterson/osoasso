@@ -3,7 +3,7 @@
 
 #include <memory>
 #include <string>
-#include "project_manager_itf.h"
+#include "project_manager.h"
 #include "matrix.h"
 
 namespace osoasso
@@ -34,12 +34,12 @@ struct message_output
 class osoasso_instance
 {
 public:
-    osoasso_instance(project_manager_itf& manager);
+    osoasso_instance(project_manager& manager);
     message_output handle_message(const std::string& method_id);
     std::shared_ptr<const matrix<double>> get_matrix(const std::string& name) const;
 
 private:
-    project_manager_itf& manager_;
+    project_manager& manager_;
 };
 
 }

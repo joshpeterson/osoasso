@@ -7,7 +7,7 @@ using namespace osoasso;
 
 static const char message_argument_separator = ':';
 
-osoasso_instance::osoasso_instance(project_manager_itf& manager) : manager_(manager)
+osoasso_instance::osoasso_instance(project_manager& manager) : manager_(manager)
 {
 }
 

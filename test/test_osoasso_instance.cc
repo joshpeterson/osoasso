@@ -1,10 +1,10 @@
 #include "../test_harness/test.h"
 #include "../include/osoasso_instance.h"
-#include "../include/project_manager_itf.h"
+#include "../include/project_manager.h"
 
 using namespace osoasso;
 
-class mock_project_manager : public project_manager_itf
+class mock_project_manager : public project_manager
 {
 public:
     mock_project_manager() : input_called_(false), get_matrix_called_(false), action_(), user_(), name_()

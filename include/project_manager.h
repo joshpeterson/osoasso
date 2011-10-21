@@ -3,7 +3,6 @@
 
 #include <memory>
 #include <string>
-#include "project_manager_itf.h"
 #include "object_repository.h"
 #include "matrix.h"
 #include "command.h"
@@ -14,12 +13,31 @@
 namespace osoasso
 {
 
-class project_manager : public project_manager_itf
+struct commit_data
+{
+    commit_data()
+    {
+    }
+
+    commit_data(commit_data&& other) : action(std::move(other.action)), user(std::move(other.user)),
+        time(std::move(other.time)), output(std::move(other.output)), name(std::move(other.name))
+    {
+    }
+
+    std::string action;
+    std::string user;
+    std::string time;
+    std::string output;
+    std::string name;
+};
+
+class project_manager
 {
 public:
     project_manager();
-    commit_data input(const std::string& action, const std::string& user);
-    std::shared_ptr<const matrix<double>> get_matrix(const std::string& name) const;
+    virtual ~project_manager() {}
+    virtual commit_data input(const std::string& action, const std::string& user);
+    virtual std::shared_ptr<const matrix<double>> get_matrix(const std::string& name) const;
 
 private:
     command_factory commands_;
