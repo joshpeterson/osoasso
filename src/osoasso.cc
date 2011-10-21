@@ -20,6 +20,7 @@
 #include <ppapi/cpp/var.h>
 #include <cstdio>
 #include <string>
+#include <stdexcept>
 #include "../include/osoasso_instance.h"
 #include "../include/project_manager.h"
 
@@ -58,16 +59,23 @@ void OsoassoInstance::HandleMessage(const pp::Var& var_message)
 
     std::string message = var_message.AsString();
 
-    message_output output = instance.handle_message(message);
+    try
+    {
+        message_output output = instance.handle_message(message);
 
-    pp::Var return_var;
-    if (output.type == message_output_string)
-    {
-        PostMessage(pp::Var(output.value.commit_string));
+        pp::Var return_var;
+        if (output.type == message_output_string)
+        {
+            PostMessage(pp::Var(output.value.commit_string));
+        }
+        else
+        {
+            PostMessage(pp::Var(output.value.matrix_value));
+        }
     }
-    else
+    catch (std::exception& e)
     {
-        PostMessage(pp::Var(output.value.matrix_value));
+        PostMessage(pp::Var(e.what()));
     }
 }
 
