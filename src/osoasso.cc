@@ -20,119 +20,91 @@
 #include <ppapi/cpp/var.h>
 #include <cstdio>
 #include <string>
+#include <stdexcept>
+#include "../include/osoasso_instance.h"
+#include "../include/project_manager.h"
 
 /// These are the method names as JavaScript sees them.  Add any methods for
 /// your class here.
-namespace {
-// A method consists of a const char* for the method ID and the method's
-// declaration and implementation.
-// TODO(sdk_user): 1. Add the declarations of your method IDs.
-
-// TODO(sdk_user): 2. Implement the methods that correspond to your method IDs.
-}  // namespace
-
-// Note to the user: This glue code reflects the current state of affairs.  It
-// may change.  In particular, interface elements marked as deprecated will
-// disappear sometime in the near future and replaced with more elegant
-// interfaces.  As of the time of this writing, the new interfaces are not
-// available so we have to provide this code as it is written below.
-
-/// This class exposes the scripting interface for this NaCl module.  The
-/// HasMethod method is called by the browser when executing a method call on
-/// the object.  The name of the JavaScript function (e.g. "fortyTwo") is
-/// passed in the |method| paramter as a string pp::Var.  If HasMethod()
-/// returns |true|, then the browser will call the Call() method to actually
-/// invoke the method.
-class OsoassoScriptableObject : public pp::deprecated::ScriptableObject {
- public:
-  /// Called by the browser to decide whether @a method is provided by this
-  /// plugin's scriptable interface.
-  /// @param[in] method The name of the method
-  /// @param[out] exception A pointer to an exception.  May be used to notify
-  ///     the browser if an exception occurs.
-  /// @return true iff @a method is one of the exposed method names.
-  virtual bool HasMethod(const pp::Var& method, pp::Var* exception);
-
-  /// Invoke the function associated with @a method.  The argument list passed
-  /// in via JavaScript is marshalled into a vector of pp::Vars.  None of the
-  /// functions in this example take arguments, so this vector is always empty.
-  /// @param[in] method The name of the method to be invoked.
-  /// @param[in] args The arguments to be passed to the method.
-  /// @param[out] exception A pointer to an exception.  May be used to notify
-  ///     the browser if an exception occurs.
-  /// @return true iff @a method was called successfully.
-  virtual pp::Var Call(const pp::Var& method,
-                       const std::vector<pp::Var>& args,
-                       pp::Var* exception);
-};
-
-bool OsoassoScriptableObject::HasMethod(const pp::Var& method,
-                                             pp::Var* exception) {
-  if (!method.is_string()) {
-    return false;
-  }
-  std::string method_name = method.AsString();
-  // TODO(sdk_user): 3. Make this function return true iff method_name is equal
-  // to any of your method IDs.
-  bool has_method = false;
-  return has_method;
-}
-
-pp::Var OsoassoScriptableObject::Call(const pp::Var& method,
-                                           const std::vector<pp::Var>& args,
-                                           pp::Var* exception) {
-  if (!method.is_string()) {
-    return pp::Var();
-  }
-  std::string method_name = method.AsString();
-  // TODO(sdk_user): 4. Make this function call whatever method has method_name
-  // as its method ID.
-  return pp::Var();
-}
+namespace osoasso
+{
 
 /// The Instance class.  One of these exists for each instance of your NaCl
 /// module on the web page.  The browser will ask the Module object to create
-/// a new Instance for each occurence of the <embed> tag that has these
+/// a new Instance for each occurrence of the <embed> tag that has these
 /// attributes:
+/// <pre>
 ///     type="application/x-nacl"
-///     nexes="ARM: osoasso_arm.nexe
-///            ..."
-/// The Instance can return a ScriptableObject representing itself.  When the
-/// browser encounters JavaScript that wants to access the Instance, it calls
-/// the GetInstanceObject() method.  All the scripting work is done though
-/// the returned ScriptableObject.
-class OsoassoInstance : public pp::Instance {
- public:
-  /// The constructor creates the plugin-side instance.
-  /// @param[in] instance the handle to the browser-side plugin instance.
-  explicit OsoassoInstance(PP_Instance instance) : pp::Instance(instance)
-  {}
-  virtual ~OsoassoInstance() {}
+///     nacl="hello_world.nmf"
+/// </pre>
+class OsoassoInstance : public pp::Instance
+{
+public:
+    explicit OsoassoInstance(PP_Instance instance) : pp::Instance(instance), instance(manager) {}
+    virtual ~OsoassoInstance() {}
+
+    virtual void HandleMessage(const pp::Var& var_message);
+
+private:
+    project_manager manager;
+    osoasso_instance instance;
 };
+
+void OsoassoInstance::HandleMessage(const pp::Var& var_message)
+{
+    if (!var_message.is_string())
+    {
+        return;
+    }
+
+    std::string message = var_message.AsString();
+
+    try
+    {
+        message_output output = instance.handle_message(message);
+
+        pp::Var return_var;
+        if (output.type == message_output_string)
+        {
+            PostMessage(pp::Var(output.value.commit_string));
+        }
+        else
+        {
+            PostMessage(pp::Var(output.value.matrix_value));
+        }
+    }
+    catch (std::exception& e)
+    {
+        PostMessage(pp::Var(e.what()));
+    }
+}
 
 /// The Module class.  The browser calls the CreateInstance() method to create
 /// an instance of your NaCl module on the web page.  The browser creates a new
-/// instance for each <embed> tag with type="application/x-nacl".
-class OsoassoModule : public pp::Module {
- public:
-  OsoassoModule() : pp::Module() {}
-  virtual ~OsoassoModule() {}
+/// instance for each <embed> tag with
+/// <code>type="application/x-nacl"</code>.
+class OsoassoModule : public pp::Module
+{
+public:
+    OsoassoModule() : pp::Module() {}
+    virtual ~OsoassoModule() {}
 
-  /// Create and return a OsoassoInstance object.
-  /// @param[in] instance The browser-side instance.
-  /// @return the plugin-side instance.
-  virtual pp::Instance* CreateInstance(PP_Instance instance) {
-    return new OsoassoInstance(instance);
-  }
+    virtual pp::Instance* CreateInstance(PP_Instance instance)
+    {
+        return new OsoassoInstance(instance);
+    }
 };
 
-namespace pp {
-/// Factory function called by the browser when the module is first loaded.
-/// The browser keeps a singleton of this module.  It calls the
-/// CreateInstance() method on the object you return to make instances.  There
-/// is one instance per <embed> tag on the page.  This is the main binding
-/// point for your NaCl module with the browser.
-Module* CreateModule() {
-  return new OsoassoModule();
+}  // namespace osoasso
+
+
+namespace pp
+{
+
+Module* CreateModule()
+{
+    return new osoasso::OsoassoModule();
 }
+
 }  // namespace pp
+

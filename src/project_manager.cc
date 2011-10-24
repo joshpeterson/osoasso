@@ -13,7 +13,7 @@ project_manager::project_manager()
 {
 }
 
-void project_manager::input(const std::string& action, const std::string& user)
+commit_data project_manager::input(const std::string& action, const std::string& user)
 {
     time_t commit_time = time(NULL);
 
@@ -22,6 +22,13 @@ void project_manager::input(const std::string& action, const std::string& user)
 
     commit_factory factory(commits_, commit_tree_);
     factory.create(action, user, commit_time, command_data.second, command_data.first);
+
+    return this->get_last_commit();
+}
+
+std::shared_ptr<const matrix<double>> project_manager::get_matrix(const std::string& name) const
+{
+    return matrices_.get(name);
 }
 
 commit_data project_manager::get_last_commit() const
@@ -39,7 +46,3 @@ commit_data project_manager::get_last_commit() const
     return data;
 }
 
-std::shared_ptr<const matrix<double>> project_manager::get_matrix(std::string name) const
-{
-    return matrices_.get(name);
-}

@@ -13,61 +13,61 @@ Define(ProjectManager)
     It("Returns the action of the last commit")
     {
         project_manager manager;
-        manager.input("add([[1]], [[1]])", "me");
+        commit_data data = manager.input("add([[1]], [[1]])", "me");
 
-        AssertEqual("add([[1]], [[1]])", manager.get_last_commit().action);
+        AssertEqual("add([[1]], [[1]])", data.action);
     } Done
 
     It("Returns the user of the last commit")
     {
         project_manager manager;
-        manager.input("add([[1]], [[1]])", "me");
+        commit_data data = manager.input("add([[1]], [[1]])", "me");
 
-        AssertEqual("me", manager.get_last_commit().user);
+        AssertEqual("me", data.user);
     } Done
 
     It("Returns the user of the last commit")
     {
         project_manager manager;
-        manager.input("add([[1]], [[1]])", "me");
+        commit_data data = manager.input("add([[1]], [[1]])", "me");
 
-        AssertEqual("me", manager.get_last_commit().user);
+        AssertEqual("me", data.user);
     } Done
 
     It("Returns the time of the last commit")
     {
         project_manager manager;
-        manager.input("add([[1]], [[1]])", "me");
+        commit_data data = manager.input("add([[1]], [[1]])", "me");
 
         // Since the exact time will change, at least make sure it is GMT.
-        std::string time = manager.get_last_commit().time;
+        std::string time = data.time;
         AssertEqual("GMT", time.substr(time.length() - 3));
     } Done
 
     It("Returns the name of the output of the last commit")
     {
         project_manager manager;
-        manager.input("add([[1]], [[1]])", "me");
+        commit_data data = manager.input("add([[1]], [[1]])", "me");
 
-        AssertEqual("c155be83 bedce48e f48618cf 2cc4cbdf 7c569897", manager.get_last_commit().output);
+        AssertEqual("c155be83 bedce48e f48618cf 2cc4cbdf 7c569897", data.output);
     } Done
 
     It("Returns a non-empty string for the name of the last commit")
     {
         project_manager manager;
-        manager.input("add([[1]], [[1]])", "me");
+        commit_data data = manager.input("add([[1]], [[1]])", "me");
 
         // The name of the commit will change each time we run.
-        AssertTrue(manager.get_last_commit().name != std::string());
+        AssertTrue(data.name != std::string());
     } Done
 
     It("Provides access to the matrix repository")
     {
         matrix<double> expected_output = { { 3.0, 7.0 } };
         project_manager manager;
-        manager.input("add([[1 2]], [[2 5]])", "me");
+        commit_data data = manager.input("add([[1 2]], [[2 5]])", "me");
 
-        std::string output = manager.get_last_commit().output;
+        std::string output = data.output;
 
         std::shared_ptr<const matrix<double>> actual_output = manager.get_matrix(output);
 
