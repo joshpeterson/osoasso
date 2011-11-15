@@ -31,8 +31,11 @@
 		}
 	</ui:style>
 	<g:DockLayoutPanel unit='EM' addStyleNames='{style.totalArea}'>
-  		<g:north size='3'>
-    		<g:Label addStyleNames='{style.headerArea}'>Osoasso</g:Label>
+  		<g:north size='4'>
+  			<g:VerticalPanel>
+    			<g:Label addStyleNames='{style.headerArea}'>Osoasso</g:Label>
+    			<g:Label ui:field='moduleStatus'>Unknown</g:Label>
+    		</g:VerticalPanel>
   		</g:north>
   		<g:center>
     		<g:ScrollPanel ui:field='scrollPanel' addStyleNames='{style.bodyArea}'>
