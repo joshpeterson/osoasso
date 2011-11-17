@@ -1,0 +1,49 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	<ui:style type='org.josh.osoasso.client.Osoasso.OsoassoStyle'>
+		.totalArea
+		{
+			margin:20px;
+		}
+		
+		.headerArea
+		{
+			font-size:2em;
+		}
+		
+		.bodyArea
+		{
+			border-style:solid;
+			border-width:3px;
+			border-color:black;
+			padding:20px;
+		}
+		
+		.inputArea
+		{
+			font-family:"Lucida Console", "Courier New", monospace";
+		}
+		
+		.individualOutputArea
+		{
+			font-family:"Lucida Console", "Courier New", monospace";
+		}
+	</ui:style>
+	<g:DockLayoutPanel unit='EM' addStyleNames='{style.totalArea}'>
+  		<g:north size='4'>
+  			<g:VerticalPanel>
+    			<g:Label addStyleNames='{style.headerArea}'>Osoasso</g:Label>
+    			<g:Label ui:field='moduleStatus'>Unknown</g:Label>
+    		</g:VerticalPanel>
+  		</g:north>
+  		<g:center>
+    		<g:ScrollPanel ui:field='scrollPanel' addStyleNames='{style.bodyArea}'>
+    			<g:VerticalPanel ui:field='resultsPanel'/>
+    		</g:ScrollPanel>
+  		</g:center>
+  		<g:south size='4'>
+  			<g:TextBox ui:field='inputField' addStyleNames='{style.inputArea}'/>
+  		</g:south>
+	</g:DockLayoutPanel>
+</ui:UiBinder> 
