@@ -19,6 +19,10 @@ public:
 
         commit_data data;
         data.action = action;
+        data.user = user;
+        data.name = "CommitName";
+        data.time = "Some time GMT";
+        data.output = "OutputName";
 
         return data;
     }
