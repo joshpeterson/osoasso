@@ -3,43 +3,46 @@ package org.josh.osoasso.client;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
-import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.HasText;
-import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.Widget;
 
+/**
+ * @author Josh Peterson
+ *
+ * The class which implements a simple GWT front end for the Osoasso product.
+ */
 public class Osoasso extends Composite implements EntryPoint {
 
+	/**
+	 * @author Josh Peterson
+	 *
+	 * This interface allows access to a style defined in the XML layout file from
+	 * from the Java code here. 
+	 */
 	interface OsoassoStyle extends CssResource
 	{
 		String individualOutputArea();
 	}
 	
-	private static OsoassoUiBinder uiBinder = GWT.create(OsoassoUiBinder.class);
-
 	interface OsoassoUiBinder extends UiBinder<DockLayoutPanel, Osoasso> {}
 	
-	int type;
+	private static OsoassoUiBinder uiBinder = GWT.create(OsoassoUiBinder.class);
+	private static Osoasso instance;
+	
+	private JavaScriptObject naclModule = null;
 	
 	@UiField TextBox inputField;
 	@UiField ScrollPanel scrollPanel;
@@ -50,6 +53,18 @@ public class Osoasso extends Composite implements EntryPoint {
 	public Osoasso()
 	{
 		initWidget(uiBinder.createAndBindUi(this));
+		instance = this;
+	}
+	
+	/**
+	 * We need a static method to allow the JavaScript event handler to call back
+	 * to the GWT Java code.
+	 * 
+	 * @param naclMessage The message from the Nacl call to native code.
+	 */
+	public static void onNaclMessageStatic(String naclMessage)
+	{
+		instance.onNaclMessage(naclMessage);
 	}
 
 	@Override
@@ -77,57 +92,65 @@ public class Osoasso extends Composite implements EntryPoint {
 	{
 		if (e.getCharCode() == KeyCodes.KEY_ENTER)
 		{
-			//HTML data = new HTML("> " + inputField.getText());
-			//data.getElement().addClassName(style.individualOutputArea());
-		    //resultsPanel.add(data);
-			CallNaClInput(naclModule, inputField.getText());
+			CallOsoassoNaclModuleInputMethod(naclModule, inputField.getText());
 			
 		    scrollPanel.scrollToBottom();
 		}
 	}
 	
-	public void onNaclMessage(String data)
+	public void onNaclMessage(String naclMessage)
 	{
-		HTML html = new HTML("> Boo!");
+		HTML html = new HTML("> " + naclMessage);
 		html.getElement().addClassName(style.individualOutputArea());
 	    resultsPanel.add(html);
 	}
 	
-	 protected static native JavaScriptObject GetNaclModule() /*-{
-	    return $doc.getElementById("osoasso");
-	  }-*/;
-	 
-	 public native void RegisterNaclListener(JavaScriptObject naclModule) /*-{
-	 	//this.@org.josh.osoasso.client.Osoasso::onNaclMessage(Ljava/lang/String;)("foo");
-	 	//naclModule.addEventListener('message', function(message_event) {
-      //this.@org.josh.osoasso.client.Osoasso::onNaclMessage(Ljava/lang/String;)(message_event.data);
-    //}, false);
-    naclModule.addEventListener('message', function(message_event) {
-      alert(message_event.data);
-    }, false);
-	// naclModule.addEventListener("message", $wnd.handleMessage, false);
+	/**
+	 * @author Josh Peterson
+	 *
+	 * Use the HTML onLoad callback to wait for the Nacl module to load.
+	 */
+	public class NaclWidget extends HTML
+	{
+		@Override
+	    protected void onLoad()
+	    {
+			naclModule = GetNaclModule();
+			if (naclModule != null)
+			{
+				moduleStatus.setText("Module loaded");
+				RegisterNaclListener(naclModule);
+			}
+			else 
+			{
+				moduleStatus.setText("Module failed to load");
+			}
+		}
+	}
+	
+	private native JavaScriptObject GetNaclModule()
+	 /*-{
+	 	return $doc.getElementById("osoasso");
 	 }-*/;
 	 
-	 protected static native void CallNaClInput(
-		      JavaScriptObject naclModule, String input) /*-{
-		    if (naclModule != null) {
-		      naclModule.postMessage('input:' + input + ":me@it.com");
-		    } else {
-		      alert("Nacl module not loaded");
-		    }
-		  }-*/;
+	 public native void RegisterNaclListener(JavaScriptObject naclModule)
+	 /*-{
+	 	naclModule.addEventListener('message',
+								 	function(message_event)
+								 	{
+							      		@org.josh.osoasso.client.Osoasso::onNaclMessageStatic(Ljava/lang/String;)(message_event.data);
+							    	}, false);
+	 }-*/;
 	 
-	 private JavaScriptObject naclModule = null;
-	  public class NaclWidget extends HTML {
-	    @Override
-	    protected void onLoad(){
-	      naclModule = GetNaclModule();
-	      if (naclModule != null) {
-	    	  moduleStatus.setText("Module loaded");
-	    	  RegisterNaclListener(naclModule);
-	      } else {
-	    	  moduleStatus.setText("Module failed to load");
-	      }
-	    }
-	  }
+	 protected native void CallOsoassoNaclModuleInputMethod(JavaScriptObject naclModule, String input)
+	 /*-{
+		    if (naclModule != null)
+		    {
+		    	naclModule.postMessage('input:' + input + ":me@it.com");
+		    }
+		    else
+		    {
+		    	alert("Danger: Nacl module not loaded!");
+		    }
+	 }-*/;
 }
