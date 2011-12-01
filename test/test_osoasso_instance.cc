@@ -19,6 +19,10 @@ public:
 
         commit_data data;
         data.action = action;
+        data.user = user;
+        data.name = "CommitName";
+        data.time = "Some time GMT";
+        data.output = "OutputName";
 
         return data;
     }
@@ -106,7 +110,7 @@ Define(Osoasso)
                                         std::string(input_method_id) + ":foo([[1 5]], [[1 3]]):me@bar.com");
 
         AssertEqual(message_output_string, output.type);
-        AssertEqual(std::string("foo([[1 5]], [[1 3]])"), output.value.commit_string);
+        AssertEqual(std::string("CommitName:foo([[1 5]], [[1 3]]):me@bar.com:Some time GMT"), output.value.commit_string);
     } Done
 
     It("Calls the project manager get matrix method")
