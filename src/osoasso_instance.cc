@@ -3,6 +3,7 @@
 #include <memory>
 #include "../include/osoasso_instance.h"
 #include "../include/matrix.h"
+#include "../include/matrix_formatter.h"
 
 using namespace osoasso;
 
@@ -30,9 +31,13 @@ message_output osoasso_instance::handle_message(const std::string& message)
                 commit_data data = manager_.input(action, user);
                 output.type = message_output_string;
 
+                std::shared_ptr<const matrix<double>> matrix = manager_.get_matrix(data.output);
+                matrix_formatter<double> formatter(*matrix);
+
                 std::stringstream output_commit_string;
                 output_commit_string << data.name << ":" << data.action << ":" << data.user
-                                     << ":" << data.time << ":" << data.output;
+                                     << ":" << data.time << ":" << data.output << ":"
+                                     << formatter.to_string();
                 output.value.commit_string = output_commit_string.str().c_str();
             }
         }
