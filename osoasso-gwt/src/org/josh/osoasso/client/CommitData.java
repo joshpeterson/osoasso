@@ -15,7 +15,7 @@ public class CommitData
 	
 	public CommitData(String commitString)
 	{
-		commitStringParts = commitString.split(":");
+		commitStringParts = commitString.split("\\\\");
 	}
 	
 	public String getName()

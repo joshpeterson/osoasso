@@ -100,7 +100,10 @@ public class Osoasso extends Composite implements EntryPoint {
 	
 	public void onNaclMessage(String naclMessage)
 	{
-		HTML html = new HTML("> " + naclMessage);
+		CommitData commit = new CommitData(naclMessage);
+		CommitDataFormatter formatter = new CommitDataFormatter(commit);
+		
+		HTML html = new HTML(formatter.FormatCommit());
 		html.getElement().addClassName(style.individualOutputArea());
 	    resultsPanel.add(html);
 	}
