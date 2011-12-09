@@ -13,6 +13,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
@@ -101,11 +102,17 @@ public class Osoasso extends Composite implements EntryPoint {
 	public void onNaclMessage(String naclMessage)
 	{
 		CommitData commit = new CommitData(naclMessage);
-		CommitDataFormatter formatter = new CommitDataFormatter(commit);
 		
-		HTML html = new HTML(formatter.FormatCommit());
-		html.getElement().addClassName(style.individualOutputArea());
-	    resultsPanel.add(html);
+		HTML actionHTML = new HTML("> " + commit.getAction());
+		actionHTML.setTitle(commit.getName() + " " + commit.getUser() + " - " + commit.getTime());
+		actionHTML.getElement().addClassName(style.individualOutputArea());
+		
+		HTML outputHTML = new HTML(commit.getMatrix());
+		outputHTML.setTitle(commit.getOutput());
+		outputHTML.getElement().addClassName(style.individualOutputArea());
+		
+	    resultsPanel.add(actionHTML);
+	    resultsPanel.add(outputHTML);
 	}
 	
 	/**
