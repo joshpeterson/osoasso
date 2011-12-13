@@ -6,3 +6,4 @@
 *.nmf
 gwt-unitCache*
 war*
+test-classes*
