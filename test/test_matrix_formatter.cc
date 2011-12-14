@@ -13,4 +13,12 @@ Define(MatrixFormatter)
         matrix_formatter<double> formatter(test_matrix);
         AssertEqual("[[3.14 1] [2.72 8.9]]", formatter.to_string());
     } Done
+
+    It("Can format a matrix to a MathJax string")
+    {
+        matrix<double> test_matrix = { { 3.14, 1.0 }, { 2.72, 8.9 } };
+        
+        matrix_formatter<double> formatter(test_matrix);
+        AssertEqual("$$\\left[\\matrix{3.14&1\\\\2.72&8.9}\\right]$$", formatter.to_math_jax());
+    } Done
 }

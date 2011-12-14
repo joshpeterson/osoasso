@@ -45,6 +45,32 @@ public:
         return matrix_string.str();
     }
 
+    std::string to_math_jax() const
+    {
+        std::stringstream matrix_string;
+
+        matrix_string << "$$\\left[\\matrix{";
+
+        int rows = matrix_to_format_.rows();
+        int columns = matrix_to_format_.columns();
+        for (int i = 1; i <= rows; ++i)
+        {
+            for (int j = 1; j <= columns; ++j)
+            {
+                matrix_string << matrix_to_format_(i,j);
+                if (j != columns)
+                    matrix_string << "&";
+            }
+
+            if (i != rows)
+                matrix_string << "\\\\";
+        }
+
+        matrix_string << "}\\right]$$";
+
+        return matrix_string.str();
+    }
+
 private:
     const osoasso::matrix<ValueType>& matrix_to_format_;
 };

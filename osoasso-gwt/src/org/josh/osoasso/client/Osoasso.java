@@ -108,7 +108,7 @@ public class Osoasso extends Composite implements EntryPoint {
 		this.AddHTMLToResultsPanel(formatter.FormatCommitMetaData());
 		this.AddHTMLToResultsPanel(formatter.FormatOutputName());
 		this.AddHTMLToResultsPanel(formatter.FormatOutputMatrix());
-		this.AddHTMLToResultsPanel("$$\\left[\\matrix{newx.x&newy.x&newz.x \\\\newx.y&newy.y&newz.y \\\\newx.z&newy.z&newz.z}\\right]$$");
+		//this.AddHTMLToResultsPanel("$$\\left[\\matrix{newx.x&newy.x&newz.x \\\\newx.y&newy.y&newz.y \\\\newx.z&newy.z&newz.z}\\right]$$");
 		CallMathJax();
 	}
 	
