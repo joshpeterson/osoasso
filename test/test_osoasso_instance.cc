@@ -110,7 +110,7 @@ Define(Osoasso)
                                         std::string(input_method_id) + ":foo([[1 5]], [[1 3]]):me@bar.com");
 
         AssertEqual(message_output_string, output.type);
-        AssertEqual(std::string("CommitName#foo([[1 5]], [[1 3]])#me@bar.com#Some time GMT#OutputName#$$\\left[\\matrix{1&2}\\right]$$"), output.value.commit_string);
+        AssertEqual(std::string("CommitName#foo([[1 5]], [[1 3]])#me@bar.com#Some time GMT#OutputName#\\(\\left[\\matrix{1&2}\\right]\\)"), output.value.commit_string);
     } Done
 
     It("Calls the project manager get matrix method")

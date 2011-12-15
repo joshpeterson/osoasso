@@ -49,7 +49,7 @@ public:
     {
         std::stringstream matrix_string;
 
-        matrix_string << "$$\\left[\\matrix{";
+        matrix_string << "\\(\\left[\\matrix{";
 
         int rows = matrix_to_format_.rows();
         int columns = matrix_to_format_.columns();
@@ -66,7 +66,7 @@ public:
                 matrix_string << "\\\\";
         }
 
-        matrix_string << "}\\right]$$";
+        matrix_string << "}\\right]\\)";
 
         return matrix_string.str();
     }

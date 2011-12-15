@@ -19,6 +19,6 @@ Define(MatrixFormatter)
         matrix<double> test_matrix = { { 3.14, 1.0 }, { 2.72, 8.9 } };
         
         matrix_formatter<double> formatter(test_matrix);
-        AssertEqual("$$\\left[\\matrix{3.14&1\\\\2.72&8.9}\\right]$$", formatter.to_math_jax());
+        AssertEqual("\\(\\left[\\matrix{3.14&1\\\\2.72&8.9}\\right]\\)", formatter.to_math_jax());
     } Done
 }
