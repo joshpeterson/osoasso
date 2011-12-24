@@ -13,6 +13,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
@@ -106,7 +107,7 @@ public class Osoasso extends Composite implements EntryPoint {
 		this.AddHTMLToResultsPanel(formatter.FormatAction());
 		this.AddHTMLToResultsPanel(formatter.FormatCommitMetaData());
 		this.AddHTMLToResultsPanel(formatter.FormatOutputName());
-		this.AddHTMLToResultsPanel(formatter.FormatOutputMatrix());		
+		this.AddHTMLToResultsPanel(formatter.FormatOutputMatrix());
 	}
 	
 	/**
