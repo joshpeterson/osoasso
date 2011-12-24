@@ -71,6 +71,29 @@ public:
         return matrix_string.str();
     }
 
+    std::string to_html_table() const
+    {
+        std::stringstream matrix_string;
+
+        matrix_string << "<table id=\"matrix\">";
+
+        int rows = matrix_to_format_.rows();
+        int columns = matrix_to_format_.columns();
+        for (int i = 1; i <= rows; ++i)
+        {
+            matrix_string << "<tr><td>|</td>";
+            for (int j = 1; j <= columns; ++j)
+            {
+                matrix_string << "<td>" << matrix_to_format_(i,j) << "</td>";
+            }
+            matrix_string << "<td>|</td></tr>";
+        }
+
+        matrix_string << "</table>";
+
+        return matrix_string.str();
+    }
+
 private:
     const osoasso::matrix<ValueType>& matrix_to_format_;
 };

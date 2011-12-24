@@ -37,7 +37,7 @@ message_output osoasso_instance::handle_message(const std::string& message)
                 std::stringstream output_commit_string;
                 output_commit_string << data.name << "#" << data.action << "#" << data.user
                                      << "#" << data.time << "#" << data.output << "#"
-                                     << formatter.to_math_jax();
+                                     << formatter.to_html_table();
                 output.value.commit_string = output_commit_string.str().c_str();
             }
         }

@@ -108,8 +108,6 @@ public class Osoasso extends Composite implements EntryPoint {
 		this.AddHTMLToResultsPanel(formatter.FormatCommitMetaData());
 		this.AddHTMLToResultsPanel(formatter.FormatOutputName());
 		this.AddHTMLToResultsPanel(formatter.FormatOutputMatrix());
-		//this.AddHTMLToResultsPanel("$$\\left[\\matrix{newx.x&newy.x&newz.x \\\\newx.y&newy.y&newz.y \\\\newx.z&newy.z&newz.z}\\right]$$");
-		CallMathJax();
 	}
 	
 	/**
@@ -143,11 +141,6 @@ public class Osoasso extends Composite implements EntryPoint {
 		resultsPanel.add(htmlElement);
 	    resultsPanel.setSpacing(10);
 	}
-	
-	private native void CallMathJax()
-	/*-{
-			$wnd.MathJax.Hub.Typeset();
-	}-*/;
 	
 	private native JavaScriptObject GetNaclModule()
 	 /*-{
