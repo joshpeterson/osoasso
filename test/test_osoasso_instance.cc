@@ -1,3 +1,4 @@
+#include <stdexcept>
 #include "../test_harness/test.h"
 #include "../include/osoasso_instance.h"
 #include "../include/project_manager.h"
@@ -13,6 +14,11 @@ public:
 
     commit_data input(const std::string& action, const std::string& user)
     {
+        if (action == "error action")
+        {
+            throw std::runtime_error("Error message");
+        }
+
         input_called_ = true;
         action_ = action;
         user_ = user;
@@ -142,6 +148,17 @@ Define(Osoasso)
 
         AssertEqual(message_output_double, output.type);
         AssertEqual(1.0, output.value.matrix_value);
+    } Done
+
+    It("Returns an error message when an exception occurs")
+    {
+        mock_project_manager manager;
+        osoasso_instance instance(manager);
+
+        message_output output = instance.handle_message(std::string(input_method_id) + ":error action:me@bar.com");
+
+        AssertEqual(message_output_string, output.type);
+        AssertEqual(std::string("error#error action#Error message"), output.value.commit_string);
     } Done
 
 }
