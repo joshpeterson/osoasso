@@ -42,12 +42,15 @@ void command_dispatcher::validate_number_of_inputs(const std::string& command_na
         std::stringstream message;
         message << "Command " << command_name << " expected " << number_of_arguments_expected
                 << (number_of_arguments_expected == 1 ? " argument" : " arguments")
-                << " but" << number_of_arguments_provided
+                << " but " << number_of_arguments_provided
                 << (number_of_arguments_provided == 1 ? " argument" : " arugments")
-                << " were provided:" << std::endl;
+                << (number_of_arguments_provided == 1 ? " was" : " were")
+                << " provided: ";
         for (auto i = inputs.cbegin(); i != inputs.cend(); ++i)
         {
-            message << *i << std::endl;
+            message << *i;
+            if (i != inputs.cend() - 1)
+                message << ", ";
         }
 
         throw std::runtime_error(message.str());
