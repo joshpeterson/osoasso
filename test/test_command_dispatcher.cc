@@ -80,17 +80,45 @@ Define(CommandDispatcher)
 
         command_dispatcher dispatcher(commands, matrices);
 
+        std::string exception_message;
         bool exception_thrown = false;
         try
         {
             dispatcher.input("foo([[1 2]], [[3 5]], [[2 6]])");
         }
-        catch (const std::runtime_error&)
+        catch (const std::runtime_error& e)
         {
             exception_thrown = true;
+            exception_message = e.what();
         }
 
         AssertTrue(exception_thrown);
+        AssertEqual(std::string("Command foo expected 2 arguments but 3 arugments were provided: [[1 2]], [[3 5]], [[2 6]]"), exception_message);
+    } Done
+
+    It("Throws an exception with the correct wording when it sees the wrong number of arguments with 1 provided")
+    {
+        std::shared_ptr<mock_dispatcher_command> test_command = std::make_shared<mock_dispatcher_command>();
+
+        command_factory commands = { std::make_pair("foo", std::shared_ptr<command>(test_command)) };
+        object_repository<std::shared_ptr<const matrix<double>>> matrices;
+
+        command_dispatcher dispatcher(commands, matrices);
+
+        std::string exception_message;
+        bool exception_thrown = false;
+        try
+        {
+            dispatcher.input("foo([[1 2]])");
+        }
+        catch (const std::runtime_error& e)
+        {
+            exception_thrown = true;
+            exception_message = e.what();
+        }
+
+        AssertTrue(exception_thrown);
+        AssertEqual(std::string("Command foo expected 2 arguments but 1 argument was provided: [[1 2]]"), exception_message);
     } Done
 
     It("Passes the correct arguments to the command")
