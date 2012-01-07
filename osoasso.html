@@ -1,21 +1,40 @@
 <!DOCTYPE html>
 <html>
+  <!--
+  Copyright (c) 2011 The Native Client Authors. All rights reserved.
+  Use of this source code is governed by a BSD-style license that can be
+  found in the LICENSE file.
+  -->
 <head>
   <title>Osoasso!</title>
 
   <script type="text/javascript">
-    OsoassoModule = null;  // Global application object.
+    helloWorldModule = null;  // Global application object.
     statusText = 'NO-STATUS';
 
+    // When the NaCl module has loaded, hook up an event listener to handle
+    // messages coming from it, and then indicate success.
     function moduleDidLoad() {
       OsoassoModule = document.getElementById('osoasso');
+      // Add a message handler that accepts messages coming from the NaCl
+      // module.
+      OsoassoModule.addEventListener('message', handleMessage, false);
       updateStatus('SUCCESS');
+    }
+
+    // Handle a message coming from the NaCl module.
+    function handleMessage(message_event) {
+      alert(message_event.data);
     }
 
     // If the page loads before the Native Client module loads, then set the
     // status message indicating that the module is still loading.  Otherwise,
     // do not change the status message.
     function pageDidLoad() {
+      // Set the focus on the text input box.  Doing this means you can press
+      // return as soon as the page loads, and it will fire the reversetText()
+      // function.
+      document.forms.helloForm.inputBox.focus();
       if (OsoassoModule == null) {
         updateStatus('LOADING...');
       } else {
@@ -27,15 +46,29 @@
       }
     }
 
+    function input() {
+      var inputBox = document.forms.helloForm.inputBox;
+      OsoassoModule.postMessage('input:' + inputBox.value + ":me@it.com");
+    }
+
+    function getMatrix() {
+      // Grab the text from the text box, pass it into reverseText()
+      var inputBox = document.forms.helloForm.inputBox;
+      OsoassoModule.postMessage('getMatrix:' + inputBox.value);
+      // Note: a |false| return tells the <form> tag to cancel the GET action
+      // when submitting the form.
+      return false;
+    }
+
     // Set the global status message.  If the element with id 'statusField'
     // exists, then set its HTML to the status message as well.
     // opt_message The message test.  If this is null or undefined, then
-    // attempt to set the element with id 'statusField' to the value of
-    // |statusText|.
+    //     attempt to set the element with id 'statusField' to the value of
+    //     |statusText|.
     function updateStatus(opt_message) {
       if (opt_message)
         statusText = opt_message;
-      var statusField = document.getElementById('status_field');
+      var statusField = document.getElementById('statusField');
       if (statusField) {
         statusField.innerHTML = statusText;
       }
@@ -44,29 +77,51 @@
 </head>
 <body onload="pageDidLoad()">
 
-<h1>Native Client Module Osoasso</h1>
+<h1>Native Client Simple Module</h1>
 <p>
-  <!-- Load the published .nexe.  This includes the 'nacl' attribute which
+  <form name="helloForm"
+        action=""
+        method="get"
+        onsubmit="return getMatrix()">
+    <input type="text" id="inputBox" name="inputBox" value="Input" /><p>
+    <input type="button" value="Call input" onclick="input()" />
+    <input type="submit" value="Call getMatrix()" />
+  </form>
+  <!-- Load the published .nexe.  This includes the 'src' attribute which
   shows how to load multi-architecture modules.  Each entry in the "nexes"
-  object in the .nmf manifest file is a key-value pair: the key is the
-  instruction set architecture ('x86-32', 'x86-64', etc.); the value is a URL
-  for the desired NaCl module.
-  To load the debug versions of your .nexes, set the 'nacl' attribute to the
+  object in the  .nmf manifest file is a key-value pair: the key is the runtime
+  ('x86-32', 'x86-64', etc.); the value is a URL for the desired NaCl module.
+  To load the debug versions of your .nexes, set the 'src' attribute to the
   _dbg.nmf version of the manifest file.
 
-  Note: Since this NaCl module does not use any real-estate in the browser,
-  it's width and height are set to 0, and the 'dimensions' attribute is not
-  set (see the pi_generator example for use of the 'dimensions' attribute).
+  Note that the <EMBED> element is wrapped inside a <DIV>, which has a 'load'
+  event listener attached.  This method is used instead of attaching the 'load'
+  event listener directly to the <EMBED> element to ensure that the listener
+  is active before the NaCl module 'load' event fires.
   -->
-  <embed name="nacl_module"
-         id="osoasso"
-         width=0 height=0
-         nacl="osoasso.nmf"
-         type="application/x-nacl"
-         onload="moduleDidLoad();" />
+  <div id="listener">
+    <script type="text/javascript">
+      document.getElementById('listener')
+          .addEventListener('load', moduleDidLoad, true);
+    </script>
+
+    <embed name="nacl_module"
+           id="osoasso"
+           width=0 height=0
+           src="osoasso.nmf"
+           type="application/x-nacl" />
+  </div>
+
 </p>
 
+<p>If the module is working correctly, a click on the "Call fortyTwo()" button
+  should open a popup dialog containing <b>42</b> as its value.</p>
+
+<p> Clicking on the "Call reverseText()" button
+  should open a popup dialog containing the textbox contents and its reverse
+   as its value.</p>
+
 <h2>Status</h2>
-<div id="status_field">NO-STATUS</div>
+<div id="statusField">NO-STATUS</div>
 </body>
 </html>
