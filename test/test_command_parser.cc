@@ -74,4 +74,16 @@ Define(CommandParser)
         command_parser test_parser(" \tfoo\r\n(1, [2 3])");
         AssertEqual("foo", test_parser.name());
     } Done
+
+    It("Gets the tag name from an assignment")
+    {
+        command_parser test_parser("tag=foo(1, [2 3])");
+        AssertEqual("tag", test_parser.tag());
+    } Done
+
+    It("Trims white space from tag")
+    {
+        command_parser test_parser(" tag =  \tfoo(1, [2 3])");
+        AssertEqual("tag", test_parser.tag());
+    } Done
 }

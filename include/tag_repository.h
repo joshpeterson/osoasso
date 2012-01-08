@@ -11,7 +11,7 @@ class tag_repository
 {
 public:
     void add(std::string tag, std::string object_name);
-    std::string get(std::string tag);
+    std::string get(std::string tag) const;
 
 private:
     std::map<std::string, std::string> tags_;

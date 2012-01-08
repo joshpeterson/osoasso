@@ -9,7 +9,7 @@ void tag_repository::add(std::string tag, std::string object_name)
     tags_[tag] = object_name;
 }
 
-std::string tag_repository::get(std::string tag)
+std::string tag_repository::get(std::string tag) const
 {
     auto found = tags_.find(tag);
     if (found != tags_.end())
