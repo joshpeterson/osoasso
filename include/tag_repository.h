@@ -2,6 +2,7 @@
 #define __TAG_REPOSITORY_H
 
 #include <string>
+#include <map>
 
 namespace osoasso
 {
@@ -11,6 +12,9 @@ class tag_repository
 public:
     void add(std::string tag, std::string object_name);
     std::string get(std::string tag);
+
+private:
+    std::map<std::string, std::string> tags_;
 };
 
 }
