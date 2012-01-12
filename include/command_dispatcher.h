@@ -13,17 +13,20 @@ namespace osoasso
 
 class command_parser;
 class command;
+class tag_repository;
 
 class command_dispatcher
 {
 public:
     command_dispatcher(const command_factory& commands,
-                       object_repository<std::shared_ptr<const matrix<double>>>& matrices);
+                       object_repository<std::shared_ptr<const matrix<double>>>& matrices,
+                       tag_repository& tags);
     std::pair<std::string, std::vector<std::string>> input(const std::string& input);
 
 private:
     const command_factory& commands_;
     object_repository<std::shared_ptr<const matrix<double>>>& matrices_;
+    tag_repository& tags_;
 
     void validate_number_of_inputs(const std::string& command_name, const std::vector<std::string>& inputs,
                                    std::shared_ptr<osoasso::command> command) const;
@@ -31,7 +34,7 @@ private:
                                                             const std::vector<std::string>& inputs) const;
     std::vector<std::string> add_inputs_to_matrix_repository(
                                 const std::vector<std::shared_ptr<const osoasso::matrix<double>>>& inputs);
-    std::string add_to_repository(std::shared_ptr<const osoasso::matrix<double>> value);
+    std::string add_to_object_repository(std::shared_ptr<const osoasso::matrix<double>> value);
 };
 
 }

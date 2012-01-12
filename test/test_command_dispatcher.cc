@@ -9,6 +9,7 @@
 #include "../include/command_dispatcher.h"
 #include "../include/object_repository.h"
 #include "../include/matrix_blobber.h"
+#include "../include/tag_repository.h"
 
 using namespace osoasso;
 
@@ -64,8 +65,9 @@ Define(CommandDispatcher)
 
         command_factory commands = { std::make_pair("foo", std::shared_ptr<command>(test_command)) };
         object_repository<std::shared_ptr<const matrix<double>>> matrices;
+        tag_repository tags;
 
-        command_dispatcher dispatcher(commands, matrices);
+        command_dispatcher dispatcher(commands, matrices, tags);
         dispatcher.input("foo([[1 2]], [[3 5]])");
 
         AssertTrue(test_command->command_called());
@@ -77,8 +79,9 @@ Define(CommandDispatcher)
 
         command_factory commands = { std::make_pair("foo", std::shared_ptr<command>(test_command)) };
         object_repository<std::shared_ptr<const matrix<double>>> matrices;
+        tag_repository tags;
 
-        command_dispatcher dispatcher(commands, matrices);
+        command_dispatcher dispatcher(commands, matrices, tags);
 
         std::string exception_message;
         bool exception_thrown = false;
@@ -102,8 +105,9 @@ Define(CommandDispatcher)
 
         command_factory commands = { std::make_pair("foo", std::shared_ptr<command>(test_command)) };
         object_repository<std::shared_ptr<const matrix<double>>> matrices;
+        tag_repository tags;
 
-        command_dispatcher dispatcher(commands, matrices);
+        command_dispatcher dispatcher(commands, matrices, tags);
 
         std::string exception_message;
         bool exception_thrown = false;
@@ -127,8 +131,9 @@ Define(CommandDispatcher)
 
         command_factory commands = { std::make_pair("foo", std::shared_ptr<command>(test_command)) };
         object_repository<std::shared_ptr<const matrix<double>>> matrices;
+        tag_repository tags;
 
-        command_dispatcher dispatcher(commands, matrices);
+        command_dispatcher dispatcher(commands, matrices, tags);
         dispatcher.input("foo([[1 2]], [[3 5]])");
 
         matrix<double> expected_left = {{ 1, 2 }};
@@ -144,8 +149,9 @@ Define(CommandDispatcher)
 
         command_factory commands = { std::make_pair("foo", std::shared_ptr<command>(test_command)) };
         object_repository<std::shared_ptr<const matrix<double>>> matrices;
+        tag_repository tags;
 
-        command_dispatcher dispatcher(commands, matrices);
+        command_dispatcher dispatcher(commands, matrices, tags);
         dispatcher.input("foo([[1 2]], [[3 5]])");
 
         auto expected_left = std::shared_ptr<const matrix<double>>(new matrix<double>({{ 1, 2 }}));
@@ -165,8 +171,9 @@ Define(CommandDispatcher)
 
         command_factory commands = { std::make_pair("foo", std::shared_ptr<command>(test_command)) };
         object_repository<std::shared_ptr<const matrix<double>>> matrices;
+        tag_repository tags;
 
-        command_dispatcher dispatcher(commands, matrices);
+        command_dispatcher dispatcher(commands, matrices, tags);
         dispatcher.input("foo([[1 2]], [[3 5]])");
 
         auto expected_result = std::shared_ptr<const matrix<double>>(new matrix<double>({{1}, {1}}));
@@ -183,13 +190,14 @@ Define(CommandDispatcher)
 
         command_factory commands = { std::make_pair("foo", std::shared_ptr<command>(test_command)) };
         object_repository<std::shared_ptr<const matrix<double>>> matrices;
+        tag_repository tags;
 
         auto expected_result = std::shared_ptr<const matrix<double>>(new matrix<double>({{1}, {1}}));
 
         matrix_blobber<double> blobber;
         std::shared_ptr<const blob<double>> blob_result = blobber.make_blob(expected_result);
 
-        command_dispatcher dispatcher(commands, matrices);
+        command_dispatcher dispatcher(commands, matrices, tags);
         std::pair<std::string, std::vector<std::string>> result = dispatcher.input("foo([[1 2]], [[3 5]])");
         AssertEqual(blob_result->name(), result.first);
 
@@ -201,6 +209,7 @@ Define(CommandDispatcher)
 
         command_factory commands = { std::make_pair("foo", std::shared_ptr<command>(test_command)) };
         object_repository<std::shared_ptr<const matrix<double>>> matrices;
+        tag_repository tags;
 
         auto left = std::shared_ptr<const matrix<double>>(new matrix<double>({{1, 2}}));
         auto right = std::shared_ptr<const matrix<double>>(new matrix<double>({{3, 5}}));
@@ -209,7 +218,7 @@ Define(CommandDispatcher)
         std::shared_ptr<const blob<double>> blob_left = blobber.make_blob(left);
         std::shared_ptr<const blob<double>> blob_right = blobber.make_blob(right);
 
-        command_dispatcher dispatcher(commands, matrices);
+        command_dispatcher dispatcher(commands, matrices, tags);
         std::pair<std::string, std::vector<std::string>> result = dispatcher.input("foo([[1 2]], [[3 5]])");
 
         AssertEqual(blob_left->name(), result.second[0]);
@@ -229,14 +238,29 @@ Define(CommandDispatcher)
         std::shared_ptr<const blob<double>> blob_left = blobber.make_blob(expected_left);
 
         object_repository<std::shared_ptr<const matrix<double>>> matrices;
+        tag_repository tags;
         matrices.add(std::make_pair(blob_left->name(), expected_left));
 
         std::stringstream input;
         input << "foo(" << blob_left->name() << ", [[3 5]])";
 
-        command_dispatcher dispatcher(commands, matrices);
+        command_dispatcher dispatcher(commands, matrices, tags);
         dispatcher.input(input.str());
 
         AssertElementsEqual(*expected_left, *matrices.get(blob_left->name()));
+    } Done
+
+    It("Stores the tag with the correct result name in the tag repository")
+    {
+        std::shared_ptr<mock_dispatcher_command> test_command = std::make_shared<mock_dispatcher_command>();
+
+        command_factory commands = { std::make_pair("foo", std::shared_ptr<command>(test_command)) };
+        object_repository<std::shared_ptr<const matrix<double>>> matrices;
+        tag_repository tags;
+
+        command_dispatcher dispatcher(commands, matrices, tags);
+        dispatcher.input("bar = foo([[1 2]], [[3 5]])");
+
+        AssertEqual(std::string("f8febc7d 612c9ce4 53575949 67981bd6 33215355"), tags.get("bar"));
     } Done
 }

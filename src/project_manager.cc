@@ -17,7 +17,7 @@ commit_data project_manager::input(const std::string& action, const std::string&
 {
     time_t commit_time = time(NULL);
 
-    command_dispatcher dispatcher(commands_, matrices_);
+    command_dispatcher dispatcher(commands_, matrices_, tags_);
     auto command_data = dispatcher.input(action);
 
     commit_factory factory(commits_, commit_tree_);

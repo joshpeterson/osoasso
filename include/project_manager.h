@@ -9,6 +9,7 @@
 #include "command_dispatcher.h"
 #include "tree.h"
 #include "commit_factory.h"
+#include "tag_repository.h"
 
 namespace osoasso
 {
@@ -43,6 +44,7 @@ private:
     command_factory commands_;
     object_repository<std::shared_ptr<const matrix<double>>> matrices_;
     object_repository<std::shared_ptr<const commit>> commits_;
+    tag_repository tags_;
     tree<std::string> commit_tree_;
 
     commit_data get_last_commit() const;
