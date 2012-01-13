@@ -5,12 +5,14 @@
 #include "../include/command_parser.h"
 #include "../include/matrix_parser.h"
 #include "../include/matrix_blobber.h"
+#include "../include/tag_repository.h"
 
 using namespace osoasso;
 
 command_dispatcher::command_dispatcher(const command_factory& commands,
-                                       object_repository<std::shared_ptr<const matrix<double>>>& matrices)
-    : commands_(commands), matrices_(matrices)
+                                       object_repository<std::shared_ptr<const matrix<double>>>& matrices,
+                                       tag_repository& tags)
+    : commands_(commands), matrices_(matrices), tags_(tags)
 {
 }
 
@@ -28,7 +30,11 @@ std::pair<std::string, std::vector<std::string>> command_dispatcher::input(const
 
     auto result = command->call(matrix_inputs[0], matrix_inputs[1]);
 
-    return std::make_pair(this->add_to_repository(result), input_names);
+    std::string result_name = this->add_to_object_repository(result);
+
+    tags_.add(parser.tag(), result_name);
+
+    return std::make_pair(result_name, input_names);
 }
 
 void command_dispatcher::validate_number_of_inputs(const std::string& command_name,
@@ -65,7 +71,13 @@ std::vector<std::shared_ptr<const matrix<double>>> command_dispatcher::unpack_ar
     {
         if (i->length() != 0 && (*i)[0] != '[')
         {
-            matrix_inputs.push_back(matrices_.get(*i));
+            std::string matrix_name = *i;
+            if (tags_.contains(*i))
+            {
+                matrix_name = tags_.get(*i);
+            }
+
+            matrix_inputs.push_back(matrices_.get(matrix_name));
         }
         else
         {
@@ -83,13 +95,13 @@ std::vector<std::string> command_dispatcher::add_inputs_to_matrix_repository(
     std::vector<std::string> input_names;
     for (auto i = inputs.cbegin(); i != inputs.cend(); ++i)
     {
-        input_names.push_back(this->add_to_repository(*i));
+        input_names.push_back(this->add_to_object_repository(*i));
     }
 
     return input_names;
 }
 
-std::string command_dispatcher::add_to_repository(std::shared_ptr<const matrix<double>> value)
+std::string command_dispatcher::add_to_object_repository(std::shared_ptr<const matrix<double>> value)
 {
     matrix_blobber<double> blobber;
     std::shared_ptr<const blob<double>> blob = blobber.make_blob(value);

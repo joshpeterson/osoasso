@@ -11,11 +11,15 @@ class command_parser
 {
 public:
     command_parser(const std::string& command);
+    std::string tag() const;
     std::string name() const;
     std::vector<std::string> inputs() const;
 
 private:
+    bool has_tag_;
     std::vector<std::string> command_segments_;
+
+    size_t command_name_offset() const;
 };
 
 }
