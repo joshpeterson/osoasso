@@ -40,4 +40,17 @@ Define(TagRepository)
         tags.add("tag", "object name 2");
         AssertEqual(std::string("object name 2"), tags.get("tag"));
     } Done
+
+    It("Has a contains check that does not throw an exception when a tag does not exist")
+    {
+        tag_repository tags;
+        AssertFalse(tags.contains("foo"));
+    } Done
+
+    It("Has a contains check that returns true when a tag does exist")
+    {
+        tag_repository tags;
+        tags.add("foo", "bar");
+        AssertTrue(tags.contains("foo"));
+    } Done
 }

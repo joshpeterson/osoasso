@@ -71,7 +71,13 @@ std::vector<std::shared_ptr<const matrix<double>>> command_dispatcher::unpack_ar
     {
         if (i->length() != 0 && (*i)[0] != '[')
         {
-            matrix_inputs.push_back(matrices_.get(*i));
+            std::string matrix_name = *i;
+            if (tags_.contains(*i))
+            {
+                matrix_name = tags_.get(*i);
+            }
+
+            matrix_inputs.push_back(matrices_.get(matrix_name));
         }
         else
         {

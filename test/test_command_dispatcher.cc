@@ -238,8 +238,8 @@ Define(CommandDispatcher)
         std::shared_ptr<const blob<double>> blob_left = blobber.make_blob(expected_left);
 
         object_repository<std::shared_ptr<const matrix<double>>> matrices;
-        tag_repository tags;
         matrices.add(std::make_pair(blob_left->name(), expected_left));
+        tag_repository tags;
 
         std::stringstream input;
         input << "foo(" << blob_left->name() << ", [[3 5]])";
@@ -247,7 +247,7 @@ Define(CommandDispatcher)
         command_dispatcher dispatcher(commands, matrices, tags);
         dispatcher.input(input.str());
 
-        AssertElementsEqual(*expected_left, *matrices.get(blob_left->name()));
+        AssertElementsEqual(*expected_left, *test_command->left_argument());
     } Done
 
     It("Stores the tag with the correct result name in the tag repository")
@@ -262,5 +262,28 @@ Define(CommandDispatcher)
         dispatcher.input("bar = foo([[1 2]], [[3 5]])");
 
         AssertEqual(std::string("f8febc7d 612c9ce4 53575949 67981bd6 33215355"), tags.get("bar"));
+    } Done
+
+    It("Finds an input by tag in the tag repository")
+    {
+        std::shared_ptr<mock_dispatcher_command> test_command = std::make_shared<mock_dispatcher_command>();
+
+        command_factory commands = { std::make_pair("foo", std::shared_ptr<command>(test_command)) };
+
+        auto expected_left = std::shared_ptr<const matrix<double>>(new matrix<double>({{ 1, 2 }}));
+
+        matrix_blobber<double> blobber;
+        std::shared_ptr<const blob<double>> blob_left = blobber.make_blob(expected_left);
+
+        object_repository<std::shared_ptr<const matrix<double>>> matrices;
+        matrices.add(std::make_pair(blob_left->name(), expected_left));
+
+        tag_repository tags;
+        tags.add("tag", blob_left->name());
+
+        command_dispatcher dispatcher(commands, matrices, tags);
+        dispatcher.input("foo(tag, [[3 5]])");
+
+        AssertElementsEqual(*expected_left, *test_command->left_argument());
     } Done
 }
