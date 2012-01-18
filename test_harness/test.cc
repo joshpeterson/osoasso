@@ -31,6 +31,7 @@ int main(int argc, char** argv)
     RUN_TEST_FIXTURE(Osoasso)
     RUN_TEST_FIXTURE(Add)
     RUN_TEST_FIXTURE(Subtract)
+    RUN_TEST_FIXTURE(Multiply)
 
     double elapsed_time = double(std::clock() - start) / CLOCKS_PER_SEC;
 

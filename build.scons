@@ -27,7 +27,8 @@ sources = ['src/osoasso.cc',
            'src/commit_factory.cc',
            'src/project_manager.cc',
            'src/add.cc',
-           'src/subtract.cc']
+           'src/subtract.cc',
+           'src/multiply.cc']
 
 test_sources = ['test_harness/test.cc',
                 'test/test_blob.cc',
@@ -52,6 +53,7 @@ test_sources = ['test_harness/test.cc',
                 'test/test_osoasso_instance.cc',
                 'test/test_add.cc',
                 'test/test_subtract.cc',
+                'test/test_multiply.cc',
                 'src/sha1.cc',
                 'src/commit.cc',
                 'src/tag_repository.cc',
@@ -62,7 +64,8 @@ test_sources = ['test_harness/test.cc',
                 'src/project_manager.cc',
                 'src/osoasso_instance.cc',
                 'src/add.cc',
-                'src/subtract.cc']
+                'src/subtract.cc',
+                'src/multiply.cc']
 
 stress_test_sources = ['test_harness/stress_test.cc',
 					   'test/stress_test_blob.cc',
