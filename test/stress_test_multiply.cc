@@ -1,5 +1,6 @@
 #include <memory>
 #include <random>
+#include <iostream>
 #include "../test_harness/test.h"
 #include "../test/timer.h"
 #include "../include/matrix.h"
