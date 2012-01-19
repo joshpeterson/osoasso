@@ -1,12 +1,14 @@
 #include "../include/project_manager.h"
 #include "../include/add.h"
 #include "../include/subtract.h"
+#include "../include/multiply.h"
 
 using namespace osoasso;
 
 project_manager::project_manager() 
    : commands_({ std::make_pair("add", std::shared_ptr<command>(new add)),
-                 std::make_pair("subtract", std::shared_ptr<command>(new subtract)) }),
+                 std::make_pair("subtract", std::shared_ptr<command>(new subtract)),
+                 std::make_pair("multiply", std::shared_ptr<command>(new multiply)) }),
      matrices_(),
      commits_(),
      commit_tree_()
