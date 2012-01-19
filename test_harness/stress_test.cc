@@ -6,6 +6,7 @@ int main(int argc, char** argv)
 
     // Add RUN_TEST_FIXTURE statements here to run tests.
     RUN_TEST_FIXTURE(StressTestBlob)
+    RUN_TEST_FIXTURE(StressTestMultiply)
 
     return all_tests_passed__ ? 0 : 1;
 }

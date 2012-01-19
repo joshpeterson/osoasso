@@ -69,7 +69,9 @@ test_sources = ['test_harness/test.cc',
 
 stress_test_sources = ['test_harness/stress_test.cc',
 					   'test/stress_test_blob.cc',
-				   	   'src/sha1.cc']
+                       'test/stress_test_multiply.cc',
+				   	   'src/sha1.cc',
+                       'src/multiply.cc']
                         
 nacl_env.AllNaClModules(sources, 'osoasso')
 
