@@ -29,7 +29,7 @@ std::shared_ptr<const matrix<double>> random::call(std::shared_ptr<const matrix<
     size_t num_columns = (*columns)(1,1);
 
     srand(time(NULL));
-    auto result = std::shared_ptr<matrix<double>>(new matrix<double>(num_rows, num_columns));
+    auto result = std::make_shared<matrix<double>>(num_rows, num_columns);
     for (size_t i = 1; i <= num_rows; ++i)
     {
         for (size_t j = 1; j <= num_columns; ++j)

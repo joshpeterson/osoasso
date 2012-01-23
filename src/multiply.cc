@@ -17,7 +17,7 @@ std::shared_ptr<const matrix<double>> multiply::call(std::shared_ptr<const matri
         throw std::invalid_argument(message.str());
     }
 
-    auto result = std::shared_ptr<matrix<double>>(new matrix<double>(left->rows(), right->columns()));
+    auto result = std::make_shared<matrix<double>>(left->rows(), right->columns());
     for (size_t i = 1; i <= left->rows(); ++i)
     {
         for (size_t j = 1; j <= right->columns(); ++j)
