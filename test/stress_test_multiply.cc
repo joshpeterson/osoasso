@@ -14,8 +14,8 @@ Define(StressTestMultiply)
     {
         srand(time(NULL));
 
-        auto left = std::shared_ptr<matrix<double>>(new matrix<double>(1024, 1024));
-        auto right = std::shared_ptr<matrix<double>>(new matrix<double>(1024, 1024));
+        auto left = std::make_shared<matrix<double>>(1024, 1024);
+        auto right = std::make_shared<matrix<double>>(1024, 1024);
 
         for (size_t row = 1; row <= 1024;  ++row)
         {
