@@ -27,12 +27,13 @@ private:
 
 #define RUN_TEST_FIXTURE(test_fixture_name__) \
     std::cout << #test_fixture_name__ << ":" << std::endl;\
-    void test_fixture_name__(bool& all_tests_passed__);\
-    test_fixture_name__(all_tests_passed__);
+    void test_fixture_name__(bool& all_tests_passed__, int& number_of_tests_run);\
+    test_fixture_name__(all_tests_passed__, number_of_tests_run);
 
-#define Define(test_fixture_name__) void test_fixture_name__(bool& all_tests_passed__)
+#define Define(test_fixture_name__) void test_fixture_name__(bool& all_tests_passed__, int& number_of_tests_run)
 
 #define It(test_name__) \
+    number_of_tests_run++;\
     std::cout << "\t - " << test_name__ << std::endl;\
     try\
 

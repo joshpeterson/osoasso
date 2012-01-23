@@ -5,6 +5,7 @@
 int main(int argc, char** argv)
 {
     bool all_tests_passed__ = true;
+    int number_of_tests_run = 0;
 
     clock_t start = std::clock();
 
@@ -37,7 +38,9 @@ int main(int argc, char** argv)
     double elapsed_time = double(std::clock() - start) / CLOCKS_PER_SEC;
 
     if (all_tests_passed__)
-        std::cout << "\nTests required " << elapsed_time << "s.\n";
+    {
+        std::cout << "\nRan " << number_of_tests_run << " tests in " << elapsed_time << "s.\n";
+    }
 
     return all_tests_passed__ ? 0 : 1;
 }
