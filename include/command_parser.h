@@ -12,6 +12,7 @@ class command_parser
 public:
     command_parser(const std::string& command);
     std::string tag() const;
+    bool has_tag() const;
     std::string name() const;
     std::vector<std::string> inputs() const;
 

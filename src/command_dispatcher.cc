@@ -32,7 +32,8 @@ std::pair<std::string, std::vector<std::string>> command_dispatcher::input(const
 
     std::string result_name = this->add_to_object_repository(result);
 
-    tags_.add(parser.tag(), result_name);
+    if (parser.has_tag())
+        tags_.add(parser.tag(), result_name);
 
     return std::make_pair(result_name, input_names);
 }

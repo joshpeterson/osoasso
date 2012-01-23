@@ -286,4 +286,18 @@ Define(CommandDispatcher)
 
         AssertElementsEqual(*expected_left, *test_command->left_argument());
     } Done
+
+    It("Does not add a tag if one is not represent in the input")
+    {
+        std::shared_ptr<mock_dispatcher_command> test_command = std::make_shared<mock_dispatcher_command>();
+
+        command_factory commands = { std::make_pair("foo", std::shared_ptr<command>(test_command)) };
+        object_repository<std::shared_ptr<const matrix<double>>> matrices;
+        tag_repository tags;
+
+        command_dispatcher dispatcher(commands, matrices, tags);
+        dispatcher.input("foo([[1 2]], [[3 5]])");
+
+        AssertEqual<size_t>(0, tags.count());
+    } Done
 }
