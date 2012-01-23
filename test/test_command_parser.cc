@@ -86,4 +86,16 @@ Define(CommandParser)
         command_parser test_parser(" tag =  \tfoo(1, [2 3])");
         AssertEqual("tag", test_parser.tag());
     } Done
+
+    It("Can report when a tag does not exist in the input.")
+    {
+        command_parser test_parser("foo(1, [2 3])");
+        AssertFalse(test_parser.has_tag());
+    } Done
+
+    It("Can report when a tag exists in the input.")
+    {
+        command_parser test_parser("tag = foo(1, [2 3])");
+        AssertTrue(test_parser.has_tag());
+    } Done
 }

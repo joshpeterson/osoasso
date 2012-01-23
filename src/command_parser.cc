@@ -45,6 +45,11 @@ std::string command_parser::tag() const
     return std::string();
 }
 
+bool command_parser::has_tag() const
+{
+    return has_tag_;
+}
+
 std::string command_parser::name() const
 {
     if (!command_segments_.empty())
