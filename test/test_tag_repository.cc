@@ -53,4 +53,21 @@ Define(TagRepository)
         tags.add("foo", "bar");
         AssertTrue(tags.contains("foo"));
     } Done
+
+    It("Returns a zero count when it has no tags")
+    {
+        tag_repository tags;
+
+        AssertEqual<size_t>(0, tags.count());
+    } Done
+
+    It("Returns the number of tags it has")
+    {
+        tag_repository tags;
+
+        tags.add("foo", "bar");
+        tags.add("foo1", "bar1");
+
+        AssertEqual<size_t>(2, tags.count());
+    } Done
 }

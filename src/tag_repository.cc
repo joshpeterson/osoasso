@@ -26,3 +26,8 @@ bool tag_repository::contains(const std::string& tag) const
 {
     return tags_.find(tag) != tags_.end();
 }
+
+size_t tag_repository::count() const
+{
+    return tags_.size();
+}
