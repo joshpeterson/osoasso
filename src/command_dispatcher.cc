@@ -16,7 +16,7 @@ command_dispatcher::command_dispatcher(const command_factory& commands,
 {
 }
 
-std::pair<std::string, std::vector<std::string>> command_dispatcher::input(const std::string& input)
+command_data command_dispatcher::input(const std::string& input)
 {
     command_parser parser(input);
     std::shared_ptr<command> command = commands_.get(parser.name());
@@ -32,10 +32,17 @@ std::pair<std::string, std::vector<std::string>> command_dispatcher::input(const
 
     std::string result_name = this->add_to_object_repository(result);
 
+    command_data command_result;
     if (parser.has_tag())
+    {
         tags_.add(parser.tag(), result_name);
+        command_result.tag = parser.tag();
+    }
 
-    return std::make_pair(result_name, input_names);
+    command_result.output = result_name;
+    command_result.inputs = input_names;
+
+    return command_result;
 }
 
 void command_dispatcher::validate_number_of_inputs(const std::string& command_name,

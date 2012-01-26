@@ -36,6 +36,15 @@ public class CommitDataFormatterTests
 	}
 	
 	@Test
+	public void FormatsOutputNameWithTrailingEqualSignIfNoMatrixIsPresent()
+	{
+		CommitData commit = new CommitData("CommitName#foo([[1 5]], [[1 3]])#me@bar.com#Some time GMT#OutputName#");
+		CommitDataFormatter formatter = new CommitDataFormatter(commit);
+		
+		assertEquals("OutputName", formatter.FormatOutputName());
+	}
+	
+	@Test
 	public void FormatsOutputMatrix()
 	{
 		CommitData commit = new CommitData("CommitName#foo([[1 5]], [[1 3]])#me@bar.com#Some time GMT#OutputName#[[1 2]]");

@@ -21,7 +21,10 @@ public class CommitDataFormatter
 
 	public String FormatOutputName()
 	{
-		return this.commit.getOutput() + " =";
+		if (this.commit.hasMatrix())
+			return this.commit.getOutput() + " =";
+		else
+			return this.commit.getOutput();
 	}
 
 	public String FormatOutputMatrix()
