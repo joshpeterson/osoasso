@@ -15,13 +15,29 @@ class command_parser;
 class command;
 class tag_repository;
 
+struct command_data
+{
+    command_data()
+    {
+    }
+
+    command_data(command_data&& other) : output(std::move(other.output)), inputs(std::move(other.inputs)),
+        tag(std::move(other.tag))
+    {
+    }
+
+    std::string output;
+    std::vector<std::string> inputs;
+    std::string tag;
+};
+
 class command_dispatcher
 {
 public:
     command_dispatcher(const command_factory& commands,
                        object_repository<std::shared_ptr<const matrix<double>>>& matrices,
                        tag_repository& tags);
-    std::pair<std::string, std::vector<std::string>> input(const std::string& input);
+    command_data input(const std::string& input);
 
 private:
     const command_factory& commands_;

@@ -21,7 +21,8 @@ struct commit_data
     }
 
     commit_data(commit_data&& other) : action(std::move(other.action)), user(std::move(other.user)),
-        time(std::move(other.time)), output(std::move(other.output)), name(std::move(other.name))
+        time(std::move(other.time)), output(std::move(other.output)), name(std::move(other.name)),
+        tag(std::move(other.tag))
     {
     }
 
@@ -30,6 +31,7 @@ struct commit_data
     std::string time;
     std::string output;
     std::string name;
+    std::string tag;
 };
 
 class project_manager
@@ -47,7 +49,7 @@ private:
     tag_repository tags_;
     tree<std::string> commit_tree_;
 
-    commit_data get_last_commit() const;
+    commit_data get_last_commit(std::string& tag) const;
 };
 
 }

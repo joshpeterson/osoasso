@@ -42,4 +42,16 @@ public class CommitDataTests {
 		CommitData commitData = new CommitData("CommitName#foo([[1 5]], [[1 3]])#me@bar.com#Some time GMT#OutputName#[[1 2]]");
 		assertEquals("[[1 2]]", commitData.getMatrix());
 	}
+	
+	@Test
+	public void HasMatrixReturnsTrueWhenAMatrixIsPresent() {
+		CommitData commitData = new CommitData("CommitName#foo([[1 5]], [[1 3]])#me@bar.com#Some time GMT#OutputName#[[1 2]]");
+		assertTrue(commitData.hasMatrix());
+	}
+	
+	@Test
+	public void HasMatrixReturnsFalseWhenAMatrixIsNotPresent() {
+		CommitData commitData = new CommitData("CommitName#foo([[1 5]], [[1 3]])#me@bar.com#Some time GMT#OutputName");
+		assertFalse(commitData.hasMatrix());
+	}
 }

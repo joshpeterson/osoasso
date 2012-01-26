@@ -47,4 +47,9 @@ public class CommitData
 	{
 		return commitStringParts[commitStringIndexes.MATRIX.ordinal()];
 	}
+
+	public boolean hasMatrix()
+	{
+		return commitStringParts.length > 5;
+	}
 }

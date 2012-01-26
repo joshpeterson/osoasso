@@ -30,6 +30,11 @@ public:
         data.time = "Some time GMT";
         data.output = "OutputName";
 
+        if (action.find("tag") != std::string::npos)
+        {
+            data.tag = "tag";
+        }
+
         return data;
     }
 
@@ -161,4 +166,15 @@ Define(Osoasso)
         AssertEqual(std::string("error#error action#Error message"), output.value.commit_string);
     } Done
 
+    It("Returns a commit string without the output when input is called with a tag")
+    {
+        mock_project_manager manager;
+        osoasso_instance instance(manager);
+
+        message_output output = instance.handle_message(
+                                        std::string(input_method_id) + ":tag = foo([[1 5]], [[1 3]]):me@bar.com");
+
+        AssertEqual(message_output_string, output.type);
+        AssertEqual(std::string("CommitName#tag = foo([[1 5]], [[1 3]])#me@bar.com#Some time GMT#OutputName"), output.value.commit_string);
+    } Done
 }

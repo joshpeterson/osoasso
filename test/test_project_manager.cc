@@ -61,6 +61,14 @@ Define(ProjectManager)
         AssertTrue(data.name != std::string());
     } Done
 
+    It("Returns the tag of the last commit")
+    {
+        project_manager manager;
+        commit_data data = manager.input("tag = add([[1]], [[1]])", "me");
+
+        AssertEqual(std::string("tag"), data.tag);
+    } Done
+
     It("Provides access to the matrix repository")
     {
         matrix<double> expected_output = { { 3.0, 7.0 } };

@@ -116,7 +116,8 @@ public class Osoasso extends Composite implements EntryPoint {
 			this.AddHTMLToResultsPanel(formatter.FormatAction());
 			this.AddHTMLToResultsPanel(formatter.FormatCommitMetaData());
 			this.AddHTMLToResultsPanel(formatter.FormatOutputName());
-			this.AddHTMLToResultsPanel(formatter.FormatOutputMatrix());
+			if (commit.hasMatrix())
+				this.AddHTMLToResultsPanel(formatter.FormatOutputMatrix());
 		}
 	}
 	
