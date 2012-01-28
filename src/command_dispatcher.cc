@@ -6,6 +6,7 @@
 #include "../include/matrix_parser.h"
 #include "../include/matrix_blobber.h"
 #include "../include/tag_repository.h"
+#include "../include/timer.h"
 
 using namespace osoasso;
 
@@ -30,9 +31,12 @@ command_data command_dispatcher::input(const std::string& input)
 
     auto result = command->call(matrix_inputs[0], matrix_inputs[1]);
 
-    std::string result_name = this->add_to_object_repository(result);
-
     command_data command_result;
+
+    timer command_timer;
+    std::string result_name = this->add_to_object_repository(result);
+    command_result.command_time = command_timer.elapsed();
+
     if (parser.has_tag())
     {
         tags_.add(parser.tag(), result_name);
