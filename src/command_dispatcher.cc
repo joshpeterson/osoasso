@@ -29,13 +29,13 @@ command_data command_dispatcher::input(const std::string& input)
 
     std::vector<std::string> input_names = this->add_inputs_to_matrix_repository(matrix_inputs);
 
-    auto result = command->call(matrix_inputs[0], matrix_inputs[1]);
-
     command_data command_result;
 
     timer command_timer;
-    std::string result_name = this->add_to_object_repository(result);
+    auto result = command->call(matrix_inputs[0], matrix_inputs[1]);
     command_result.command_time = command_timer.elapsed();
+
+    std::string result_name = this->add_to_object_repository(result);
 
     if (parser.has_tag())
     {

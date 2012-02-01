@@ -17,7 +17,7 @@ class tag_repository;
 
 struct command_data
 {
-    command_data()
+    command_data() : command_time(0.0)
     {
     }
 

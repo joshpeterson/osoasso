@@ -16,7 +16,7 @@ namespace osoasso
 
 struct commit_data
 {
-    commit_data()
+    commit_data() : command_time(0.0)
     {
     }
 

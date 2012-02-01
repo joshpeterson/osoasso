@@ -29,7 +29,7 @@ public:
         data.name = "CommitName";
         data.time = "Some time GMT";
         data.output = "OutputName";
-        data.command_time = 3.45;
+        data.command_time = 0.469;
 
         if (action.find("tag") != std::string::npos)
         {
@@ -122,7 +122,7 @@ Define(Osoasso)
                                         std::string(input_method_id) + ":foo([[1 5]], [[1 3]]):me@bar.com");
 
         AssertEqual(message_output_string, output.type);
-        AssertEqual(std::string("CommitName#foo([[1 5]], [[1 3]])#me@bar.com#Some time GMT#3.45#OutputName#<table id=\"matrix\"><tr><td>|</td><td>1</td><td>2</td><td>|</td></tr></table>"), output.value.commit_string);
+        AssertEqual(std::string("CommitName#foo([[1 5]], [[1 3]])#me@bar.com#Some time GMT#0.469#OutputName#<table id=\"matrix\"><tr><td>|</td><td>1</td><td>2</td><td>|</td></tr></table>"), output.value.commit_string);
     } Done
 
     It("Calls the project manager get matrix method")
@@ -176,7 +176,7 @@ Define(Osoasso)
                                         std::string(input_method_id) + ":tag = foo([[1 5]], [[1 3]]):me@bar.com");
 
         AssertEqual(message_output_string, output.type);
-        AssertEqual(std::string("CommitName#tag = foo([[1 5]], [[1 3]])#me@bar.com#Some time GMT#3.45#OutputName"), output.value.commit_string);
+        AssertEqual(std::string("CommitName#tag = foo([[1 5]], [[1 3]])#me@bar.com#Some time GMT#0.469#OutputName"), output.value.commit_string);
     } Done
 
     It("Returns a time for the command when input is called")
@@ -188,6 +188,6 @@ Define(Osoasso)
                                         std::string(input_method_id) + ":tag = foo([[1 5]], [[1 3]]):me@bar.com");
 
         AssertEqual(message_output_string, output.type);
-        AssertEqual(std::string("CommitName#tag = foo([[1 5]], [[1 3]])#me@bar.com#Some time GMT#3.45#OutputName"), output.value.commit_string);
+        AssertEqual(std::string("CommitName#tag = foo([[1 5]], [[1 3]])#me@bar.com#Some time GMT#0.469#OutputName"), output.value.commit_string);
     } Done
 }
