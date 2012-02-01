@@ -69,6 +69,14 @@ Define(ProjectManager)
         AssertEqual(std::string("tag"), data.tag);
     } Done
 
+    It("Returns the time of the command")
+    {
+        project_manager manager;
+        commit_data data = manager.input("tag = add([[1]], [[1]])", "me");
+
+        AssertTrue(data.command_time >= 0 && data.command_time < 1);
+    } Done
+
     It("Provides access to the matrix repository")
     {
         matrix<double> expected_output = { { 3.0, 7.0 } };

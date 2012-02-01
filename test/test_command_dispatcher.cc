@@ -313,4 +313,19 @@ Define(CommandDispatcher)
 
         AssertEqual<size_t>(0, tags.count());
     } Done
+
+    It("Returns the time to execute the command")
+    {
+        std::shared_ptr<mock_dispatcher_command> test_command = std::make_shared<mock_dispatcher_command>();
+
+        command_factory commands = { std::make_pair("foo", std::shared_ptr<command>(test_command)) };
+        object_repository<std::shared_ptr<const matrix<double>>> matrices;
+        tag_repository tags;
+
+        command_dispatcher dispatcher(commands, matrices, tags);
+        command_data data = dispatcher.input("foo([[1 2]], [[3 5]])");
+
+        // Verify that we at least get a non-negative time less than 1 second.
+        AssertTrue(data.command_time >= 0 && data.command_time < 1);
+    } Done
 }

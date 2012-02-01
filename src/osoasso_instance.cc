@@ -36,7 +36,8 @@ message_output osoasso_instance::handle_message(const std::string& message)
 
                     std::stringstream output_commit_string;
                     output_commit_string << data.name << "#" << data.action << "#" << data.user
-                                         << "#" << data.time << "#" << data.output;
+                                         << "#" << data.time << "#" << data.command_time << "#"
+                                         << data.output;
 
                     if (data.tag.size() == 0)
                     {

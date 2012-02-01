@@ -1,8 +1,8 @@
 #include <vector>
 #include <iostream>
 #include "../test_harness/test.h"
-#include "../test/timer.h"
 #include "../test/million_doubles.h"
+#include "../include/timer.h"
 #include "../include/blob.h"
 
 using namespace osoasso;

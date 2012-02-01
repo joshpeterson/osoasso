@@ -16,13 +16,13 @@ namespace osoasso
 
 struct commit_data
 {
-    commit_data()
+    commit_data() : command_time(0.0)
     {
     }
 
     commit_data(commit_data&& other) : action(std::move(other.action)), user(std::move(other.user)),
         time(std::move(other.time)), output(std::move(other.output)), name(std::move(other.name)),
-        tag(std::move(other.tag))
+        tag(std::move(other.tag)), command_time(std::move(other.command_time))
     {
     }
 
@@ -32,6 +32,7 @@ struct commit_data
     std::string output;
     std::string name;
     std::string tag;
+    double command_time;
 };
 
 class project_manager
@@ -49,7 +50,7 @@ private:
     tag_repository tags_;
     tree<std::string> commit_tree_;
 
-    commit_data get_last_commit(std::string& tag) const;
+    commit_data get_last_commit(std::string& tag, double command_time) const;
 };
 
 }

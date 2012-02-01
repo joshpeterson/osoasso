@@ -1,13 +1,14 @@
 #include <iostream>
 #include <ctime>
 #include "test.h"
+#include "../include/timer.h"
 
 int main(int argc, char** argv)
 {
     bool all_tests_passed__ = true;
     int number_of_tests_run = 0;
 
-    clock_t start = std::clock();
+    osoasso::timer test_timer;
 
     // Add RUN_TEST_FIXTURE statements here to run tests.
     RUN_TEST_FIXTURE(Blob)
@@ -35,11 +36,9 @@ int main(int argc, char** argv)
     RUN_TEST_FIXTURE(Multiply)
     RUN_TEST_FIXTURE(Random)
 
-    double elapsed_time = double(std::clock() - start) / CLOCKS_PER_SEC;
-
     if (all_tests_passed__)
     {
-        std::cout << "\nRan " << number_of_tests_run << " tests in " << elapsed_time << "s.\n";
+        std::cout << "\nRan " << number_of_tests_run << " tests in " << test_timer.elapsed() << "s.\n";
     }
 
     return all_tests_passed__ ? 0 : 1;

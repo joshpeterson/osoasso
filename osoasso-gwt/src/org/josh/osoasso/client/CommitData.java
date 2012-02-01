@@ -8,6 +8,7 @@ public class CommitData
 		ACTION, 
 		USER,
 		TIME,
+		COMMAND_ELAPSED_TIME,
 		OUTPUT,
 		MATRIX
 	}
@@ -50,6 +51,10 @@ public class CommitData
 
 	public boolean hasMatrix()
 	{
-		return commitStringParts.length > 5;
+		return commitStringParts.length > 6;
+	}
+
+	public String getCommandElapsedTime() {
+		return commitStringParts[commitStringIndexes.COMMAND_ELAPSED_TIME.ordinal()];
 	}
 }
