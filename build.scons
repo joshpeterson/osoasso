@@ -55,26 +55,15 @@ test_sources = ['test_harness/test.cc',
                 'test/test_add.cc',
                 'test/test_subtract.cc',
                 'test/test_multiply.cc',
-                'test/test_random.cc',
-                'src/sha1.cc',
-                'src/commit.cc',
-                'src/tag_repository.cc',
-                'src/command_parser.cc',
-                'src/command_factory.cc',
-                'src/command_dispatcher.cc',
-                'src/commit_factory.cc',
-                'src/project_manager.cc',
-                'src/osoasso_instance.cc',
-                'src/add.cc',
-                'src/subtract.cc',
-                'src/multiply.cc',
-                'src/random.cc']
+                'test/test_random.cc']
+
+test_sources += sources
 
 stress_test_sources = ['test_harness/stress_test.cc',
 					   'test/stress_test_blob.cc',
-                       'test/stress_test_multiply.cc',
-				   	   'src/sha1.cc',
-                       'src/multiply.cc']
+                       'test/stress_test_multiply.cc']
+
+stress_test_sources += sources
                         
 nacl_env.AllNaClModules(sources, 'osoasso')
 
