@@ -8,6 +8,46 @@ import make_nacl_env
 import nacl_utils
 import os
 
+def LocalNaClTestProgram(env,
+                    test_sources,
+                    arch_spec,
+                    module_name='nacl_test',
+                    target_name='test'):
+  '''This is a copy of the nacl tools method with some modifications:
+    - Build in release instead of debug
+  '''
+
+  arch, subarch = nacl_utils.GetArchFromSpec(arch_spec)
+  # Create multi-level dictionary for sel_ldr binary name.
+  NACL_SEL_LDR = {'x86' :
+                   {'32': '$NACL_SEL_LDR32',
+                    '64': '$NACL_SEL_LDR64'
+                   }
+                 }
+  NACL_IRT_CORE = {'x86' :
+                    {'32': '$NACL_IRT_CORE32',
+                     '64': '$NACL_IRT_CORE64'
+                    }
+                  }
+  arch_sel_ldr = NACL_SEL_LDR[arch][subarch]
+  # if |arch| and |subarch| are not found, a KeyError exception will be
+  # thrown, which will generate a stack trace for debugging.
+  test_program = nacl_utils.MakeNaClModuleEnvironment(
+                     env,
+                     test_sources,
+                     module_name,
+                     arch_spec,
+                     is_debug=False,
+                     dir_prefix='test_')
+  test_node = env.Alias(target_name,
+                        source=test_program,
+                        action=arch_sel_ldr +
+                               ' -B %s' % NACL_IRT_CORE[arch][subarch] +
+                               ' $SOURCE')
+  # Tell SCons that |test_node| never goes out of date, so that you don't see
+  # '<test_node> is up to date.'
+  env.AlwaysBuild(test_node)
+
 nacl_env = make_nacl_env.NaClEnvironment(use_c_plus_plus_libs=True, nacl_platform='pepper_15')
 nacl_env.Append(
     # Add a CPPPATH that enables the full-path #include directives, such as
@@ -68,25 +108,25 @@ stress_test_sources += sources
 nacl_env.AllNaClModules(sources, 'osoasso')
 
 nacl_test_32 = nacl_env.Clone()
-nacl_test_32.NaClTestProgram(test_sources,
+LocalNaClTestProgram(nacl_test_32, test_sources,
                              nacl_utils.ARCH_SPECS['x86-32'],
                              module_name='osoasso_test',
                              target_name='test32')
 
 nacl_test_64 = nacl_env.Clone()
-nacl_test_64.NaClTestProgram(test_sources,
+LocalNaClTestProgram(nacl_test_64, test_sources,
                              nacl_utils.ARCH_SPECS['x86-64'],
                              module_name='osoasso_test',
                              target_name='test64')
 
 nacl_stress_test_32 = nacl_env.Clone()
-nacl_stress_test_32.NaClTestProgram(stress_test_sources,
+LocalNaClTestProgram(nacl_stress_test_32, stress_test_sources,
                              nacl_utils.ARCH_SPECS['x86-32'],
                              module_name='osoasso_stress_test',
                              target_name='stress_test32')
 
 nacl_stress_test_64 = nacl_env.Clone()
-nacl_stress_test_64.NaClTestProgram(stress_test_sources,
+LocalNaClTestProgram(nacl_stress_test_64, stress_test_sources,
                              nacl_utils.ARCH_SPECS['x86-64'],
                              module_name='osoasso_stress_test',
                              target_name='stress_test64')
