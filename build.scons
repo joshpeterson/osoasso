@@ -8,6 +8,61 @@ import make_nacl_env
 import nacl_utils
 import os
 
+use_c_plus_plus_libs=True
+nacl_platform='pepper_15'
+cpp_path = [os.path.dirname(os.path.dirname(os.getcwd()))]
+cc_flags = ['-Wall', '-Wno-long-long', '-pthread', '-Werror', '-std=c++0x', '-O2']
+
+source_info = [('src/osoasso.cc', ["deploy"]),
+('src/osoasso_instance.cc', ["deploy", "test"]),
+('src/sha1.cc', ["deploy", "test", "stress"]),
+('src/commit.cc', ["deploy", "test"]),
+('src/tag_repository.cc', ["deploy", "test"]),
+('src/command_parser.cc', ["deploy", "test"]),
+('src/command_factory.cc', ["deploy", "test"]),
+('src/command_dispatcher.cc', ["deploy", "test"]),
+('src/commit_factory.cc', ["deploy", "test"]),
+('src/project_manager.cc', ["deploy", "test"]),
+('src/add.cc', ["deploy", "test"]),
+('src/subtract.cc', ["deploy", "test"]),
+('src/multiply.cc', ["deploy", "test", "stress"]),
+('src/random.cc', ["deploy", "test"]),
+('test_harness/test.cc', ["test", "stress"]),
+('test/test_blob.cc', ["test"]),
+('test/test_sha1.cc', ["test"]),
+('test/test_commit.cc', ["test"]),
+('test/test_object_repository.cc', ["test"]),
+('test/test_tag_repository.cc', ["test"]),
+('test/test_command_parser.cc', ["test"]),
+('test/test_matrix.cc', ["test"]),
+('test/test_matrix_iterator.cc', ["test"]),
+('test/test_matrix_parser.cc', ["test"]),
+('test/test_matrix_builder.cc', ["test"]),
+('test/test_matrix_blobber.cc', ["test"]),
+('test/test_matrix_iterator_with_size.cc', ["test"]),
+('test/test_matrix_formatter.cc', ["test"]),
+('test/test_double_equal.cc', ["test"]),
+('test/test_command_factory.cc', ["test"]),
+('test/test_command_dispatcher.cc', ["test"]),
+('test/test_tree.cc', ["test"]),
+('test/test_commit_factory.cc', ["test"]),
+('test/test_project_manager.cc', ["test"]),
+('test/test_osoasso_instance.cc', ["test"]),
+('test/test_add.cc', ["test"]),
+('test/test_subtract.cc', ["test"]),
+('test/test_multiply.cc', ["test"]),
+('test/test_random.cc', ["test"]),
+('test/stress_test_blob.cc', ["stress"]),
+('test/stress_test_multiply.cc', ["stress"])]
+
+def MakeSourceList(source_info, build_type):
+    sources = []
+    for entry in source_info:
+        if build_type in entry[1]:
+            sources.append(entry[0])
+
+    return sources
+
 def LocalNaClTestProgram(env,
                     test_sources,
                     arch_spec,
@@ -48,64 +103,14 @@ def LocalNaClTestProgram(env,
   # '<test_node> is up to date.'
   env.AlwaysBuild(test_node)
 
-nacl_env = make_nacl_env.NaClEnvironment(use_c_plus_plus_libs=True, nacl_platform='pepper_15')
-nacl_env.Append(
-    # Add a CPPPATH that enables the full-path #include directives, such as
-    # #include "examples/sine_synth/sine_synth.h"
-    CPPPATH=[os.path.dirname(os.path.dirname(os.getcwd()))],
-    CCFLAGS=['-Wall', '-Wno-long-long', '-pthread', '-Werror', '-std=c++0x'],
-   )
+nacl_env = make_nacl_env.NaClEnvironment(use_c_plus_plus_libs, nacl_platform)
+nacl_env.Append(CPPPATH=cpp_path, CCFLAGS=cc_flags)
 
-sources = ['src/osoasso.cc',
-           'src/osoasso_instance.cc',
-           'src/sha1.cc',
-           'src/commit.cc',
-           'src/tag_repository.cc',
-           'src/command_parser.cc',
-           'src/command_factory.cc',
-           'src/command_dispatcher.cc',
-           'src/commit_factory.cc',
-           'src/project_manager.cc',
-           'src/add.cc',
-           'src/subtract.cc',
-           'src/multiply.cc',
-           'src/random.cc']
+deploy_sources = MakeSourceList(source_info, 'deploy')
+test_sources = MakeSourceList(source_info, 'test')
+stress_test_sources = MakeSourceList(source_info, 'stress')
 
-test_sources = ['test_harness/test.cc',
-                'test/test_blob.cc',
-                'test/test_sha1.cc',
-                'test/test_commit.cc',
-                'test/test_object_repository.cc',
-                'test/test_tag_repository.cc',
-                'test/test_command_parser.cc',
-                'test/test_matrix.cc',
-                'test/test_matrix_iterator.cc',
-                'test/test_matrix_parser.cc',
-                'test/test_matrix_builder.cc',
-                'test/test_matrix_blobber.cc',
-                'test/test_matrix_iterator_with_size.cc',
-                'test/test_matrix_formatter.cc',
-                'test/test_double_equal.cc',
-                'test/test_command_factory.cc',
-                'test/test_command_dispatcher.cc',
-                'test/test_tree.cc',
-                'test/test_commit_factory.cc',
-                'test/test_project_manager.cc',
-                'test/test_osoasso_instance.cc',
-                'test/test_add.cc',
-                'test/test_subtract.cc',
-                'test/test_multiply.cc',
-                'test/test_random.cc']
-
-test_sources += sources
-
-stress_test_sources = ['test_harness/stress_test.cc',
-					   'test/stress_test_blob.cc',
-                       'test/stress_test_multiply.cc']
-
-stress_test_sources += sources
-                        
-nacl_env.AllNaClModules(sources, 'osoasso')
+nacl_env.AllNaClModules(deploy_sources, 'osoasso')
 
 nacl_test_32 = nacl_env.Clone()
 LocalNaClTestProgram(nacl_test_32, test_sources,
