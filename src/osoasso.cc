@@ -29,6 +29,33 @@
 namespace osoasso
 {
 
+// Keep the lock class in this file so that it doesn't get used elsewhere (keep the threading exposure small)
+class scoped_lock
+{
+public:
+    explicit scoped_lock(pthread_mutex_t* mutex) : mutex_(mutex)
+    {
+        if (!pthread_mutex_lock(mutex_))
+        {
+            mutex_ = NULL;
+        }
+    }
+
+    ~scoped_lock()
+    {
+        if (mutex_)
+            pthread_mutex_unlock(mutex_);
+    }
+
+    bool is_valid() const
+    {
+        return mutex_ != NULL;
+    }
+
+private:
+    pthread_mutex_t* mutex_;
+};
+
 /// The Instance class.  One of these exists for each instance of your NaCl
 /// module on the web page.  The browser will ask the Module object to create
 /// a new Instance for each occurrence of the <embed> tag that has these
@@ -40,14 +67,25 @@ namespace osoasso
 class OsoassoInstance : public pp::Instance
 {
 public:
-    explicit OsoassoInstance(PP_Instance instance) : pp::Instance(instance), instance(manager) {}
-    virtual ~OsoassoInstance() {}
+    explicit OsoassoInstance(PP_Instance instance) : pp::Instance(instance), instance(manager)
+    {
+        if (!pthread_mutex_init(&command_mutex_, NULL))
+        {
+            throw std::runtime_error("Unable to create command mutex - this is a serious problem.");
+        }
+    }
+
+    virtual ~OsoassoInstance()
+    {
+        pthread_mutex_destroy(&command_mutex_);
+    }
 
     virtual void HandleMessage(const pp::Var& var_message);
 
 private:
     project_manager manager;
     osoasso_instance instance;
+    pthread_mutex_t command_mutex_;
 };
 
 void OsoassoInstance::HandleMessage(const pp::Var& var_message)
