@@ -1,19 +1,3 @@
-/// @file osoasso.cc
-/// This example demonstrates loading, running and scripting a very simple NaCl
-/// module.  To load the NaCl module, the browser first looks for the
-/// CreateModule() factory method (at the end of this file).  It calls
-/// CreateModule() once to load the module code from your .nexe.  After the
-/// .nexe code is loaded, CreateModule() is not called again.
-///
-/// Once the .nexe code is loaded, the browser than calls the CreateInstance()
-/// method on the object returned by CreateModule().  It calls CreateInstance()
-/// each time it encounters an <embed> tag that references your NaCl module.
-///
-/// When the browser encounters JavaScript that references your NaCl module, it
-/// calls the GetInstanceObject() method on the object returned from
-/// CreateInstance().  In this example, the returned object is a subclass of
-/// ScriptableObject, which handles the scripting support.
-
 #include <ppapi/cpp/dev/scriptable_object_deprecated.h>
 #include <ppapi/cpp/instance.h>
 #include <ppapi/cpp/module.h>
@@ -24,8 +8,6 @@
 #include "../include/osoasso_instance.h"
 #include "../include/project_manager.h"
 
-/// These are the method names as JavaScript sees them.  Add any methods for
-/// your class here.
 namespace osoasso
 {
 
@@ -56,14 +38,6 @@ private:
     pthread_mutex_t* mutex_;
 };
 
-/// The Instance class.  One of these exists for each instance of your NaCl
-/// module on the web page.  The browser will ask the Module object to create
-/// a new Instance for each occurrence of the <embed> tag that has these
-/// attributes:
-/// <pre>
-///     type="application/x-nacl"
-///     nacl="hello_world.nmf"
-/// </pre>
 class OsoassoInstance : public pp::Instance
 {
 public:
@@ -117,10 +91,6 @@ void OsoassoInstance::HandleMessage(const pp::Var& var_message)
     }
 }
 
-/// The Module class.  The browser calls the CreateInstance() method to create
-/// an instance of your NaCl module on the web page.  The browser creates a new
-/// instance for each <embed> tag with
-/// <code>type="application/x-nacl"</code>.
 class OsoassoModule : public pp::Module
 {
 public:
@@ -134,7 +104,6 @@ public:
 };
 
 }  // namespace osoasso
-
 
 namespace pp
 {
