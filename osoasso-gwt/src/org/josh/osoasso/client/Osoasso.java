@@ -95,11 +95,14 @@ public class Osoasso extends Composite implements EntryPoint {
 			CallOsoassoNaclModuleInputMethod(naclModule, inputField.getText());
 			
 		    scrollPanel.scrollToBottom();
+		    
+		    inputField.setReadOnly(true);
 		}
 	}
 	
 	public void onNaclMessage(String naclMessage)
 	{
+		inputField.setReadOnly(false);
 		if (naclMessage.startsWith("error"))
 		{
 			ErrorData error = new ErrorData(naclMessage);
