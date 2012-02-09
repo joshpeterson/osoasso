@@ -1,88 +1,100 @@
-/// @file osoasso.cc
-/// This example demonstrates loading, running and scripting a very simple NaCl
-/// module.  To load the NaCl module, the browser first looks for the
-/// CreateModule() factory method (at the end of this file).  It calls
-/// CreateModule() once to load the module code from your .nexe.  After the
-/// .nexe code is loaded, CreateModule() is not called again.
-///
-/// Once the .nexe code is loaded, the browser than calls the CreateInstance()
-/// method on the object returned by CreateModule().  It calls CreateInstance()
-/// each time it encounters an <embed> tag that references your NaCl module.
-///
-/// When the browser encounters JavaScript that references your NaCl module, it
-/// calls the GetInstanceObject() method on the object returned from
-/// CreateInstance().  In this example, the returned object is a subclass of
-/// ScriptableObject, which handles the scripting support.
-
 #include <ppapi/cpp/dev/scriptable_object_deprecated.h>
 #include <ppapi/cpp/instance.h>
 #include <ppapi/cpp/module.h>
 #include <ppapi/cpp/var.h>
+#include <ppapi/cpp/core.h>
+#include <ppapi/cpp/completion_callback.h>
 #include <cstdio>
 #include <string>
 #include <stdexcept>
+#include <deque>
 #include "../include/osoasso_instance.h"
 #include "../include/project_manager.h"
+#include "../include/scoped_lock.h"
+#include "../include/locking_ptr.h"
 
-/// These are the method names as JavaScript sees them.  Add any methods for
-/// your class here.
 namespace osoasso
 {
 
-/// The Instance class.  One of these exists for each instance of your NaCl
-/// module on the web page.  The browser will ask the Module object to create
-/// a new Instance for each occurrence of the <embed> tag that has these
-/// attributes:
-/// <pre>
-///     type="application/x-nacl"
-///     nacl="hello_world.nmf"
-/// </pre>
 class OsoassoInstance : public pp::Instance
 {
 public:
-    explicit OsoassoInstance(PP_Instance instance) : pp::Instance(instance), instance(manager) {}
-    virtual ~OsoassoInstance() {}
+    explicit OsoassoInstance(PP_Instance instance) : pp::Instance(instance), instance(manager)
+    {
+        // Don't check the error code, it seems that it is non-zero even on success.
+        pthread_mutex_init(&message_mutex_, NULL);
+    }
 
-    virtual void HandleMessage(const pp::Var& var_message);
+    virtual ~OsoassoInstance()
+    {
+        pthread_join(command_thread_, NULL);
+        pthread_mutex_destroy(&message_mutex_);
+    }
+
+    virtual void HandleMessage(const pp::Var& var_message)
+    {
+        if (!var_message.is_string())
+        {
+            return;
+        }
+
+        std::string message = var_message.AsString();
+
+        locking_ptr<std::string> locked_message(message_, message_mutex_);
+        *locked_message = message;
+
+        pthread_create(&command_thread_, NULL, &CallRunCommand, this);
+    }
 
 private:
     project_manager manager;
     osoasso_instance instance;
+
+    pthread_t command_thread_;
+    pthread_mutex_t message_mutex_;
+    volatile std::string message_;
+
+    void RunCommand()
+    {
+        {
+            locking_ptr<std::string> locked_message(message_, message_mutex_);
+            try
+            {
+                message_output output = instance.handle_message(*locked_message);
+
+                if (output.type == message_output_string)
+                {
+                    *locked_message = output.value.commit_string;
+                }
+                else
+                {
+                    // Only handle strings for now.
+                }
+            }
+            catch (std::exception& e)
+            {
+                *locked_message = e.what();
+            }
+        }
+
+        pp::Core* core = pp::Module::Get()->core();
+        core->CallOnMainThread(0, pp::CompletionCallback(PostMessageCallback, this));
+    }
+
+    static void* CallRunCommand(void* This)
+    {
+        static_cast<OsoassoInstance*>(This)->RunCommand();
+        return NULL;
+    }
+
+    static void PostMessageCallback(void* This, int32_t /*result*/)
+    {
+        OsoassoInstance* instance = static_cast<OsoassoInstance*>(This);
+        locking_ptr<std::string> locked_message(instance->message_, instance->message_mutex_);
+        instance->PostMessage(pp::Var(*locked_message));
+    }
 };
 
-void OsoassoInstance::HandleMessage(const pp::Var& var_message)
-{
-    if (!var_message.is_string())
-    {
-        return;
-    }
-
-    std::string message = var_message.AsString();
-
-    try
-    {
-        message_output output = instance.handle_message(message);
-
-        pp::Var return_var;
-        if (output.type == message_output_string)
-        {
-            PostMessage(pp::Var(output.value.commit_string));
-        }
-        else
-        {
-            PostMessage(pp::Var(output.value.matrix_value));
-        }
-    }
-    catch (std::exception& e)
-    {
-        PostMessage(pp::Var(e.what()));
-    }
-}
-
-/// The Module class.  The browser calls the CreateInstance() method to create
-/// an instance of your NaCl module on the web page.  The browser creates a new
-/// instance for each <embed> tag with
-/// <code>type="application/x-nacl"</code>.
 class OsoassoModule : public pp::Module
 {
 public:
@@ -96,7 +108,6 @@ public:
 };
 
 }  // namespace osoasso
-
 
 namespace pp
 {
