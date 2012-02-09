@@ -174,7 +174,7 @@ public class Osoasso extends Composite implements EntryPoint {
 	 /*-{
 		    if (naclModule != null)
 		    {
-		    	naclModule.postMessage('input:' + input + ":me@it.com");
+		    	naclModule.postMessage('input:' + input + ":Unknown User");
 		    }
 		    else
 		    {
