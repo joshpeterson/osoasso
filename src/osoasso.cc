@@ -10,64 +10,11 @@
 #include <deque>
 #include "../include/osoasso_instance.h"
 #include "../include/project_manager.h"
+#include "../include/scoped_lock.h"
+#include "../include/locking_ptr.h"
 
 namespace osoasso
 {
-
-// Keep the lock class in this file so that it doesn't get used elsewhere (keep the threading exposure small)
-class scoped_lock
-{
-public:
-    explicit scoped_lock(pthread_mutex_t mutex) : mutex_(&mutex)
-    {
-        if (!pthread_mutex_lock(mutex_))
-        {
-            mutex_ = NULL;
-        }
-    }
-
-    ~scoped_lock()
-    {
-        if (mutex_)
-            pthread_mutex_unlock(mutex_);
-    }
-
-    bool is_valid() const
-    {
-        return mutex_ != NULL;
-    }
-
-private:
-    pthread_mutex_t* mutex_;
-};
-
-// From Andrei Alexandrescu in Dr. Dobbs: http://drdobbs.com/cpp/184403766
-template<typename T>
-class locking_ptr
-{
-public:
-    locking_ptr(volatile T& object_to_lock, pthread_mutex_t& mutex) :
-        locked_object_(const_cast<T*>(&object_to_lock)), lock_(mutex)
-    {
-    }
-
-    T& operator*()
-    {
-        return *locked_object_;
-    }
-
-    T* operator->()
-    {
-        return locked_object_;
-    }
-    
-private:
-    T* locked_object_;
-    scoped_lock lock_;
-
-    locking_ptr(const locking_ptr&);
-    locking_ptr& operator=(const locking_ptr&);
-};
 
 class OsoassoInstance : public pp::Instance
 {
@@ -84,7 +31,20 @@ public:
         pthread_mutex_destroy(&message_mutex_);
     }
 
-    virtual void HandleMessage(const pp::Var& var_message);
+    virtual void HandleMessage(const pp::Var& var_message)
+    {
+        if (!var_message.is_string())
+        {
+            return;
+        }
+
+        std::string message = var_message.AsString();
+
+        locking_ptr<std::string> locked_message(message_, message_mutex_);
+        *locked_message = message;
+
+        pthread_create(&command_thread_, NULL, &CallRunCommand, this);
+    }
 
 private:
     project_manager manager;
@@ -94,7 +54,32 @@ private:
     pthread_mutex_t message_mutex_;
     volatile std::string message_;
 
-    void RunCommand();
+    void RunCommand()
+    {
+        {
+            locking_ptr<std::string> locked_message(message_, message_mutex_);
+            try
+            {
+                message_output output = instance.handle_message(*locked_message);
+
+                if (output.type == message_output_string)
+                {
+                    *locked_message = output.value.commit_string;
+                }
+                else
+                {
+                    // Only handle strings for now.
+                }
+            }
+            catch (std::exception& e)
+            {
+                *locked_message = e.what();
+            }
+        }
+
+        pp::Core* core = pp::Module::Get()->core();
+        core->CallOnMainThread(0, pp::CompletionCallback(PostMessageCallback, this));
+    }
 
     static void* CallRunCommand(void* This)
     {
@@ -109,48 +94,6 @@ private:
         instance->PostMessage(pp::Var(*locked_message));
     }
 };
-
-void OsoassoInstance::HandleMessage(const pp::Var& var_message)
-{
-    if (!var_message.is_string())
-    {
-        return;
-    }
-
-    std::string message = var_message.AsString();
-
-    locking_ptr<std::string> locked_message(message_, message_mutex_);
-    *locked_message = message;
-
-    pthread_create(&command_thread_, NULL, &CallRunCommand, this);
-}
-
-void OsoassoInstance::RunCommand()
-{
-    {
-        locking_ptr<std::string> locked_message(message_, message_mutex_);
-        try
-        {
-            message_output output = instance.handle_message(*locked_message);
-
-            if (output.type == message_output_string)
-            {
-                *locked_message = output.value.commit_string;
-            }
-            else
-            {
-                // Only handle strings for now.
-            }
-        }
-        catch (std::exception& e)
-        {
-            *locked_message = e.what();
-        }
-    }
-
-    pp::Core* core = pp::Module::Get()->core();
-    core->CallOnMainThread(0, pp::CompletionCallback(PostMessageCallback, this));
-}
 
 class OsoassoModule : public pp::Module
 {
