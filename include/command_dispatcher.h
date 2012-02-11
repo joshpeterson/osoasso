@@ -52,6 +52,8 @@ private:
     std::vector<std::string> add_inputs_to_matrix_repository(
                                 const std::vector<std::shared_ptr<const osoasso::matrix<double>>>& inputs);
     std::string add_to_object_repository(std::shared_ptr<const osoasso::matrix<double>> value);
+
+    bool is_number(const std::string& input) const;
 };
 
 }
