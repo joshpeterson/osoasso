@@ -328,4 +328,44 @@ Define(CommandDispatcher)
         // Verify that we at least get a non-negative time less than 1 second.
         AssertTrue(data.command_time >= 0 && data.command_time < 1);
     } Done
+
+    It("Creates a new matrix for a single integer input")
+    {
+        std::shared_ptr<mock_dispatcher_command> test_command = std::make_shared<mock_dispatcher_command>();
+
+        command_factory commands = { std::make_pair("foo", std::shared_ptr<command>(test_command)) };
+
+        auto expected_left = std::shared_ptr<const matrix<double>>(new matrix<double>({{2}}));
+
+        matrix_blobber<double> blobber;
+        std::shared_ptr<const blob<double>> blob_left = blobber.make_blob(expected_left);
+
+        object_repository<std::shared_ptr<const matrix<double>>> matrices;
+        tag_repository tags;
+
+        command_dispatcher dispatcher(commands, matrices, tags);
+        dispatcher.input("foo(2, [[3 5]])");
+
+        AssertElementsEqual(*expected_left, *test_command->left_argument());
+    } Done
+
+    It("Creates a new matrix for a single double input")
+    {
+        std::shared_ptr<mock_dispatcher_command> test_command = std::make_shared<mock_dispatcher_command>();
+
+        command_factory commands = { std::make_pair("foo", std::shared_ptr<command>(test_command)) };
+
+        auto expected_left = std::shared_ptr<const matrix<double>>(new matrix<double>({{2.3}}));
+
+        matrix_blobber<double> blobber;
+        std::shared_ptr<const blob<double>> blob_left = blobber.make_blob(expected_left);
+
+        object_repository<std::shared_ptr<const matrix<double>>> matrices;
+        tag_repository tags;
+
+        command_dispatcher dispatcher(commands, matrices, tags);
+        dispatcher.input("foo(2.3, [[3 5]])");
+
+        AssertElementsEqual(*expected_left, *test_command->left_argument());
+    } Done
 }

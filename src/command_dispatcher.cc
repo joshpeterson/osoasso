@@ -8,6 +8,8 @@
 #include "../include/tag_repository.h"
 #include "../include/timer.h"
 
+#include <iostream>
+
 using namespace osoasso;
 
 command_dispatcher::command_dispatcher(const command_factory& commands,
@@ -83,13 +85,24 @@ std::vector<std::shared_ptr<const matrix<double>>> command_dispatcher::unpack_ar
     {
         if (i->length() != 0 && (*i)[0] != '[')
         {
-            std::string matrix_name = *i;
             if (tags_.contains(*i))
             {
-                matrix_name = tags_.get(*i);
+                // First look for a tag name
+                matrix_inputs.push_back(matrices_.get(tags_.get(*i)));
             }
-
-            matrix_inputs.push_back(matrices_.get(matrix_name));
+            else if (is_number(*i))
+            {
+                // Then see if the input is a single number
+                std::istringstream to_value(*i);
+                double value;
+                to_value >> value;
+                matrix_inputs.push_back(std::shared_ptr<const matrix<double>>(new matrix<double>({{value}})));
+            }
+            else
+            {
+                // Finally the input may be a matrix SHA1 name
+                matrix_inputs.push_back(matrices_.get(*i));
+            }
         }
         else
         {
@@ -120,4 +133,17 @@ std::string command_dispatcher::add_to_object_repository(std::shared_ptr<const m
     matrices_.add(std::make_pair(blob->name(), value));
 
     return blob->name();
+}
+
+bool command_dispatcher::is_number(const std::string& input) const
+{
+    for (auto i = input.begin(); i != input.end(); ++i)
+    {
+        if (!isdigit(*i) && *i != '.')
+        {
+            return false;
+        }
+    }
+
+    return true;
 }
