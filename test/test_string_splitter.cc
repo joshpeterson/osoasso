@@ -40,4 +40,10 @@ Define(StringSplitter)
         string_splitter splitter("The quick brown fox.", 3);
         AssertEqual(std::string("x."), splitter.part(6));
     } Done
+
+    It("Returns the full string in the first part when the string is smaller than the part length")
+    {
+        string_splitter splitter("The quick brown fox.", 25);
+        AssertEqual(std::string("The quick brown fox."), splitter.part(0));
+    } Done
 }
