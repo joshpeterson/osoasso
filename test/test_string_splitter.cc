@@ -1,3 +1,5 @@
+#include <string>
+#include <sstream>
 #include "../test_harness/test.h"
 #include "../include/string_splitter.h"
 
@@ -45,5 +47,30 @@ Define(StringSplitter)
     {
         string_splitter splitter("The quick brown fox.", 25);
         AssertEqual(std::string("The quick brown fox."), splitter.part(0));
+    } Done
+
+    It("Returns the correct number of parts with a very large string")
+    {
+        std::stringstream large_string;
+        for  (int i = 0; i < 10000; ++i)
+        {
+            large_string << "fooba ";
+        }
+
+        string_splitter splitter(large_string.str(), 50000);
+        AssertEqual(2, splitter.number_of_parts());
+    } Done
+
+    It("Returns correctly sized parts with a very large string")
+    {
+        std::stringstream large_string;
+        for  (int i = 0; i < 10000; ++i)
+        {
+            large_string << "fooba ";
+        }
+
+        string_splitter splitter(large_string.str(), 50000);
+        AssertEqual<size_t>(50000, splitter.part(0).size());
+        AssertEqual<size_t>(10000, splitter.part(1).size());
     } Done
 }
