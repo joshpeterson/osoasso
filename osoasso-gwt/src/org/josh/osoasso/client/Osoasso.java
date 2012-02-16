@@ -44,6 +44,8 @@ public class Osoasso extends Composite implements EntryPoint {
 	
 	private JavaScriptObject naclModule = null;
 	
+	private StringConcatenator concatenator = new StringConcatenator();
+	
 	@UiField TextBox inputField;
 	@UiField ScrollPanel scrollPanel;
 	@UiField VerticalPanel resultsPanel;
@@ -103,24 +105,31 @@ public class Osoasso extends Composite implements EntryPoint {
 	public void onNaclMessage(String naclMessage)
 	{
 		inputField.setReadOnly(false);
-		if (naclMessage.startsWith("error"))
+		if (concatenator.addString(naclMessage))
 		{
-			ErrorData error = new ErrorData(naclMessage);
-			ErrorDataFormatter formatter = new ErrorDataFormatter(error);
+			// Done concatenating strings from the NaCl module
+			String message = concatenator.fullString();
+			concatenator = new StringConcatenator();
 			
-			this.AddHTMLToResultsPanel(formatter.FormatAction());
-			this.AddHTMLToResultsPanel(formatter.FormatErrorMessage());
-		}
-		else
-		{
-			CommitData commit = new CommitData(naclMessage);
-			CommitDataFormatter formatter = new CommitDataFormatter(commit);
-			
-			this.AddHTMLToResultsPanel(formatter.FormatAction());
-			this.AddHTMLToResultsPanel(formatter.FormatCommitMetaData());
-			this.AddHTMLToResultsPanel(formatter.FormatOutputName());
-			if (commit.hasMatrix())
-				this.AddHTMLToResultsPanel(formatter.FormatOutputMatrix());
+			if (message.startsWith("error"))
+			{
+				ErrorData error = new ErrorData(message);
+				ErrorDataFormatter formatter = new ErrorDataFormatter(error);
+				
+				this.AddHTMLToResultsPanel(formatter.FormatAction());
+				this.AddHTMLToResultsPanel(formatter.FormatErrorMessage());
+			}
+			else
+			{
+				CommitData commit = new CommitData(message);
+				CommitDataFormatter formatter = new CommitDataFormatter(commit);
+				
+				this.AddHTMLToResultsPanel(formatter.FormatAction());
+				this.AddHTMLToResultsPanel(formatter.FormatCommitMetaData());
+				this.AddHTMLToResultsPanel(formatter.FormatOutputName());
+				if (commit.hasMatrix())
+					this.AddHTMLToResultsPanel(formatter.FormatOutputMatrix());
+			}
 		}
 	}
 	

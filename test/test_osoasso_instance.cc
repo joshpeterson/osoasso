@@ -1,4 +1,4 @@
-#include <stdexcept>
+#include <string>
 #include "../test_harness/test.h"
 #include "../include/osoasso_instance.h"
 #include "../include/project_manager.h"
@@ -8,7 +8,7 @@ using namespace osoasso;
 class mock_project_manager : public project_manager
 {
 public:
-    mock_project_manager() : input_called_(false), get_matrix_called_(false), action_(), user_(), name_()
+    mock_project_manager() : input_called_(false), action_(), user_(), name_()
     {
     }
 
@@ -41,7 +41,6 @@ public:
 
     std::shared_ptr<const matrix<double>> get_matrix(const std::string& name) const
     {
-        get_matrix_called_ = true;
         name_ = name;
 
         return std::shared_ptr<const matrix<double>>(new matrix<double>({{1, 2}}));
@@ -50,11 +49,6 @@ public:
     bool input_called() const
     {
         return input_called_;
-    }
-
-    bool get_matrix_called() const
-    {
-        return get_matrix_called_;
     }
 
     std::string action() const
@@ -75,7 +69,6 @@ public:
 
 private:
     bool input_called_;
-    mutable bool get_matrix_called_;
     std::string action_;
     std::string user_;
     mutable std::string name_;
@@ -118,42 +111,10 @@ Define(Osoasso)
         mock_project_manager manager;
         osoasso_instance instance(manager);
 
-        message_output output = instance.handle_message(
+        std::string output = instance.handle_message(
                                         std::string(input_method_id) + ":foo([[1 5]], [[1 3]]):me@bar.com");
 
-        AssertEqual(message_output_string, output.type);
-        AssertEqual(std::string("CommitName#foo([[1 5]], [[1 3]])#me@bar.com#Some time GMT#0.469#OutputName#<table id=\"matrix\"><tr><td>|</td><td>1</td><td>2</td><td>|</td></tr></table>"), output.value.commit_string);
-    } Done
-
-    It("Calls the project manager get matrix method")
-    {
-        mock_project_manager manager;
-        osoasso_instance instance(manager);
-
-        instance.handle_message(std::string(get_matrix_method_id) + ":foosha1");
-
-        AssertTrue(manager.get_matrix_called());
-    } Done
-
-    It("Calls the project manager get matrix method with the correct name")
-    {
-        mock_project_manager manager;
-        osoasso_instance instance(manager);
-
-         message_output value = instance.handle_message(std::string(get_matrix_method_id) + ":foosha1");
-
-        AssertEqual("foosha1", manager.name());
-    } Done
-
-    It("Returns a double when get matrix is called")
-    {
-        mock_project_manager manager;
-        osoasso_instance instance(manager);
-
-        message_output output = instance.handle_message(std::string(get_matrix_method_id) + ":foosha1");
-
-        AssertEqual(message_output_double, output.type);
-        AssertEqual(1.0, output.value.matrix_value);
+        AssertEqual(std::string("CommitName#foo([[1 5]], [[1 3]])#me@bar.com#Some time GMT#0.469#OutputName#<table id=\"matrix\"><tr><td>|</td><td>1</td><td>2</td><td>|</td></tr></table>"), output);
     } Done
 
     It("Returns an error message when an exception occurs")
@@ -161,10 +122,9 @@ Define(Osoasso)
         mock_project_manager manager;
         osoasso_instance instance(manager);
 
-        message_output output = instance.handle_message(std::string(input_method_id) + ":error action:me@bar.com");
+        std::string output = instance.handle_message(std::string(input_method_id) + ":error action:me@bar.com");
 
-        AssertEqual(message_output_string, output.type);
-        AssertEqual(std::string("error#error action#Error message"), output.value.commit_string);
+        AssertEqual(std::string("error#error action#Error message"), output);
     } Done
 
     It("Returns a commit string without the output when input is called with a tag")
@@ -172,11 +132,10 @@ Define(Osoasso)
         mock_project_manager manager;
         osoasso_instance instance(manager);
 
-        message_output output = instance.handle_message(
+        std::string output = instance.handle_message(
                                         std::string(input_method_id) + ":tag = foo([[1 5]], [[1 3]]):me@bar.com");
 
-        AssertEqual(message_output_string, output.type);
-        AssertEqual(std::string("CommitName#tag = foo([[1 5]], [[1 3]])#me@bar.com#Some time GMT#0.469#OutputName"), output.value.commit_string);
+        AssertEqual(std::string("CommitName#tag = foo([[1 5]], [[1 3]])#me@bar.com#Some time GMT#0.469#OutputName"), output);
     } Done
 
     It("Returns a time for the command when input is called")
@@ -184,10 +143,9 @@ Define(Osoasso)
         mock_project_manager manager;
         osoasso_instance instance(manager);
 
-        message_output output = instance.handle_message(
+        std::string output = instance.handle_message(
                                         std::string(input_method_id) + ":tag = foo([[1 5]], [[1 3]]):me@bar.com");
 
-        AssertEqual(message_output_string, output.type);
-        AssertEqual(std::string("CommitName#tag = foo([[1 5]], [[1 3]])#me@bar.com#Some time GMT#0.469#OutputName"), output.value.commit_string);
+        AssertEqual(std::string("CommitName#tag = foo([[1 5]], [[1 3]])#me@bar.com#Some time GMT#0.469#OutputName"), output);
     } Done
 }

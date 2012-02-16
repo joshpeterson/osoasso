@@ -8,13 +8,17 @@
 #include <string>
 #include <stdexcept>
 #include <deque>
+#include <sstream>
 #include "../include/osoasso_instance.h"
 #include "../include/project_manager.h"
 #include "../include/scoped_lock.h"
 #include "../include/locking_ptr.h"
+#include "../include/string_splitter.h"
 
 namespace osoasso
 {
+
+const int post_message_max_string_length_ = 65000;
 
 class OsoassoInstance : public pp::Instance
 {
@@ -60,16 +64,7 @@ private:
             locking_ptr<std::string> locked_message(message_, message_mutex_);
             try
             {
-                message_output output = instance.handle_message(*locked_message);
-
-                if (output.type == message_output_string)
-                {
-                    *locked_message = output.value.commit_string;
-                }
-                else
-                {
-                    // Only handle strings for now.
-                }
+                *locked_message = instance.handle_message(*locked_message);
             }
             catch (std::exception& e)
             {
@@ -90,8 +85,16 @@ private:
     static void PostMessageCallback(void* This, int32_t /*result*/)
     {
         OsoassoInstance* instance = static_cast<OsoassoInstance*>(This);
+
         locking_ptr<std::string> locked_message(instance->message_, instance->message_mutex_);
-        instance->PostMessage(pp::Var(*locked_message));
+
+        osoasso::string_splitter splitter(*locked_message, post_message_max_string_length_);
+        for (int i = 0; i < splitter.number_of_parts(); ++i)
+        {
+            std::stringstream part_indicator;
+            part_indicator << i + 1 << "," << splitter.number_of_parts() << "," << splitter.part(i);
+            instance->PostMessage(pp::Var(part_indicator.str()));
+        }
     }
 };
 
