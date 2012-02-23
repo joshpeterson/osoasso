@@ -9,7 +9,7 @@ import nacl_utils
 import os
 
 use_c_plus_plus_libs=True
-nacl_platform='pepper_15'
+nacl_platform='pepper_16'
 cpp_path = [os.path.dirname(os.path.dirname(os.getcwd()))]
 cc_flags = ['-Wall', '-Wno-long-long', '-pthread', '-Werror', '-std=c++0x', '-O2']
 
@@ -94,7 +94,7 @@ def LocalNaClTestProgram(env,
                      module_name,
                      arch_spec,
                      is_debug=False,
-                     dir_prefix='test_')
+                     build_dir_prefix='test_')
   test_node = env.Alias(target_name,
                         source=test_program,
                         action=arch_sel_ldr +
