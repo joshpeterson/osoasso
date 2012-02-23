@@ -146,12 +146,12 @@ public class Osoasso extends Composite implements EntryPoint {
 			naclModule = GetNaclModule();
 			if (naclModule != null)
 			{
-				moduleStatus.setText("Module loaded");
+				moduleStatus.setText("An experiemental website for Chrome.  Go to about:flags and enable Native Client to make it work.");
 				RegisterNaclListener(naclModule);
 			}
 			else 
 			{
-				moduleStatus.setText("Module failed to load");
+				moduleStatus.setText("Danger: Native client module failed to load!");
 			}
 		}
 	}
@@ -181,13 +181,6 @@ public class Osoasso extends Composite implements EntryPoint {
 	 
 	 protected native void CallOsoassoNaclModuleInputMethod(JavaScriptObject naclModule, String input)
 	 /*-{
-		    if (naclModule != null)
-		    {
-		    	naclModule.postMessage('input:' + input + ":Unknown User");
-		    }
-		    else
-		    {
-		    	alert("Danger: Nacl module not loaded!");
-		    }
+			naclModule.postMessage('input:' + input + ":Unknown User");
 	 }-*/;
 }
