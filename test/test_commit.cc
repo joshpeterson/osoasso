@@ -32,16 +32,22 @@ Define(Commit)
         AssertEqual("josh@mine.com", test_commit.user());
     } Done
 
-    It("Returns the correct time")
+    It("Returns the correct GMT time")
     {
         commit test_commit("foo", "me", 1306927001, std::vector<std::string>(), "");
-        AssertEqual("Wed Jun  1 11:16:41 2011 GMT", test_commit.time());
+        AssertEqual("Wed Jun  1 11:16:41 2011 GMT", test_commit.gmt_time());
     } Done
 
-    It("Returns the correct time for a different time value")
+    It("Returns the correct GMT time for a different time value")
     {
         commit test_commit("foo", "me", 1306927186, std::vector<std::string>(), "");
-        AssertEqual("Wed Jun  1 11:19:46 2011 GMT", test_commit.time());
+        AssertEqual("Wed Jun  1 11:19:46 2011 GMT", test_commit.gmt_time());
+    } Done
+
+    It("Returns the correct local time")
+    {
+        commit test_commit("foo", "me", 1306927001, std::vector<std::string>(), "");
+        AssertEqual("Wed Jun  1 6:16:41 2011", test_commit.local_time());
     } Done
 
     It("Returns the correct inputs")

@@ -20,13 +20,22 @@ std::string commit::user() const
     return user_;
 }
 
-std::string commit::time() const
+std::string commit::gmt_time() const
 {
     tm* time_info = gmtime(&time_);
     std::string time(asctime(time_info));
 
     // Strip off the trailing newline character.
     return time.substr(0, time.size()-1) + " GMT";
+}
+
+std::string commit::local_time() const
+{
+    tm* time_info = localtime(&time_);
+    std::string time(asctime(time_info));
+
+    // Strip off the trailing newline character.
+    return time.substr(0, time.size()-1);
 }
 
 std::vector<std::string> commit::inputs() const

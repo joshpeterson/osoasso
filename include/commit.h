@@ -17,7 +17,8 @@ public:
 
     std::string action() const;
     std::string user() const;
-    std::string time() const;
+    std::string gmt_time() const;
+    std::string local_time() const;
     std::vector<std::string> inputs() const;
     std::string output() const;
     std::string name() const;

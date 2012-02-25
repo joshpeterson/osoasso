@@ -34,16 +34,6 @@ Define(ProjectManager)
         AssertEqual("me", data.user);
     } Done
 
-    It("Returns the time of the last commit")
-    {
-        project_manager manager;
-        commit_data data = manager.input("add([[1]], [[1]])", "me");
-
-        // Since the exact time will change, at least make sure it is GMT.
-        std::string time = data.time;
-        AssertEqual("GMT", time.substr(time.length() - 3));
-    } Done
-
     It("Returns the name of the output of the last commit")
     {
         project_manager manager;

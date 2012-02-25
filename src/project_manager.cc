@@ -43,7 +43,7 @@ commit_data project_manager::get_last_commit(std::string& tag, double command_ti
     commit_data data;
     data.action = head_commit->action();
     data.user = head_commit->user();
-    data.time = head_commit->time();
+    data.time = head_commit->local_time();
     data.output = head_commit->output();
     data.name = head_commit->name();
     data.tag = tag;

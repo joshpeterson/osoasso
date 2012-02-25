@@ -86,7 +86,7 @@ Define(CommitFactory)
 
         commit result = factory.create("", "", 1306927186, inputs, "");
 
-        AssertEqual("Wed Jun  1 11:19:46 2011 GMT", result.time());
+        AssertEqual("Wed Jun  1 11:19:46 2011 GMT", result.gmt_time());
     } Done
 
     It("Adds the commit to the commit repository")
