@@ -18,7 +18,7 @@ if not defined NACL_SDK_ROOT (
 :: are found.
 :: Replace the platform with the name of your target platform.  For example, to
 :: build applications that target the pepper_15 API, set
-::   NACL_TARGET_PLATFORM=pepper_15
+::   NACL_TARGET_PLATFORM=pepper_16
 if not defined NACL_TARGET_PLATFORM (
   set NACL_TARGET_PLATFORM=pepper_15
 )
