@@ -50,7 +50,7 @@ public class Osoasso extends Composite implements EntryPoint {
 	@UiField ScrollPanel scrollPanel;
 	@UiField VerticalPanel resultsPanel;
 	@UiField OsoassoStyle style;
-	@UiField Label moduleStatus;
+	@UiField TextBox usernameField;
 
 	public Osoasso()
 	{
@@ -74,6 +74,8 @@ public class Osoasso extends Composite implements EntryPoint {
 	{
 		DockLayoutPanel outer = uiBinder.createAndBindUi(this);
 		
+		usernameField.setText("Unknown User");
+		
 		Window.enableScrolling(false);
 	    Window.setMargin("0px");
 	    
@@ -94,7 +96,7 @@ public class Osoasso extends Composite implements EntryPoint {
 	{
 		if (e.getCharCode() == KeyCodes.KEY_ENTER)
 		{
-			CallOsoassoNaclModuleInputMethod(naclModule, inputField.getText());
+			CallOsoassoNaclModuleInputMethod(naclModule, inputField.getText(), usernameField.getText());
 			
 		    scrollPanel.scrollToBottom();
 		    
@@ -144,15 +146,8 @@ public class Osoasso extends Composite implements EntryPoint {
 	    protected void onLoad()
 	    {
 			naclModule = GetNaclModule();
-			if (naclModule != null)
-			{
-				moduleStatus.setText("An experiemental website for Chrome.  Go to about:flags and enable Native Client to make it work.");
-				RegisterNaclListener(naclModule);
-			}
-			else 
-			{
-				moduleStatus.setText("Danger: Native client module failed to load!");
-			}
+			RegisterNaclListener(naclModule);
+
 		}
 	}
 	
@@ -179,8 +174,8 @@ public class Osoasso extends Composite implements EntryPoint {
 							    	}, false);
 	 }-*/;
 	 
-	 protected native void CallOsoassoNaclModuleInputMethod(JavaScriptObject naclModule, String input)
+	 protected native void CallOsoassoNaclModuleInputMethod(JavaScriptObject naclModule, String input, String username)
 	 /*-{
-			naclModule.postMessage('input:' + input + ":Unknown User");
+			naclModule.postMessage('input:' + input + ":" + username);
 	 }-*/;
 }
