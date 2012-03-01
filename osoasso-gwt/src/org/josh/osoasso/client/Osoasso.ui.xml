@@ -33,14 +33,14 @@
 	<g:DockLayoutPanel unit='EM' addStyleNames='{style.totalArea}'>
   		<g:north size='4'>
   			<g:HorizontalPanel>
-  				<g:cell>
+  				<g:cell width="100%" horizontalAlignment="ALIGN_LEFT">
 		  			<g:VerticalPanel>
 			   			<g:Label addStyleNames='{style.headerArea}'>Osoasso</g:Label>
 			   			<g:Label ui:field='moduleStatus'>An experiemental website for Chrome.  Go to about:flags and enable Native Client to make it work.</g:Label>
 		   			</g:VerticalPanel>
 	   			</g:cell>
-	   			<g:cell width="200px" horizontalAlignment="ALIGN_RIGHT">
-	   				<g:TextBox ui:field='usernameField' addStyleNames='{style.inputArea}'/>
+	   			<g:cell width="100%" horizontalAlignment="ALIGN_RIGHT">
+	   				<g:TextBox width="300px" ui:field='usernameField' addStyleNames='{style.inputArea}'/>
 	   			</g:cell>
    			</g:HorizontalPanel>
   		</g:north>
