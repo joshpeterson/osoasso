@@ -18,6 +18,7 @@ import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.Cookies;
 
 /**
  * @author Josh Peterson
@@ -45,6 +46,8 @@ public class Osoasso extends Composite implements EntryPoint {
 	private JavaScriptObject naclModule = null;
 	
 	private StringConcatenator concatenator = new StringConcatenator();
+	
+	final private String UsernameCookieName = "OsoassoUsernameCookie";
 	
 	@UiField TextBox inputField;
 	@UiField ScrollPanel scrollPanel;
@@ -74,7 +77,11 @@ public class Osoasso extends Composite implements EntryPoint {
 	{
 		DockLayoutPanel outer = uiBinder.createAndBindUi(this);
 		
-		usernameField.setText("Unknown User");
+		String username = Cookies.getCookie(UsernameCookieName);
+		if (username != null)
+			usernameField.setText(username);
+		else
+			usernameField.setText("Unknown User");
 		
 		Window.enableScrolling(false);
 	    Window.setMargin("0px");
@@ -102,6 +109,12 @@ public class Osoasso extends Composite implements EntryPoint {
 		    
 		    inputField.setReadOnly(true);
 		}
+	}
+	
+	@UiHandler("usernameField")
+	void onKeyUp(KeyPressEvent e)
+	{
+		Cookies.setCookie(UsernameCookieName, usernameField.getText() + e.getCharCode());
 	}
 	
 	public void onNaclMessage(String naclMessage)
