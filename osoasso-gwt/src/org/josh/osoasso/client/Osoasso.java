@@ -98,23 +98,24 @@ public class Osoasso extends Composite implements EntryPoint {
 	    root.add(outer);
 	}
 	
-	@UiHandler("inputField")
+	@UiHandler({"inputField", "usernameField"})
 	void onKeyPress(KeyPressEvent e)
 	{
-		if (e.getCharCode() == KeyCodes.KEY_ENTER)
+		if (e.getSource() == this.inputField)
 		{
-			CallOsoassoNaclModuleInputMethod(naclModule, inputField.getText(), usernameField.getText());
-			
-		    scrollPanel.scrollToBottom();
-		    
-		    inputField.setReadOnly(true);
+			if (e.getCharCode() == KeyCodes.KEY_ENTER)
+			{
+				CallOsoassoNaclModuleInputMethod(naclModule, inputField.getText(), usernameField.getText());
+				
+			    scrollPanel.scrollToBottom();
+			    
+			    inputField.setReadOnly(true);
+			}
 		}
-	}
-	
-	@UiHandler("usernameField")
-	void onKeyUp(KeyPressEvent e)
-	{
-		Cookies.setCookie(UsernameCookieName, usernameField.getText() + e.getCharCode());
+		else if (e.getSource() == this.usernameField)
+		{
+			Cookies.setCookie(UsernameCookieName, usernameField.getText() + e.getCharCode());
+		}
 	}
 	
 	public void onNaclMessage(String naclMessage)
