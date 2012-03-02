@@ -40,7 +40,7 @@
 		   			</g:VerticalPanel>
 	   			</g:cell>
 	   			<g:cell width="100%" horizontalAlignment="ALIGN_RIGHT">
-	   				<g:TextBox width="300px" ui:field='usernameField' addStyleNames='{style.inputArea}'/>
+	   				<g:TextBox width="300px" ui:field='usernameField' addStyleNames='{style.inputArea}' title="Your username can really be anything, maybe an email address or Twitter handle."/>
 	   			</g:cell>
    			</g:HorizontalPanel>
   		</g:north>
