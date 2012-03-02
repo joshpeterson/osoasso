@@ -18,6 +18,7 @@ import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.Cookies;
 
 /**
  * @author Josh Peterson
@@ -46,11 +47,13 @@ public class Osoasso extends Composite implements EntryPoint {
 	
 	private StringConcatenator concatenator = new StringConcatenator();
 	
+	final private String UsernameCookieName = "OsoassoUsernameCookie";
+	
 	@UiField TextBox inputField;
 	@UiField ScrollPanel scrollPanel;
 	@UiField VerticalPanel resultsPanel;
 	@UiField OsoassoStyle style;
-	@UiField Label moduleStatus;
+	@UiField TextBox usernameField;
 
 	public Osoasso()
 	{
@@ -74,6 +77,12 @@ public class Osoasso extends Composite implements EntryPoint {
 	{
 		DockLayoutPanel outer = uiBinder.createAndBindUi(this);
 		
+		String username = Cookies.getCookie(UsernameCookieName);
+		if (username != null)
+			usernameField.setText(username);
+		else
+			usernameField.setText("Unknown User");
+		
 		Window.enableScrolling(false);
 	    Window.setMargin("0px");
 	    
@@ -89,16 +98,23 @@ public class Osoasso extends Composite implements EntryPoint {
 	    root.add(outer);
 	}
 	
-	@UiHandler("inputField")
+	@UiHandler({"inputField", "usernameField"})
 	void onKeyPress(KeyPressEvent e)
 	{
-		if (e.getCharCode() == KeyCodes.KEY_ENTER)
+		if (e.getSource() == this.inputField)
 		{
-			CallOsoassoNaclModuleInputMethod(naclModule, inputField.getText());
-			
-		    scrollPanel.scrollToBottom();
-		    
-		    inputField.setReadOnly(true);
+			if (e.getCharCode() == KeyCodes.KEY_ENTER)
+			{
+				CallOsoassoNaclModuleInputMethod(naclModule, inputField.getText(), usernameField.getText());
+				
+			    scrollPanel.scrollToBottom();
+			    
+			    inputField.setReadOnly(true);
+			}
+		}
+		else if (e.getSource() == this.usernameField)
+		{
+			Cookies.setCookie(UsernameCookieName, usernameField.getText() + e.getCharCode());
 		}
 	}
 	
@@ -144,15 +160,8 @@ public class Osoasso extends Composite implements EntryPoint {
 	    protected void onLoad()
 	    {
 			naclModule = GetNaclModule();
-			if (naclModule != null)
-			{
-				moduleStatus.setText("An experiemental website for Chrome.  Go to about:flags and enable Native Client to make it work.");
-				RegisterNaclListener(naclModule);
-			}
-			else 
-			{
-				moduleStatus.setText("Danger: Native client module failed to load!");
-			}
+			RegisterNaclListener(naclModule);
+
 		}
 	}
 	
@@ -179,8 +188,8 @@ public class Osoasso extends Composite implements EntryPoint {
 							    	}, false);
 	 }-*/;
 	 
-	 protected native void CallOsoassoNaclModuleInputMethod(JavaScriptObject naclModule, String input)
+	 protected native void CallOsoassoNaclModuleInputMethod(JavaScriptObject naclModule, String input, String username)
 	 /*-{
-			naclModule.postMessage('input:' + input + ":Unknown User");
+			naclModule.postMessage('input:' + input + ":" + username);
 	 }-*/;
 }

@@ -32,10 +32,17 @@
 	</ui:style>
 	<g:DockLayoutPanel unit='EM' addStyleNames='{style.totalArea}'>
   		<g:north size='4'>
-  			<g:VerticalPanel>
-    			<g:Label addStyleNames='{style.headerArea}'>Osoasso</g:Label>
-    			<g:Label ui:field='moduleStatus'>Unknown</g:Label>
-    		</g:VerticalPanel>
+  			<g:HorizontalPanel>
+  				<g:cell width="100%" horizontalAlignment="ALIGN_LEFT">
+		  			<g:VerticalPanel>
+			   			<g:Label addStyleNames='{style.headerArea}'>Osoasso</g:Label>
+			   			<g:Label ui:field='moduleStatus'>An experiemental website for Chrome.  Go to about:flags and enable Native Client to make it work.</g:Label>
+		   			</g:VerticalPanel>
+	   			</g:cell>
+	   			<g:cell width="100%" horizontalAlignment="ALIGN_RIGHT">
+	   				<g:TextBox width="300px" ui:field='usernameField' addStyleNames='{style.inputArea}' title="Your username can really be anything, maybe an email address or Twitter handle."/>
+	   			</g:cell>
+   			</g:HorizontalPanel>
   		</g:north>
   		<g:center>
     		<g:ScrollPanel ui:field='scrollPanel' addStyleNames='{style.bodyArea}'>
