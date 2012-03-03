@@ -5,7 +5,9 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -36,6 +38,12 @@ public class Osoasso extends Composite implements EntryPoint {
 	interface OsoassoStyle extends CssResource
 	{
 		String individualOutputArea();
+	}
+	
+	public interface Resources extends ClientBundle
+	{
+		  @Source("osoasso_logo.png")
+		  ImageResource logo();
 	}
 	
 	interface OsoassoUiBinder extends UiBinder<DockLayoutPanel, Osoasso> {}
