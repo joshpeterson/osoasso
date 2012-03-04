@@ -17,19 +17,19 @@ class tag_repository;
 
 struct command_data
 {
-    command_data() : command_time(0.0)
+    command_data() : command_duration_seconds(0.0)
     {
     }
 
     command_data(command_data&& other) : output(std::move(other.output)), inputs(std::move(other.inputs)),
-        tag(std::move(other.tag)), command_time(std::move(other.command_time))
+        tag(std::move(other.tag)), command_duration_seconds(std::move(other.command_duration_seconds))
     {
     }
 
     std::string output;
     std::vector<std::string> inputs;
     std::string tag;
-    double command_time;
+    double command_duration_seconds;
 };
 
 class command_dispatcher

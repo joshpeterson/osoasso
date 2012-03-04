@@ -31,7 +31,7 @@ std::string osoasso_instance::handle_message(const std::string& message)
                 commit_data data = manager_.input(action, user);
 
                 output_commit_string << data.name << "#" << data.action << "#" << data.user
-                                     << "#" << data.time << "#" << data.command_time << "#"
+                                     << "#" << data.time << "#" << data.command_duration_seconds << "#"
                                      << data.output;
 
                 if (data.tag.size() == 0)

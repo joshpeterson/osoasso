@@ -74,7 +74,7 @@ Define(ProjectManager)
         project_manager manager;
         commit_data data = manager.input("tag = add([[1]], [[1]])", "me");
 
-        AssertTrue(data.command_time >= 0 && data.command_time < 1);
+        AssertTrue(data.command_duration_seconds >= 0 && data.command_duration_seconds < 1);
     } Done
 
     It("Provides access to the matrix repository")

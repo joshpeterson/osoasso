@@ -16,13 +16,13 @@ namespace osoasso
 
 struct commit_data
 {
-    commit_data() : command_time(0.0)
+    commit_data() : command_duration_seconds(0.0)
     {
     }
 
     commit_data(commit_data&& other) : action(std::move(other.action)), user(std::move(other.user)),
         time(std::move(other.time)), output(std::move(other.output)), name(std::move(other.name)),
-        tag(std::move(other.tag)), command_time(std::move(other.command_time))
+        tag(std::move(other.tag)), command_duration_seconds(std::move(other.command_duration_seconds))
     {
     }
 
@@ -32,7 +32,7 @@ struct commit_data
     std::string output;
     std::string name;
     std::string tag;
-    double command_time;
+    double command_duration_seconds;
 };
 
 class project_manager

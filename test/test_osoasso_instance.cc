@@ -29,7 +29,7 @@ public:
         data.name = "CommitName";
         data.time = "Some time GMT";
         data.output = "OutputName";
-        data.command_time = 0.469;
+        data.command_duration_seconds = 0.469;
 
         if (action.find("tag") != std::string::npos)
         {
