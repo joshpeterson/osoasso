@@ -140,19 +140,28 @@ public class Osoasso extends Composite implements EntryPoint {
 				ErrorData error = new ErrorData(message);
 				ErrorDataFormatter formatter = new ErrorDataFormatter(error);
 				
-				this.AddHTMLToResultsPanel(formatter.FormatAction());
-				this.AddHTMLToResultsPanel(formatter.FormatErrorMessage());
+				this.AddHTMLToResultsPanel(formatter.formatAction());
+				this.AddHTMLToResultsPanel(formatter.formatErrorMessage());
+			}
+			else if (message.startsWith("text"))
+			{
+				TextFormatter formatter = new TextFormatter(message);
+				this.AddHTMLToResultsPanel(formatter.formatAction());
+				for (String line: formatter.formatLines())
+				{
+					this.AddHTMLToResultsPanel(line);
+				}
 			}
 			else
 			{
 				CommitData commit = new CommitData(message);
 				CommitDataFormatter formatter = new CommitDataFormatter(commit);
 				
-				this.AddHTMLToResultsPanel(formatter.FormatAction());
-				this.AddHTMLToResultsPanel(formatter.FormatCommitMetaData());
-				this.AddHTMLToResultsPanel(formatter.FormatOutputName());
+				this.AddHTMLToResultsPanel(formatter.formatAction());
+				this.AddHTMLToResultsPanel(formatter.formatCommitMetaData());
+				this.AddHTMLToResultsPanel(formatter.formatOutputName());
 				if (commit.hasMatrix())
-					this.AddHTMLToResultsPanel(formatter.FormatOutputMatrix());
+					this.AddHTMLToResultsPanel(formatter.formatOutputMatrix());
 			}
 		}
 	}

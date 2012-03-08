@@ -9,17 +9,17 @@ public class CommitDataFormatter
 		this.commit = commit;
 	}
 	
-	public String FormatAction()
+	public String formatAction()
 	{
 		return "> " + this.commit.getAction();
 	}
 
-	public String FormatCommitMetaData()
+	public String formatCommitMetaData()
 	{
 		return "Commit: " + this.commit.getName() + " (" + this.commit.getUser() + "/" + this.commit.getTime() + ") Elapsed: " + this.commit.getCommandElapsedTime() + "s";
 	}
 
-	public String FormatOutputName()
+	public String formatOutputName()
 	{
 		if (this.commit.hasMatrix())
 			return this.commit.getOutput() + " =";
@@ -27,7 +27,7 @@ public class CommitDataFormatter
 			return this.commit.getOutput();
 	}
 
-	public String FormatOutputMatrix()
+	public String formatOutputMatrix()
 	{
 		return this.commit.getMatrix();
 	}

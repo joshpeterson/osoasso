@@ -156,7 +156,7 @@ Define(Osoasso)
         osoasso_instance instance(manager);
 
         std::stringstream help_message;
-        help_message << "text#"
+        help_message << "text#help#"
                      << "Osoasso Version: " << VERSION << "\n"
                      << "For a list of commands, type help commands";
 

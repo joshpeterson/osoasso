@@ -32,7 +32,7 @@ std::string osoasso_instance::handle_message(const std::string& message)
                 if (action.substr(0, 4) == "help")
                 {
                     std::string help_message = help_.get_help_for_action(action);
-                    output << "text#" << help_message;
+                    output << "text#" << action << "#" << help_message;
                 }
                 else
                 {

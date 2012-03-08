@@ -14,7 +14,7 @@ public class CommitDataFormatterTests
 		CommitData commit = new CommitData("CommitName#foo([[1 5]], [[1 3]])#me@bar.com#Some time GMT#3.14#OutputName#[[1 2]]");
 		CommitDataFormatter formatter = new CommitDataFormatter(commit);
 		
-		assertEquals("> foo([[1 5]], [[1 3]])", formatter.FormatAction());
+		assertEquals("> foo([[1 5]], [[1 3]])", formatter.formatAction());
 	}
 	
 	@Test
@@ -23,7 +23,7 @@ public class CommitDataFormatterTests
 		CommitData commit = new CommitData("CommitName#foo([[1 5]], [[1 3]])#me@bar.com#Some time GMT#3.14#OutputName#[[1 2]]");
 		CommitDataFormatter formatter = new CommitDataFormatter(commit);
 		
-		assertEquals("Commit: CommitName (me@bar.com/Some time GMT) Elapsed: 3.14s", formatter.FormatCommitMetaData());
+		assertEquals("Commit: CommitName (me@bar.com/Some time GMT) Elapsed: 3.14s", formatter.formatCommitMetaData());
 	}
 	
 	@Test
@@ -32,7 +32,7 @@ public class CommitDataFormatterTests
 		CommitData commit = new CommitData("CommitName#foo([[1 5]], [[1 3]])#me@bar.com#Some time GMT#3.14#OutputName#[[1 2]]");
 		CommitDataFormatter formatter = new CommitDataFormatter(commit);
 		
-		assertEquals("OutputName =", formatter.FormatOutputName());
+		assertEquals("OutputName =", formatter.formatOutputName());
 	}
 	
 	@Test
@@ -41,7 +41,7 @@ public class CommitDataFormatterTests
 		CommitData commit = new CommitData("CommitName#foo([[1 5]], [[1 3]])#me@bar.com#Some time GMT#3.14#OutputName#");
 		CommitDataFormatter formatter = new CommitDataFormatter(commit);
 		
-		assertEquals("OutputName", formatter.FormatOutputName());
+		assertEquals("OutputName", formatter.formatOutputName());
 	}
 	
 	@Test
@@ -50,7 +50,7 @@ public class CommitDataFormatterTests
 		CommitData commit = new CommitData("CommitName#foo([[1 5]], [[1 3]])#me@bar.com#Some time GMT#3.14#OutputName#[[1 2]]");
 		CommitDataFormatter formatter = new CommitDataFormatter(commit);
 		
-		assertEquals("[[1 2]]", formatter.FormatOutputMatrix());
+		assertEquals("[[1 2]]", formatter.formatOutputMatrix());
 	}
 }
 

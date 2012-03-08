@@ -16,7 +16,7 @@ public class ErrorDataFormatterTests {
 		ErrorData error = new ErrorData("error#action#Error message");
 		ErrorDataFormatter formatter = new ErrorDataFormatter(error);
 		
-		assertEquals("> action", formatter.FormatAction());
+		assertEquals("> action", formatter.formatAction());
 	}
 
 	@Test
@@ -25,6 +25,6 @@ public class ErrorDataFormatterTests {
 		ErrorData error = new ErrorData("error#action#Error message");
 		ErrorDataFormatter formatter = new ErrorDataFormatter(error);
 		
-		assertEquals("Error: Error message", formatter.FormatErrorMessage());
+		assertEquals("Error: Error message", formatter.formatErrorMessage());
 	}
 }

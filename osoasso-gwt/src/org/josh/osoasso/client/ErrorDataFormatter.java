@@ -9,12 +9,12 @@ public class ErrorDataFormatter
 		this.error = error;
 	}
 
-	public String FormatAction()
+	public String formatAction()
 	{
 		return "> " + this.error.getAction();
 	}
 
-	public String FormatErrorMessage()
+	public String formatErrorMessage()
 	{
 		return "Error: " + this.error.getErrorMessage();
 	}
