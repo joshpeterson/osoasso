@@ -89,4 +89,11 @@ Define(ProjectManager)
 
         AssertElementsEqual(expected_output, *actual_output);
     } Done
+
+    It("Provides a list of command names")
+    {
+        project_manager manager;
+        std::vector<std::string> command_names = manager.get_command_names();
+        AssertEqual(std::string("add"), command_names[0]);
+    } Done
 }

@@ -35,6 +35,12 @@ std::shared_ptr<const matrix<double>> project_manager::get_matrix(const std::str
     return matrices_.get(name);
 }
 
+std::vector<std::string> project_manager::get_command_names() const
+{
+    return commands_.get_names();
+
+}
+
 commit_data project_manager::get_last_commit(std::string& tag, double command_duration_seconds) const
 {
     std::string head_commit_name = commit_tree_.head();

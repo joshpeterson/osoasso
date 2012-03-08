@@ -7,6 +7,7 @@
 #include <string>
 #include <sstream>
 #include <stdexcept>
+#include <vector>
 
 namespace osoasso
 {
@@ -50,6 +51,28 @@ public:
     size_t size() const
     {
         return objects_.size();
+    }
+
+    std::vector<std::string> get_keys() const
+    {
+        std::vector<std::string> keys;
+        for(auto i = objects_.begin(); i != objects_.end(); ++i)
+        {
+            keys.push_back(i->first);
+        }
+
+        return keys;
+    }
+
+    std::vector<RepositoryValueType> get_values() const
+    {
+        std::vector<RepositoryValueType> values;
+        for(auto i = objects_.begin(); i != objects_.end(); ++i)
+        {
+            values.push_back(i->second);
+        }
+
+        return values;
     }
 
 private:

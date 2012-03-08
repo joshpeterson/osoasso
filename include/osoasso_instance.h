@@ -5,12 +5,12 @@
 #include <string>
 #include "project_manager.h"
 #include "matrix.h"
+#include "help_manager.h"
 
 namespace osoasso
 {
 
 const char* const input_method_id = "input";
-const char* const get_matrix_method_id = "getMatrix";
 
 class osoasso_instance
 {
@@ -21,6 +21,7 @@ public:
 
 private:
     project_manager& manager_;
+    help_manager help_;
 };
 
 }

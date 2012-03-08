@@ -43,6 +43,8 @@ public:
     virtual commit_data input(const std::string& action, const std::string& user);
     virtual std::shared_ptr<const matrix<double>> get_matrix(const std::string& name) const;
 
+    std::vector<std::string> get_command_names() const;
+
 private:
     command_factory commands_;
     object_repository<std::shared_ptr<const matrix<double>>> matrices_;

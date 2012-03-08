@@ -87,4 +87,28 @@ Define(ObjectRepository)
         AssertEqual<size_t>(1, test_repo.size());
         AssertEqual(3, test_repo.get("Object 1"));
     } Done
+
+    It("Returns a list of keys")
+    {
+        auto object1 = std::make_pair("Object 1", 3);
+        auto object2 = std::make_pair("Object 2", 4);
+
+        object_repository<int> test_repo = { object1, object2 };
+
+        std::vector<std::string> names = test_repo.get_keys();
+        AssertEqual(std::string("Object 1"), names[0]);
+        AssertEqual(std::string("Object 2"), names[1]);
+    } Done
+
+    It("Returns a list of values")
+    {
+        auto object1 = std::make_pair("Object 1", 3);
+        auto object2 = std::make_pair("Object 2", 4);
+
+        object_repository<int> test_repo = { object1, object2 };
+
+        std::vector<int> values = test_repo.get_values();
+        AssertEqual(3, values[0]);
+        AssertEqual(4, values[1]);
+    } Done
 }
