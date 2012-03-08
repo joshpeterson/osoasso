@@ -2,8 +2,6 @@ package org.josh.osoasso;
 
 import static org.junit.Assert.*;
 
-import org.josh.osoasso.client.CommitData;
-import org.josh.osoasso.client.CommitDataFormatter;
 import org.josh.osoasso.client.ErrorData;
 import org.josh.osoasso.client.ErrorDataFormatter;
 import org.junit.Test;
