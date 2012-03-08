@@ -2,20 +2,20 @@ package org.josh.osoasso.client;
 
 public class ErrorDataFormatter
 {
-	private ErrorData error;
-	
-	public ErrorDataFormatter(ErrorData error)
-	{
-		this.error = error;
-	}
+    private ErrorData error;
 
-	public String formatAction()
-	{
-		return "> " + this.error.getAction();
-	}
+    public ErrorDataFormatter(ErrorData error)
+    {
+        this.error = error;
+    }
 
-	public String formatErrorMessage()
-	{
-		return "Error: " + this.error.getErrorMessage();
-	}
+    public String formatAction()
+    {
+        return "> " + this.error.getAction();
+    }
+
+    public String formatErrorMessage()
+    {
+        return "Error: " + this.error.getErrorMessage();
+    }
 }
