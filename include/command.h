@@ -13,6 +13,7 @@ public:
     virtual std::shared_ptr<const matrix<double>> call(std::shared_ptr<const matrix<double>> left,
                                                        std::shared_ptr<const matrix<double>> right) const = 0;
     virtual int number_of_arguments() const = 0;
+    virtual std::string get_help() const = 0;
 };
 
 }

@@ -4,6 +4,7 @@
 #include <utility>
 #include <memory>
 #include <string>
+#include <vector>
 #include "command.h"
 #include "object_repository.h"
 
@@ -15,6 +16,7 @@ class command_factory
 public:
     command_factory(std::initializer_list<std::pair<std::string, std::shared_ptr<command>>> commands);
     std::shared_ptr<command> get(std::string name) const;
+    std::vector<std::string> get_names() const;
 
 private:
     object_repository<std::shared_ptr<command>> commands_;

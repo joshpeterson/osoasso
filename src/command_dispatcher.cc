@@ -35,7 +35,7 @@ command_data command_dispatcher::input(const std::string& input)
 
     timer command_timer;
     auto result = command->call(matrix_inputs[0], matrix_inputs[1]);
-    command_result.command_time = command_timer.elapsed();
+    command_result.command_duration_seconds = command_timer.elapsed();
 
     std::string result_name = this->add_to_object_repository(result);
 

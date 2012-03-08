@@ -35,6 +35,11 @@ public:
         return 2;
     }
 
+    std::string get_help() const
+    {
+        return std::string();
+    }
+
     bool command_called() const
     {
         return command_called_;
@@ -326,7 +331,7 @@ Define(CommandDispatcher)
         command_data data = dispatcher.input("foo([[1 2]], [[3 5]])");
 
         // Verify that we at least get a non-negative time less than 1 second.
-        AssertTrue(data.command_time >= 0 && data.command_time < 1);
+        AssertTrue(data.command_duration_seconds >= 0 && data.command_duration_seconds < 1);
     } Done
 
     It("Creates a new matrix for a single integer input")

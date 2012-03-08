@@ -61,4 +61,11 @@ Define(Multiply)
         
         AssertEqual(2, multiply_command.number_of_arguments());
     } Done
+
+    It("Provides a help message")
+    {
+        multiply multiply_command;
+        
+        AssertEqual(std::string("multiply(A,B) computes the product of two matrices A (m x n) and B (n x p), with A on the left."), multiply_command.get_help());
+    } Done
 }

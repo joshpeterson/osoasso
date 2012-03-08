@@ -2,6 +2,7 @@
 #include "../test_harness/test.h"
 #include "../include/osoasso_instance.h"
 #include "../include/project_manager.h"
+#include "../include/version.h"
 
 using namespace osoasso;
 
@@ -29,7 +30,7 @@ public:
         data.name = "CommitName";
         data.time = "Some time GMT";
         data.output = "OutputName";
-        data.command_time = 0.469;
+        data.command_duration_seconds = 0.469;
 
         if (action.find("tag") != std::string::npos)
         {
@@ -147,5 +148,18 @@ Define(Osoasso)
                                         std::string(input_method_id) + ":tag = foo([[1 5]], [[1 3]]):me@bar.com");
 
         AssertEqual(std::string("CommitName#tag = foo([[1 5]], [[1 3]])#me@bar.com#Some time GMT#0.469#OutputName"), output);
+    } Done
+
+    It("Calls the help manager when a string starts with help")
+    {
+        mock_project_manager manager;
+        osoasso_instance instance(manager);
+
+        std::stringstream help_message;
+        help_message << "text#help#"
+                     << "Osoasso Version " << VERSION << "\n"
+                     << "For a list of commands, type this: help commands";
+
+        AssertEqual(help_message.str(), instance.handle_message(":help:me@bar.com"));
     } Done
 }

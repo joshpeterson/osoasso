@@ -1,6 +1,8 @@
 #include <utility>
 #include <memory>
 #include <stdexcept>
+#include <vector>
+#include <string>
 #include "../test_harness/test.h"
 #include "../include/matrix.h"
 #include "../include/command.h"
@@ -22,6 +24,11 @@ public:
     {
         return 15;
     }
+
+    std::string get_help() const
+    {
+        return std::string();
+    }
 };
 
 Define(CommandFactory)
@@ -37,6 +44,26 @@ Define(CommandFactory)
 
         std::shared_ptr<command> actual_command = commands.get("mock");
         AssertEqual(15, actual_command->number_of_arguments());
+    } Done
+
+    It("Returns a list of command names")
+    {
+        command_factory commands = { std::make_pair("mock", std::shared_ptr<command>(new mock_command)) };
+        std::vector<std::string> names = commands.get_names();
+        AssertEqual(std::string("mock"), names[0]);
+    } Done
+
+    It("Returns a list of command names sorted alphabetically")
+    {
+        command_factory commands = { std::make_pair("mock", std::shared_ptr<command>(new mock_command)),
+                                     std::make_pair("add", std::shared_ptr<command>(new mock_command)),
+                                     std::make_pair("subtract", std::shared_ptr<command>(new mock_command)) };
+
+        std::vector<std::string> names = commands.get_names();
+
+        AssertEqual(std::string("add"), names[0]);
+        AssertEqual(std::string("mock"), names[1]);
+        AssertEqual(std::string("subtract"), names[2]);
     } Done
 }
 

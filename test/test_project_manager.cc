@@ -74,7 +74,7 @@ Define(ProjectManager)
         project_manager manager;
         commit_data data = manager.input("tag = add([[1]], [[1]])", "me");
 
-        AssertTrue(data.command_time >= 0 && data.command_time < 1);
+        AssertTrue(data.command_duration_seconds >= 0 && data.command_duration_seconds < 1);
     } Done
 
     It("Provides access to the matrix repository")
@@ -88,5 +88,19 @@ Define(ProjectManager)
         std::shared_ptr<const matrix<double>> actual_output = manager.get_matrix(output);
 
         AssertElementsEqual(expected_output, *actual_output);
+    } Done
+
+    It("Provides a list of command names")
+    {
+        project_manager manager;
+        std::vector<std::string> command_names = manager.get_command_names();
+        AssertEqual(std::string("add"), command_names[0]);
+    } Done
+
+    It("Provides a list of command names and help messages")
+    {
+        project_manager manager;
+        std::vector<std::pair<std::string, std::string>> command_names = manager.get_command_help();
+        AssertEqual(std::string("add"), command_names[0].first);
     } Done
 }
