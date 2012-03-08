@@ -14,8 +14,8 @@ Define(HelpManager)
         help_manager help(command_names);
 
         std::stringstream help_message;
-        help_message << "Osoasso Version: " << VERSION << "\n"
-                     << "For a list of commands, type help commands";
+        help_message << "Osoasso Version " << VERSION << "\n"
+                     << "For a list of commands, type this: help commands";
         AssertEqual(help_message.str(), help.get_help_for_action("help"));
     } Done
 

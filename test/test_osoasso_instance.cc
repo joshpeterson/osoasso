@@ -157,8 +157,8 @@ Define(Osoasso)
 
         std::stringstream help_message;
         help_message << "text#help#"
-                     << "Osoasso Version: " << VERSION << "\n"
-                     << "For a list of commands, type help commands";
+                     << "Osoasso Version " << VERSION << "\n"
+                     << "For a list of commands, type this: help commands";
 
         AssertEqual(help_message.str(), instance.handle_message(":help:me@bar.com"));
     } Done

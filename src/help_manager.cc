@@ -22,8 +22,8 @@ std::string help_manager::get_help_for_action(const std::string& action)
     }
     else
     {
-        help_message << "Osoasso Version: " << VERSION << "\n"
-                     << "For a list of commands, type help commands";
+        help_message << "Osoasso Version " << VERSION << "\n"
+                     << "For a list of commands, type this: help commands";
         return help_message.str();
     }
 }
