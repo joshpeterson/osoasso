@@ -24,6 +24,11 @@ public:
     {
         return 15;
     }
+
+    std::string get_help() const
+    {
+        return std::string();
+    }
 };
 
 Define(CommandFactory)

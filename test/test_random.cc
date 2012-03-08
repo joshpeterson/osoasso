@@ -79,4 +79,11 @@ Define(Random)
         
         AssertEqual(2, random_command.number_of_arguments());
     } Done
+
+    It("Provides a help message")
+    {
+        random random_command;
+        
+        AssertEqual(std::string("random(m,n) generates a random matrix of size m x n."), random_command.get_help());
+    } Done
 }

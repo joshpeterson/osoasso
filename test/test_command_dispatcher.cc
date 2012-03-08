@@ -35,6 +35,11 @@ public:
         return 2;
     }
 
+    std::string get_help() const
+    {
+        return std::string();
+    }
+
     bool command_called() const
     {
         return command_called_;

@@ -2,6 +2,7 @@
 #define __RANDOM_H
 
 #include <memory>
+#include <string>
 #include "matrix.h"
 #include "command.h"
 
@@ -14,6 +15,7 @@ public:
     std::shared_ptr<const matrix<double>> call(std::shared_ptr<const matrix<double>> rows,
                                                std::shared_ptr<const matrix<double>> columns) const;
     int number_of_arguments() const;
+    std::string get_help() const;
 };
 
 }

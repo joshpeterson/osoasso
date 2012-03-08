@@ -45,4 +45,11 @@ Define(Add)
         
         AssertEqual(2, add_command.number_of_arguments());
     } Done
+
+    It("Provides a help message")
+    {
+        add add_command;
+
+        AssertEqual(std::string("add(A,B) computes the sum of two matrices m x n A and B."), add_command.get_help());
+    } Done
 }

@@ -45,3 +45,8 @@ int random::number_of_arguments() const
 {
     return 2;
 }
+
+std::string random::get_help() const
+{
+    return "random(m,n) generates a random matrix of size m x n.";
+}

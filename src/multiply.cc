@@ -36,3 +36,8 @@ int multiply::number_of_arguments() const
 {
     return 2;
 }
+
+std::string multiply::get_help() const
+{
+    return "multiply(A,B) computes the product of two matrices A (m x n) and B (n x p), with A on the left.";
+}

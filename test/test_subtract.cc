@@ -45,4 +45,11 @@ Define(Subtract)
         
         AssertEqual(2, subtract_command.number_of_arguments());
     } Done
+
+    It("Provides a help message")
+    {
+        subtract subtract_command;
+
+        AssertEqual(std::string("subtract(A,B) computes the difference of two matrices m x n A and B, with A on the left."), subtract_command.get_help());
+    } Done
 }
