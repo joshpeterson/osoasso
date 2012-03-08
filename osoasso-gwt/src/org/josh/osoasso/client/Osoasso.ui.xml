@@ -35,7 +35,7 @@
   		<g:north size='4'>
   			<g:HorizontalPanel>
   				<g:cell width="100%" horizontalAlignment="ALIGN_LEFT">
-  					<g:Image resource="{res.logo}"/>
+  					<g:Image resource="{res.logo}" title="It's a made-up word (pronounced oh-s-oh-s-oh)."/>
 	   			</g:cell>
 	   			<g:cell width="100%" horizontalAlignment="ALIGN_RIGHT">
 	   				<g:TextBox width="300px" ui:field='usernameField' addStyleNames='{style.inputArea}' title="Your username can really be anything, maybe an email address or Twitter handle."/>
@@ -43,12 +43,12 @@
    			</g:HorizontalPanel>
   		</g:north>
   		<g:center>
-    		<g:ScrollPanel ui:field='scrollPanel' addStyleNames='{style.bodyArea}'>
+    		<g:ScrollPanel ui:field='scrollPanel' addStyleNames='{style.bodyArea}' title="The output from commands will show up here (if some has not already).">
     			<g:VerticalPanel ui:field='resultsPanel'/>
     		</g:ScrollPanel>
   		</g:center>
   		<g:south size='4'>
-  			<g:TextBox ui:field='inputField' addStyleNames='{style.inputArea}'/>
+  			<g:TextBox ui:field='inputField' addStyleNames='{style.inputArea}' title="Type commands here.  If you're not sure what to type, try typing this: help"/>
   		</g:south>
 	</g:DockLayoutPanel>
 </ui:UiBinder> 
