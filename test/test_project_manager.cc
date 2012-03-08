@@ -96,4 +96,11 @@ Define(ProjectManager)
         std::vector<std::string> command_names = manager.get_command_names();
         AssertEqual(std::string("add"), command_names[0]);
     } Done
+
+    It("Provides a list of command names and help messages")
+    {
+        project_manager manager;
+        std::vector<std::pair<std::string, std::string>> command_names = manager.get_command_help();
+        AssertEqual(std::string("add"), command_names[0].first);
+    } Done
 }

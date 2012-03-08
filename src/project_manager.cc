@@ -41,6 +41,19 @@ std::vector<std::string> project_manager::get_command_names() const
 
 }
 
+std::vector<std::pair<std::string, std::string>> project_manager::get_command_help() const
+{
+    std::vector<std::string> command_names = commands_.get_names();
+    std::vector<std::pair<std::string, std::string>> command_help;
+
+    for (auto name = command_names.begin(); name != command_names.end(); ++name)
+    {
+        command_help.push_back(std::make_pair(*name, commands_.get(*name)->get_help()));
+    }
+
+    return command_help;
+}
+
 commit_data project_manager::get_last_commit(std::string& tag, double command_duration_seconds) const
 {
     std::string head_commit_name = commit_tree_.head();

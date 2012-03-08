@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <string>
+#include <utility>
 #include "object_repository.h"
 #include "matrix.h"
 #include "command.h"
@@ -44,6 +45,7 @@ public:
     virtual std::shared_ptr<const matrix<double>> get_matrix(const std::string& name) const;
 
     std::vector<std::string> get_command_names() const;
+    std::vector<std::pair<std::string, std::string>> get_command_help() const;
 
 private:
     command_factory commands_;

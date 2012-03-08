@@ -10,7 +10,7 @@ using namespace osoasso;
 
 static const char message_argument_separator = ':';
 
-osoasso_instance::osoasso_instance(project_manager& manager) : manager_(manager), help_(manager_.get_command_names())
+osoasso_instance::osoasso_instance(project_manager& manager) : manager_(manager), help_(manager_.get_command_help())
 {
 }
 

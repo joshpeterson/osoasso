@@ -4,7 +4,7 @@
 
 using namespace osoasso;
 
-help_manager::help_manager(const std::vector<std::string>& command_names) : command_names_(command_names)
+help_manager::help_manager(const std::vector<std::pair<std::string, std::string>>& command_help) : command_help_(command_help)
 {
 }
 
@@ -13,9 +13,9 @@ std::string help_manager::get_help_for_action(const std::string& action)
     std::stringstream help_message;
     if (action == "help commands")
     {
-        for (auto i = command_names_.begin(); i != command_names_.end(); ++i)
+        for (auto i = command_help_.begin(); i != command_help_.end(); ++i)
         {
-            help_message << *i << std::endl;
+            help_message << i->first << " - " << i->second << std::endl;
         }
 
         return help_message.str();

@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <utility>
 
 namespace osoasso
 {
@@ -10,11 +11,11 @@ namespace osoasso
 class help_manager
 {
 public:
-    help_manager(const std::vector<std::string>& command_names);
+    help_manager(const std::vector<std::pair<std::string, std::string>>& command_help);
     std::string get_help_for_action(const std::string& action);
 
 private:
-    const std::vector<std::string> command_names_;
+    const std::vector<std::pair<std::string, std::string>> command_help_;
 };
 
 }
