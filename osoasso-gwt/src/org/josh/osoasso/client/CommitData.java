@@ -51,7 +51,6 @@ public class CommitData
 
     public String getCommandElapsedTime()
     {
-        return commitStringParts[commitStringIndexes.COMMAND_ELAPSED_TIME
-                .ordinal()];
+        return commitStringParts[commitStringIndexes.COMMAND_ELAPSED_TIME.ordinal()];
     }
 }

@@ -109,9 +109,8 @@ public class Osoasso extends Composite implements EntryPoint
         Window.setMargin("0px");
 
         final NaclWidget naclWidget = new NaclWidget();
-        naclWidget.setHTML("<embed name=\"nacl_module\" " + "id=\"osoasso\" "
-                + "width=0 height=0 " + "src=\"osoasso.nmf\" "
-                + "type=\"application/x-nacl\" />");
+        naclWidget.setHTML("<embed name=\"nacl_module\" " + "id=\"osoasso\" " + "width=0 height=0 " + "src=\"osoasso.nmf\" "
+                        + "type=\"application/x-nacl\" />");
 
         // Schedule a timer to display a help message when the NaCl executable
         // loads.
@@ -120,8 +119,7 @@ public class Osoasso extends Composite implements EntryPoint
             public void run()
             {
                 AddHTMLToResultsPanel("Attempting to communicate with the Osoasso NaCl executable...");
-                CallOsoassoNaclModuleInputMethod(naclModule, "help",
-                        usernameField.getText());
+                CallOsoassoNaclModuleInputMethod(naclModule, "help", usernameField.getText());
                 inputField.setReadOnly(true);
             }
         };
@@ -151,17 +149,16 @@ public class Osoasso extends Composite implements EntryPoint
         {
             if (e.getCharCode() == KeyCodes.KEY_ENTER)
             {
-                CallOsoassoNaclModuleInputMethod(naclModule,
-                        inputField.getText(), usernameField.getText());
+                CallOsoassoNaclModuleInputMethod(naclModule, inputField.getText(), usernameField.getText());
 
                 scrollPanel.scrollToBottom();
 
                 inputField.setReadOnly(true);
             }
-        } else if (e.getSource() == this.usernameField)
+        }
+        else if (e.getSource() == this.usernameField)
         {
-            Cookies.setCookie(UsernameCookieName,
-                    usernameField.getText() + e.getCharCode());
+            Cookies.setCookie(UsernameCookieName, usernameField.getText() + e.getCharCode());
         }
     }
 
@@ -181,13 +178,15 @@ public class Osoasso extends Composite implements EntryPoint
 
                 this.AddHTMLToResultsPanel(formatter.formatAction());
                 this.AddHTMLToResultsPanel(formatter.formatErrorMessage());
-            } else if (message.startsWith("text"))
+            }
+            else if (message.startsWith("text"))
             {
                 TextFormatter formatter = new TextFormatter(message);
                 if (this.initalHelpMessageDisplayed)
                 {
                     this.AddHTMLToResultsPanel(formatter.formatAction());
-                } else
+                }
+                else
                 {
                     naclModuleLoadErrorTimer.cancel();
                     this.initalHelpMessageDisplayed = true;
@@ -197,7 +196,8 @@ public class Osoasso extends Composite implements EntryPoint
                 {
                     this.AddHTMLToResultsPanel(line);
                 }
-            } else
+            }
+            else
             {
                 CommitData commit = new CommitData(message);
                 CommitDataFormatter formatter = new CommitDataFormatter(commit);
@@ -251,8 +251,7 @@ public class Osoasso extends Composite implements EntryPoint
 						}, false);
     }-*/;
 
-    protected native void CallOsoassoNaclModuleInputMethod(
-            JavaScriptObject naclModule, String input, String username)
+    protected native void CallOsoassoNaclModuleInputMethod(JavaScriptObject naclModule, String input, String username)
     /*-{
 		naclModule.postMessage('input:' + input + ":" + username);
     }-*/;

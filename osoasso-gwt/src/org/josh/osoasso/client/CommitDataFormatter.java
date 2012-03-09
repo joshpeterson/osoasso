@@ -16,9 +16,8 @@ public class CommitDataFormatter
 
     public String formatCommitMetaData()
     {
-        return "Commit: " + this.commit.getName() + " ("
-                + this.commit.getUser() + "/" + this.commit.getTime()
-                + ") Elapsed: " + this.commit.getCommandElapsedTime() + "s";
+        return "Commit: " + this.commit.getName() + " (" + this.commit.getUser() + "/" + this.commit.getTime() + ") Elapsed: "
+                        + this.commit.getCommandElapsedTime() + "s";
     }
 
     public String formatOutputName()

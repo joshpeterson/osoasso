@@ -11,8 +11,7 @@ public class StringConcatenator
         int secondCommaIndex = part.indexOf(',', firstCommaIndex + 1);
 
         String partNumberString = part.substring(0, firstCommaIndex);
-        String numberOfPartsString = part.substring(firstCommaIndex + 1,
-                secondCommaIndex);
+        String numberOfPartsString = part.substring(firstCommaIndex + 1, secondCommaIndex);
 
         fullString.append(part.substring(secondCommaIndex + 1));
 

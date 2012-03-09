@@ -23,9 +23,7 @@ public class CommitDataFormatterTests
         CommitData commit = new CommitData("CommitName#foo([[1 5]], [[1 3]])#me@bar.com#Some time GMT#3.14#OutputName#[[1 2]]");
         CommitDataFormatter formatter = new CommitDataFormatter(commit);
 
-        assertEquals(
-                "Commit: CommitName (me@bar.com/Some time GMT) Elapsed: 3.14s",
-                formatter.formatCommitMetaData());
+        assertEquals("Commit: CommitName (me@bar.com/Some time GMT) Elapsed: 3.14s", formatter.formatCommitMetaData());
     }
 
     @Test
