@@ -61,7 +61,7 @@ public:
             ++matrix_iterator_;
         }
 
-        iterator<ValueType> end;
+        matrix_element_iterator<ValueType> end;
         if (matrix_iterator_ == end)
         {
             // Signal the end iterator
@@ -105,7 +105,7 @@ private:
     bool row_size_returned_;
     double columns_;
     bool column_size_returned_;
-    iterator<ValueType> matrix_iterator_;
+    matrix_element_iterator<ValueType> matrix_iterator_;
 };
 
 }

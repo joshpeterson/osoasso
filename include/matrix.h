@@ -78,14 +78,14 @@ public:
         return data_[row-1][column-1];
     }
 
-    iterator<ValueType> begin() const
+    matrix_element_iterator<ValueType> begin() const
     {
-        return iterator<ValueType>(this);
+        return matrix_element_iterator<ValueType>(this);
     }
 
-    iterator<ValueType> end() const
+    matrix_element_iterator<ValueType> end() const
     {
-        return iterator<ValueType>();
+        return matrix_element_iterator<ValueType>();
     }
 
     template <typename T> friend class matrix_builder;
