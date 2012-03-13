@@ -3,6 +3,7 @@
 
 #include <iterator>
 #include "matrix.h"
+#include "matrix_element_iterator.h"
 
 namespace osoasso
 {
@@ -26,7 +27,7 @@ public:
     {
     }
 
-    const ValueType& operator*() const
+    ValueType operator*() const
     {
         if (!row_size_returned_)
         {
@@ -60,7 +61,7 @@ public:
             ++matrix_iterator_;
         }
 
-        typename matrix<ValueType>::iterator end;
+        iterator<ValueType> end;
         if (matrix_iterator_ == end)
         {
             // Signal the end iterator
@@ -104,7 +105,7 @@ private:
     bool row_size_returned_;
     double columns_;
     bool column_size_returned_;
-    typename matrix<ValueType>::iterator matrix_iterator_;
+    iterator<ValueType> matrix_iterator_;
 };
 
 }

@@ -4,6 +4,7 @@
 #include <stdexcept>
 #include <sstream>
 #include <vector>
+#include "matrix_element_iterator.h"
 #include "blob.h"
 
 namespace osoasso
@@ -77,89 +78,14 @@ public:
         return data_[row-1][column-1];
     }
 
-    class iterator : public std::iterator<std::forward_iterator_tag, ValueType, ptrdiff_t,
-                                          const ValueType*, const ValueType&>
+    iterator<ValueType> begin() const
     {
-    public:
-        iterator() : matrix_(NULL), current_row_index_(0), current_column_index_(0)
-        {
-        }
-
-        explicit iterator(const matrix<ValueType>* matrix) : matrix_(matrix), current_row_index_(0),
-                                                             current_column_index_(0)
-        {
-        }
-
-        const ValueType& operator*() const
-        {
-            return matrix_->data_[current_row_index_][current_column_index_];
-        }
-
-        const ValueType* operator->() const
-        {
-            return &(*this);
-        }
-
-        iterator& operator++()
-        {
-            ++current_column_index_;
-            if (current_column_index_ >= matrix_->columns_)
-            {
-                current_column_index_ = 0;
-                ++current_row_index_;
-            }
-
-            if (current_row_index_ >= matrix_->rows_)
-            {
-                // Signal the end iterator
-                matrix_ = NULL;
-                current_row_index_ = 0;
-                current_column_index_ = 0;
-            }
-
-            return *this;
-        }
-
-        iterator operator++(int)
-        {
-            iterator previous = *this;
-            ++(*this);
-
-            return previous;
-        }
-
-        bool equal(const iterator& other) const
-        {
-            return matrix_ == other.matrix_ && current_row_index_ == other.current_row_index_ &&
-                   current_column_index_ == other.current_column_index_;
-        }
-
-        bool operator==(const iterator& other) const
-        {
-            return equal(other);
-        }
-
-        bool operator!=(const iterator& other) const
-        {
-            return !equal(other);
-        }
-
-    protected:
-        const matrix<ValueType>* matrix_;
-
-    private:
-        size_t current_row_index_;
-        size_t current_column_index_;
-    };
-
-    iterator begin() const
-    {
-        return iterator(this);
+        return iterator<ValueType>(this);
     }
 
-    iterator end() const
+    iterator<ValueType> end() const
     {
-        return iterator();
+        return iterator<ValueType>();
     }
 
     template <typename T> friend class matrix_builder;
