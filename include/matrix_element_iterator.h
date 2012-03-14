@@ -17,8 +17,9 @@ public:
     {
     }
 
-    explicit matrix_element_iterator(const matrix<ValueType>* matrix) : matrix_(matrix), current_row_index_(0),
-                                                         current_column_index_(0)
+    explicit matrix_element_iterator(const matrix<ValueType>* matrix) : matrix_(matrix),
+                                                                        current_row_index_(0),
+                                                                        current_column_index_(0)
     {
     }
 
