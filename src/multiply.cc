@@ -17,16 +17,17 @@ std::shared_ptr<const matrix<double>> multiply::call(std::shared_ptr<const matri
         throw std::invalid_argument(message.str());
     }
 
+    size_t result_row_index = 1;
     auto result = std::make_shared<matrix<double>>(left->rows(), right->columns());
-    for (size_t i = 1; i <= left->rows(); ++i)
+    for (auto row = left->row_begin();  row != left->row_end(); ++row)
     {
-        for (size_t j = 1; j <= right->columns(); ++j)
+        size_t result_column_index = 1;
+        for (auto column = right->column_begin(); column != right->column_end(); ++column)
         {
-            for (size_t k = 1; k <= left->columns(); ++k)
-            {
-                (*result)(i,j) += (*left)(i,k) * (*right)(k,j);
-            }
+            (*result)(result_row_index, result_column_index) = multiply_and_add_vector_elements(*row, *column);
+            ++result_column_index;
         }
+        ++result_row_index;
     }
 
     return result;
@@ -40,4 +41,23 @@ int multiply::number_of_arguments() const
 std::string multiply::get_help() const
 {
     return "multiply(A,B) computes the product of two matrices A (m x n) and B (n x p), with A on the left.";
+}
+
+double multiply::multiply_and_add_vector_elements(const std::vector<double>& left, const std::vector<double>& right) const
+{
+    auto end = left.end();
+
+    auto left_it = left.begin();
+    auto right_it = right.begin();
+
+    double result = 0.0;
+    while (left_it != end)
+    {
+        result += *left_it * *right_it;
+
+        ++left_it;
+        ++right_it;
+    }
+
+    return result;
 }
