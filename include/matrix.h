@@ -6,12 +6,12 @@
 #include <vector>
 #include "matrix_element_iterator.h"
 #include "matrix_row_iterator.h"
+#include "matrix_column_iterator.h"
 #include "blob.h"
 
 namespace osoasso
 {
 template <typename T> class matrix_builder;
-template <typename T> class matrix_column_iterator;
 
 template<typename ValueType>
 class matrix
@@ -98,6 +98,16 @@ public:
     matrix_row_iterator<ValueType> row_end() const
     {
         return matrix_row_iterator<ValueType>();
+    }
+
+    matrix_column_iterator<ValueType> column_begin() const
+    {
+        return matrix_column_iterator<ValueType>(this);
+    }
+
+    matrix_column_iterator<ValueType> column_end() const
+    {
+        return matrix_column_iterator<ValueType>();
     }
 
     template <typename T> friend class matrix_builder;

@@ -182,6 +182,27 @@ Define(Matrix)
         AssertElementsEqual(expected_row_1, actual_row_1);
         AssertElementsEqual(expected_row_2, actual_row_2);
     } Done
+
+    It("Can be iterated by column")
+    {
+        std::vector<double> expected_column_0 = { 3.14, 2.72, 12.04 };
+        std::vector<double> expected_column_1 = { 1.0, 8.9, 23.5 };
+        std::vector<double> expected_column_2 = { 3.19, 5.42, 287 };
+        std::vector<double> expected_column_3 = { 3.17, 2.13, 9.7 };
+
+        std::vector<std::vector<double>> actual_columns;
+
+        matrix<double> test_matrix = { { 3.14, 1.0, 3.19, 3.17 }, { 2.72, 8.9, 5.42, 2.13 }, { 12.04, 23.5, 287, 9.7 }  };
+        for (auto it = test_matrix.column_begin(); it != test_matrix.column_end(); ++it)
+        {
+            actual_columns.push_back(*it);
+        }
+
+        AssertElementsEqual(expected_column_0, actual_columns[0]);
+        AssertElementsEqual(expected_column_1, actual_columns[1]);
+        AssertElementsEqual(expected_column_2, actual_columns[2]);
+        AssertElementsEqual(expected_column_3, actual_columns[3]);
+    } Done
 }
 
 matrix<double> test_move()
