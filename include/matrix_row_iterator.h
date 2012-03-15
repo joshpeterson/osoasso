@@ -24,8 +24,7 @@ public:
 
     std::vector<ValueType> operator*() const
     {
-        std::vector<double> row = { 3.14, 1.0 };
-        return row;
+        return matrix_->data_[current_row_index_];
     }
 
     const std::vector<ValueType>* operator->() const
@@ -35,6 +34,14 @@ public:
 
     matrix_row_iterator& operator++()
     {
+        ++current_row_index_;
+        if (current_row_index_ > matrix_->rows_ - 1)
+        {
+            // Signal the end iterator
+            matrix_ = NULL;
+            current_row_index_ = 0;
+        }
+
         return *this;
     }
 

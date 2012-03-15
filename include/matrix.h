@@ -10,6 +10,7 @@
 namespace osoasso
 {
 template <typename T> class matrix_builder;
+template <typename T> class matrix_row_iterator;
 
 template<typename ValueType>
 class matrix
@@ -89,6 +90,7 @@ public:
     }
 
     template <typename T> friend class matrix_builder;
+    template <typename T> friend class matrix_row_iterator;
 
 private:
     size_t rows_;
