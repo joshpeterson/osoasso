@@ -158,6 +158,30 @@ Define(Matrix)
         matrix<double> test_matrix(3,4);
         test_matrix(1,1) = 1;
     } Done
+
+    It("Can be iterated by row")
+    {
+        std::vector<double> expected_row_1 = { 3.14, 1.0, 3.19 };
+        std::vector<double> expected_row_2 = { 2.72, 8.9, 5.42};
+
+        std::vector<double> actual_row_1;
+        std::vector<double> actual_row_2;
+
+        int row = 1;
+
+        matrix<double> test_matrix = { { 3.14, 1.0, 3.19 }, { 2.72, 8.9, 5.42} };
+        for (auto it = test_matrix.row_begin(); it != test_matrix.row_end(); ++it)
+        {
+            if (row == 1)
+                actual_row_1 = *it;
+            else
+                actual_row_2 = *it;
+            row++;
+        }
+
+        AssertElementsEqual(expected_row_1, actual_row_1);
+        AssertElementsEqual(expected_row_2, actual_row_2);
+    } Done
 }
 
 matrix<double> test_move()
