@@ -64,8 +64,6 @@ Define(MatrixRowIterator)
 
     It ("Signals the end iterator")
     {
-        std::vector<double> expected_row = { 2.72, 8.9 };
-
         auto end = matrix_row_iterator<double>();
 
         matrix<double> test_matrix = { { 3.14, 1.0 }, { 2.72, 8.9 } };
