@@ -161,26 +161,19 @@ Define(Matrix)
 
     It("Can be iterated by row")
     {
-        std::vector<double> expected_row_1 = { 3.14, 1.0, 3.19 };
-        std::vector<double> expected_row_2 = { 2.72, 8.9, 5.42};
+        std::vector<double> expected_row_0 = { 3.14, 1.0, 3.19 };
+        std::vector<double> expected_row_1 = { 2.72, 8.9, 5.42};
 
-        std::vector<double> actual_row_1;
-        std::vector<double> actual_row_2;
-
-        int row = 1;
+        std::vector<std::vector<double>> actual_rows;
 
         matrix<double> test_matrix = { { 3.14, 1.0, 3.19 }, { 2.72, 8.9, 5.42} };
         for (auto it = test_matrix.row_begin(); it != test_matrix.row_end(); ++it)
         {
-            if (row == 1)
-                actual_row_1 = *it;
-            else
-                actual_row_2 = *it;
-            row++;
+            actual_rows.push_back(*it);
         }
 
-        AssertElementsEqual(expected_row_1, actual_row_1);
-        AssertElementsEqual(expected_row_2, actual_row_2);
+        AssertElementsEqual(expected_row_0, actual_rows[0]);
+        AssertElementsEqual(expected_row_1, actual_rows[1]);
     } Done
 
     It("Can be iterated by column")
