@@ -134,7 +134,7 @@ public class Osoasso extends Composite implements EntryPoint
                 AddHTMLToResultsPanel("Make sure you are using the Google Chrome browser with Native Client enabled in about:flags.");
             }
         };
-        naclModuleLoadErrorTimer.schedule(5000);
+        naclModuleLoadErrorTimer.schedule(10000);
 
         RootLayoutPanel root = RootLayoutPanel.get();
         root.add(naclWidget);
