@@ -25,8 +25,11 @@ Define(StressTestColumnIterator)
 
         timer column_iteration_timer;
 
+        double value = 0.0;
         for (auto it = big->column_begin(); it != big->column_end(); ++it)
         {
+            // Do something so the compiler actually generates the loop.
+            value += (*it)[0];
         }
 
         std::cout << " Time to iterate columns: " << column_iteration_timer.elapsed() << "s" << std::endl;
