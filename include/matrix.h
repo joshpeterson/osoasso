@@ -4,6 +4,7 @@
 #include <stdexcept>
 #include <sstream>
 #include <vector>
+#include "sse2_aligned_allocator.h"
 #include "matrix_element_iterator.h"
 #include "matrix_row_iterator.h"
 #include "matrix_column_iterator.h"
@@ -20,6 +21,8 @@ public:
     matrix(std::initializer_list<std::initializer_list<ValueType>> list) : rows_(list.size()), columns_(0),
                                                                            data_()
     {
+        data_.reserve(rows_);
+
         int row_number = 1;
         for (auto i = list.begin(); i != list.end(); ++i)
         {
@@ -35,7 +38,10 @@ public:
                 throw std::invalid_argument(message.str());
             }
 
-            data_.push_back(std::vector<ValueType>(i->begin(), i->end()));
+            std::vector<ValueType, sse2_aligned_allocator<ValueType>> row;
+            row.reserve(columns_);
+            std::copy(i->begin(), i->end(), std::back_inserter(row));
+            data_.push_back(row);
 
             row_number++;
         }
@@ -50,7 +56,7 @@ public:
     {
         for (size_t i = 0; i < rows_; ++i)
         {
-            data_.push_back(std::vector<ValueType>(columns_));
+            data_.push_back(std::vector<ValueType, sse2_aligned_allocator<ValueType>>(columns_));
         }
     }
 
@@ -117,7 +123,7 @@ public:
 private:
     size_t rows_;
     size_t columns_;
-    std::vector<std::vector<ValueType>> data_;
+    std::vector<std::vector<ValueType, sse2_aligned_allocator<ValueType>>, sse2_aligned_allocator<std::vector<ValueType, sse2_aligned_allocator<ValueType>>>> data_;
 
     matrix() : rows_(0), columns_(0), data_()
     {

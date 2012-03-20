@@ -1,7 +1,10 @@
 #include <sstream>
 #include <stdexcept>
+#include <emmintrin.h>
 #include "../include/multiply.h"
 #include "../include/matrix.h"
+
+#include <iostream>
 
 using namespace osoasso;
 
@@ -43,21 +46,27 @@ std::string multiply::get_help() const
     return "multiply(A,B) computes the product of two matrices A (m x n) and B (n x p), with A on the left.";
 }
 
-double multiply::multiply_and_add_vector_elements(const std::vector<double>& left, const std::vector<double>& right) const
+double multiply::multiply_and_add_vector_elements(const std::vector<double, sse2_aligned_allocator<double>>& left,
+                                                  const std::vector<double, sse2_aligned_allocator<double>>& right) const
 {
-    auto end = left.end();
+    std::vector<double, sse2_aligned_allocator<double>> result(2);
 
-    auto left_it = left.begin();
-    auto right_it = right.begin();
-
-    double result = 0.0;
-    while (left_it != end)
+    __m128d result_simd = _mm_load_pd(&result[0]);
+    size_t end = left.size();
+	if (end % 2 != 0)
+		end -= 1;
+    for (size_t i = 0; i < end; i+=2)
     {
-        result += *left_it * *right_it;
-
-        ++left_it;
-        ++right_it;
+        __m128d left_simd = _mm_load_pd(&left[i]);
+        __m128d right_simd = _mm_load_pd(&right[i]);
+        __m128d product_simd = _mm_mul_pd(left_simd, right_simd);
+        result_simd = _mm_add_pd(result_simd, product_simd);
     }
 
-    return result;
+    _mm_store_pd(&result[0], result_simd);
+
+	if (end != left.size())
+		result[1] += left[end] * right[end];
+
+    return result[0] + result[1];
 }

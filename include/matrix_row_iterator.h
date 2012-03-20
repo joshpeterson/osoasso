@@ -22,12 +22,12 @@ public:
     {
     }
 
-    std::vector<ValueType> operator*() const
+    std::vector<ValueType, sse2_aligned_allocator<ValueType>> operator*() const
     {
         return matrix_->data_[current_row_index_];
     }
 
-    const std::vector<ValueType>* operator->() const
+    const std::vector<ValueType, sse2_aligned_allocator<ValueType>>* operator->() const
     {
         return &(*this);
     }

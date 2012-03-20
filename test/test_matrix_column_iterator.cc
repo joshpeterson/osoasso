@@ -8,7 +8,7 @@ Define(MatrixColumnIterator)
 {
     It ("Can be dereferenced")
     {
-        std::vector<double> expected_column = { 3.14, 2.72 };
+        std::vector<double, sse2_aligned_allocator<double>> expected_column = { 3.14, 2.72 };
 
         matrix<double> test_matrix = { { 3.14, 1.0 }, { 2.72, 8.9 } };
         auto it = matrix_column_iterator<double>(&test_matrix);
@@ -18,7 +18,7 @@ Define(MatrixColumnIterator)
 
     It ("Can be incremented")
     {
-        std::vector<double> expected_column = { 1.0, 8.9 };
+        std::vector<double, sse2_aligned_allocator<double>> expected_column = { 1.0, 8.9 };
 
         matrix<double> test_matrix = { { 3.14, 1.0 }, { 2.72, 8.9 } };
         auto it = matrix_column_iterator<double>(&test_matrix);
@@ -29,7 +29,7 @@ Define(MatrixColumnIterator)
 
     It ("Can be incremented more than once")
     {
-        std::vector<double> expected_column = { 5.2, 2.4 };
+        std::vector<double, sse2_aligned_allocator<double>> expected_column = { 5.2, 2.4 };
 
         matrix<double> test_matrix = { { 3.14, 1.0, 5.2 }, { 2.72, 8.9, 2.4 } };
         auto it = matrix_column_iterator<double>(&test_matrix);
@@ -41,7 +41,7 @@ Define(MatrixColumnIterator)
 
     It ("Post increment returns previous value")
     {
-        std::vector<double> expected_column = { 3.14, 2.72 };
+        std::vector<double, sse2_aligned_allocator<double>> expected_column = { 3.14, 2.72 };
 
         matrix<double> test_matrix = { { 3.14, 1.0 }, { 2.72, 8.9 } };
         auto it = matrix_column_iterator<double>(&test_matrix);
@@ -53,7 +53,7 @@ Define(MatrixColumnIterator)
 
     It ("Pre increment returns next value")
     {
-        std::vector<double> expected_column = { 1.0, 8.9 };
+        std::vector<double, sse2_aligned_allocator<double>> expected_column = { 1.0, 8.9 };
 
         matrix<double> test_matrix = { { 3.14, 1.0 }, { 2.72, 8.9 } };
         auto it = matrix_column_iterator<double>(&test_matrix);

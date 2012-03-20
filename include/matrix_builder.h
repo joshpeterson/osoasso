@@ -64,7 +64,7 @@ public:
 
 private:
     std::shared_ptr<matrix<ValueType>> matrix_;
-    std::vector<ValueType> current_row_;
+    std::vector<ValueType, sse2_aligned_allocator<ValueType>> current_row_;
     bool done_called_;
 };
 

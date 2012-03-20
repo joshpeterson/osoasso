@@ -1,5 +1,4 @@
 #include <stdexcept>
-#include <iostream>
 #include "../test_harness/test.h"
 #include "../include/blob.h"
 #include "../include/matrix.h"
@@ -161,10 +160,10 @@ Define(Matrix)
 
     It("Can be iterated by row")
     {
-        std::vector<double> expected_row_0 = { 3.14, 1.0, 3.19 };
-        std::vector<double> expected_row_1 = { 2.72, 8.9, 5.42};
+        std::vector<double, sse2_aligned_allocator<double>> expected_row_0 = { 3.14, 1.0, 3.19 };
+        std::vector<double, sse2_aligned_allocator<double>> expected_row_1 = { 2.72, 8.9, 5.42};
 
-        std::vector<std::vector<double>> actual_rows;
+        std::vector<std::vector<double, sse2_aligned_allocator<double>>> actual_rows;
 
         matrix<double> test_matrix = { { 3.14, 1.0, 3.19 }, { 2.72, 8.9, 5.42} };
         for (auto it = test_matrix.row_begin(); it != test_matrix.row_end(); ++it)
@@ -178,12 +177,12 @@ Define(Matrix)
 
     It("Can be iterated by column")
     {
-        std::vector<double> expected_column_0 = { 3.14, 2.72, 12.04 };
-        std::vector<double> expected_column_1 = { 1.0, 8.9, 23.5 };
-        std::vector<double> expected_column_2 = { 3.19, 5.42, 287 };
-        std::vector<double> expected_column_3 = { 3.17, 2.13, 9.7 };
+        std::vector<double, sse2_aligned_allocator<double>> expected_column_0 = { 3.14, 2.72, 12.04 };
+        std::vector<double, sse2_aligned_allocator<double>> expected_column_1 = { 1.0, 8.9, 23.5 };
+        std::vector<double, sse2_aligned_allocator<double>> expected_column_2 = { 3.19, 5.42, 287 };
+        std::vector<double, sse2_aligned_allocator<double>> expected_column_3 = { 3.17, 2.13, 9.7 };
 
-        std::vector<std::vector<double>> actual_columns;
+        std::vector<std::vector<double, sse2_aligned_allocator<double>>> actual_columns;
 
         matrix<double> test_matrix = { { 3.14, 1.0, 3.19, 3.17 }, { 2.72, 8.9, 5.42, 2.13 }, { 12.04, 23.5, 287, 9.7 }  };
         for (auto it = test_matrix.column_begin(); it != test_matrix.column_end(); ++it)

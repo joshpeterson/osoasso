@@ -3,6 +3,7 @@
 
 #include <iterator>
 #include <vector>
+#include "sse2_aligned_allocator.h"
 
 namespace osoasso
 {
@@ -22,9 +23,9 @@ public:
     {
     }
 
-    std::vector<ValueType> operator*() const
+    std::vector<ValueType, sse2_aligned_allocator<ValueType>> operator*() const
     {
-        std::vector<ValueType> column;
+        std::vector<ValueType, sse2_aligned_allocator<ValueType>> column;
         for (size_t i = 0; i < matrix_->rows_; ++i)
         {
             column.push_back(matrix_->data_[i][current_column_index_]);
@@ -33,7 +34,7 @@ public:
         return column;
     }
 
-    const std::vector<ValueType>* operator->() const
+    const std::vector<ValueType, sse2_aligned_allocator<ValueType>>* operator->() const
     {
         return &(*this);
     }
