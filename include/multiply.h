@@ -18,8 +18,11 @@ public:
     std::string get_help() const;
 
 private:
-    double multiply_and_add_vector_elements(const std::vector<double, sse2_aligned_allocator<double>>& left,
-                                            const std::vector<double, sse2_aligned_allocator<double>>& right) const;
+    double multiply_and_add_vector_elements_naive(const std::vector<double, sse2_aligned_allocator<double>>& left,
+                                                  const std::vector<double, sse2_aligned_allocator<double>>& right) const;
+
+    void multiply_and_add_vector_elements_sse2(const std::vector<double, sse2_aligned_allocator<double>>& left,
+                                               const std::vector<double, sse2_aligned_allocator<double>>& right, double* result) const;
 };
 
 }

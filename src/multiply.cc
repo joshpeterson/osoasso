@@ -4,7 +4,7 @@
 #include "../include/multiply.h"
 #include "../include/matrix.h"
 
-#include <iostream>
+#define SSE2
 
 using namespace osoasso;
 
@@ -20,6 +20,11 @@ std::shared_ptr<const matrix<double>> multiply::call(std::shared_ptr<const matri
         throw std::invalid_argument(message.str());
     }
 
+#ifdef SSE2
+    std::vector<double, sse2_aligned_allocator<double>> result_sse2;
+    result_sse2.reserve(2);
+#endif
+
     size_t result_row_index = 1;
     auto result = std::make_shared<matrix<double>>(left->rows(), right->columns());
     for (auto row = left->row_begin();  row != left->row_end(); ++row)
@@ -27,7 +32,13 @@ std::shared_ptr<const matrix<double>> multiply::call(std::shared_ptr<const matri
         size_t result_column_index = 1;
         for (auto column = right->column_begin(); column != right->column_end(); ++column)
         {
-            (*result)(result_row_index, result_column_index) = multiply_and_add_vector_elements(*row, *column);
+#ifdef SSE2
+            result_sse2[0] = result_sse2[1] = 0.0;
+            multiply_and_add_vector_elements_sse2(*row, *column, &result_sse2[0]);
+            (*result)(result_row_index, result_column_index) = result_sse2[0] + result_sse2[1];
+#else
+            (*result)(result_row_index, result_column_index) = multiply_and_add_vector_elements_naive(*row, *column);
+#endif
             ++result_column_index;
         }
         ++result_row_index;
@@ -46,12 +57,30 @@ std::string multiply::get_help() const
     return "multiply(A,B) computes the product of two matrices A (m x n) and B (n x p), with A on the left.";
 }
 
-double multiply::multiply_and_add_vector_elements(const std::vector<double, sse2_aligned_allocator<double>>& left,
-                                                  const std::vector<double, sse2_aligned_allocator<double>>& right) const
+double multiply::multiply_and_add_vector_elements_naive(const std::vector<double, sse2_aligned_allocator<double>>& left,
+                                                        const std::vector<double, sse2_aligned_allocator<double>>& right) const
 {
-    std::vector<double, sse2_aligned_allocator<double>> result(2);
+    double result = 0.0;
 
-    __m128d result_simd = _mm_load_pd(&result[0]);
+    auto end = left.end();
+
+    auto left_it = left.begin();
+    auto right_it = right.begin();
+
+    while(left_it != end)
+    {
+        result += *left_it * *right_it;
+        ++left_it;
+        ++right_it;
+    }
+
+    return result;
+}
+
+void multiply::multiply_and_add_vector_elements_sse2(const std::vector<double, sse2_aligned_allocator<double>>& left,
+                                                     const std::vector<double, sse2_aligned_allocator<double>>& right, double* result) const
+{
+    __m128d result_simd = _mm_load_pd(result);
     size_t end = left.size();
 	if (end % 2 != 0)
 		end -= 1;
@@ -63,10 +92,8 @@ double multiply::multiply_and_add_vector_elements(const std::vector<double, sse2
         result_simd = _mm_add_pd(result_simd, product_simd);
     }
 
-    _mm_store_pd(&result[0], result_simd);
+    _mm_store_pd(result, result_simd);
 
-	if (end != left.size())
-		result[1] += left[end] * right[end];
-
-    return result[0] + result[1];
+    if (end != left.size())
+        *result += left[end] * right[end];
 }

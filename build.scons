@@ -11,7 +11,7 @@ import os
 use_c_plus_plus_libs=True
 nacl_platform='pepper_16'
 cpp_path = [os.path.dirname(os.path.dirname(os.getcwd()))]
-cc_flags = ['-Wall', '-Wno-long-long', '-pthread', '-Werror', '-std=c++0x', '-O2', '-msse2']
+cc_flags = ['-Wall', '-Wno-long-long', '-pthread', '-Werror', '-std=c++0x', '-msse2']
 
 source_info = [('src/osoasso.cc', ["deploy"]),
 ('src/osoasso_instance.cc', ["deploy", "test"]),
