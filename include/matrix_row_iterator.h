@@ -24,7 +24,13 @@ public:
 
     std::vector<ValueType> operator*() const
     {
-        return matrix_->data_[current_row_index_];
+        std::vector<ValueType> row;
+        for (size_t i = 0; i < matrix_->columns_; ++i)
+        {
+            row.push_back(matrix_->data_[(current_row_index_ * matrix_->columns_) + i]);
+        }
+
+        return row;
     }
 
     const std::vector<ValueType>* operator->() const

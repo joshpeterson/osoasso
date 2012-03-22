@@ -27,7 +27,7 @@ public:
         std::vector<ValueType> column;
         for (size_t i = 0; i < matrix_->rows_; ++i)
         {
-            column.push_back(matrix_->data_[i][current_column_index_]);
+            column.push_back(matrix_->data_[(i * matrix_->columns_) + current_column_index_]);
         }
 
         return column;

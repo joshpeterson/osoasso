@@ -42,7 +42,7 @@ public:
         ++matrix_->rows_;
         if (matrix_->rows_ > 1)
         {
-            matrix_->data_.push_back(current_row_);
+            std::copy(current_row_.begin(), current_row_.end(), std::back_inserter(matrix_->data_));
             current_row_.clear();
         }
     }
@@ -56,7 +56,7 @@ public:
 
         done_called_ = true;
 
-        matrix_->data_.push_back(current_row_);
+        std::copy(current_row_.begin(), current_row_.end(), std::back_inserter(matrix_->data_));
         current_row_.clear();
 
         return matrix_;

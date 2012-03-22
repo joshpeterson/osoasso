@@ -26,6 +26,7 @@ public:
             if (columns_ == 0)
             {
                 columns_ = i->size();
+                data_.reserve(rows_ * columns_);
             }
             else if (columns_ != i->size())
             {
@@ -35,7 +36,7 @@ public:
                 throw std::invalid_argument(message.str());
             }
 
-            data_.push_back(std::vector<ValueType>(i->begin(), i->end()));
+            std::copy(i->begin(), i->end(), std::back_inserter(data_));
 
             row_number++;
         }
@@ -48,10 +49,7 @@ public:
 
     matrix(size_t rows, size_t columns) : rows_(rows), columns_(columns), data_()
     {
-        for (size_t i = 0; i < rows_; ++i)
-        {
-            data_.push_back(std::vector<ValueType>(columns_));
-        }
+        data_.reserve(rows_ * columns_);
     }
 
     size_t rows() const
@@ -69,7 +67,7 @@ public:
         validate_row(row);
         validate_column(column);
 
-        return data_[row-1][column-1];
+        return data_[((row-1) * columns_) + (column-1)];
     }
 
     ValueType& operator()(size_t row, size_t column)
@@ -77,7 +75,7 @@ public:
         validate_row(row);
         validate_column(column);
 
-        return data_[row-1][column-1];
+        return data_[((row-1) * columns_) + (column-1)];
     }
 
     matrix_element_iterator<ValueType> begin() const
@@ -117,7 +115,7 @@ public:
 private:
     size_t rows_;
     size_t columns_;
-    std::vector<std::vector<ValueType>> data_;
+    std::vector<ValueType> data_;
 
     matrix() : rows_(0), columns_(0), data_()
     {
