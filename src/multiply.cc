@@ -4,7 +4,7 @@
 #include "../include/multiply.h"
 #include "../include/matrix.h"
 
-#define SSE2
+#define SSE2_CUSTOM_ASM
 
 using namespace osoasso;
 
@@ -20,7 +20,7 @@ std::shared_ptr<const matrix<double>> multiply::call(std::shared_ptr<const matri
         throw std::invalid_argument(message.str());
     }
 
-#ifdef SSE2
+#if defined(SSE2_INTRINSICS) || defined(SSE2_CUSTOM_ASM)
     std::vector<double, sse2_aligned_allocator<double>> result_sse2;
     result_sse2.reserve(2);
 #endif
@@ -32,9 +32,12 @@ std::shared_ptr<const matrix<double>> multiply::call(std::shared_ptr<const matri
         size_t result_column_index = 1;
         for (auto column = right->column_begin(); column != right->column_end(); ++column)
         {
-#ifdef SSE2
+#if defined(SSE2_INTRINSICS)
             result_sse2[0] = result_sse2[1] = 0.0;
-            multiply_and_add_vector_elements_sse2(*row, *column, &result_sse2[0]);
+            multiply_and_add_vector_elements_sse2_intrinsics(*row, *column, &result_sse2[0]);
+            (*result)(result_row_index, result_column_index) = result_sse2[0] + result_sse2[1];
+#elif defined(SSE2_CUSTOM_ASM)
+            multiply_and_add_vector_elements_sse2_custom_asm(*row, *column, &result_sse2[0]);
             (*result)(result_row_index, result_column_index) = result_sse2[0] + result_sse2[1];
 #else
             (*result)(result_row_index, result_column_index) = multiply_and_add_vector_elements_naive(*row, *column);
@@ -57,6 +60,51 @@ std::string multiply::get_help() const
     return "multiply(A,B) computes the product of two matrices A (m x n) and B (n x p), with A on the left.";
 }
 
+void multiply::multiply_and_add_vector_elements_sse2_custom_asm(const std::vector<double, sse2_aligned_allocator<double>>& left,
+                                                               const std::vector<double, sse2_aligned_allocator<double>>& right, double* result) const
+{
+    __asm
+	(
+        ".intel_syntax noprefix\n"
+		"xorpd xmm2, xmm2\n"
+	);
+
+    size_t size = left.size();
+	if (size % 2 != 0)
+		size -= 1;
+	for (size_t i = 0; i < size; i +=2)
+	{
+		const double* left_mine = &left[i];
+		const double* right_mine = &right[i];
+
+		__asm
+		(
+            ".intel_syntax noprefix\n"
+			"mov esi, %[foo2]\n"
+			"mov edx, %[foo1]\n"
+
+			"movapd xmm4, [edx]\n"
+			"movapd xmm6, [edx+0x20]\n"
+
+			"movapd xmm0, [esi]\n"
+
+			"mulpd xmm0, xmm4\n"
+
+			"addpd xmm2, xmm0" :: [foo1] "m" (left_mine), [foo2] "m" (right_mine)
+		);
+	}
+
+	__asm
+	(
+        ".intel_syntax noprefix\n"
+		"mov	edi, %[foo3]\n"
+		"movapd [edi], xmm2" :: [foo3] "m" (result)
+	);
+
+    if (size != left.size())
+        *result += left[size] * right[size];
+}
+
 double multiply::multiply_and_add_vector_elements_naive(const std::vector<double, sse2_aligned_allocator<double>>& left,
                                                         const std::vector<double, sse2_aligned_allocator<double>>& right) const
 {
@@ -77,8 +125,8 @@ double multiply::multiply_and_add_vector_elements_naive(const std::vector<double
     return result;
 }
 
-void multiply::multiply_and_add_vector_elements_sse2(const std::vector<double, sse2_aligned_allocator<double>>& left,
-                                                     const std::vector<double, sse2_aligned_allocator<double>>& right, double* result) const
+void multiply::multiply_and_add_vector_elements_sse2_intrinsics(const std::vector<double, sse2_aligned_allocator<double>>& left,
+                                                                const std::vector<double, sse2_aligned_allocator<double>>& right, double* result) const
 {
     __m128d result_simd = _mm_load_pd(result);
     size_t end = left.size();
