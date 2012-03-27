@@ -97,9 +97,9 @@ void multiply::multiply_and_add_vector_elements_sse2_custom_asm(const std::vecto
 		(
             ".intel_syntax noprefix\n"
 
-            // Load the addresses of one of two doubles in the left and right vectors into esi and edx.
-			"mov esi, %[right_pointer]\n"
-			"mov edx, %[left_pointer]\n"
+            // Load the addresses of doubles from the left and right vectors into esi and edx to start the loop.
+			"mov esi, %[right_address]\n"
+			"mov edx, %[left_address]\n"
 
             // Load the next two doubles from the left vector into xmm4.
 			"movapd xmm4, [edx]\n"
@@ -111,7 +111,7 @@ void multiply::multiply_and_add_vector_elements_sse2_custom_asm(const std::vecto
 			"mulpd xmm0, xmm4\n"
 
             // Accumulate the result of both multiplies into xmm2.
-			"addpd xmm2, xmm0" :: [left_pointer] "m" (left_ptr), [right_pointer] "m" (right_ptr)
+			"addpd xmm2, xmm0" :: [left_address] "m" (left_ptr), [right_address] "m" (right_ptr)
 		);
 	}
 
@@ -119,9 +119,9 @@ void multiply::multiply_and_add_vector_elements_sse2_custom_asm(const std::vecto
 	(
         ".intel_syntax noprefix\n"
         // Load the result pointer into edi.
-		"mov	edi, %[result_pointer]\n"
+		"mov	edi, %[result_address]\n"
         // Move the accumulated result from xmm2 into the result pointer.
-		"movapd [edi], xmm2" :: [result_pointer] "m" (result)
+		"movapd [edi], xmm2" :: [result_address] "m" (result)
 	);
 
 }
