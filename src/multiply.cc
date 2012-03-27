@@ -37,7 +37,20 @@ std::shared_ptr<const matrix<double>> multiply::call(std::shared_ptr<const matri
             multiply_and_add_vector_elements_sse2_intrinsics(*row, *column, &result_sse2[0]);
             (*result)(result_row_index, result_column_index) = result_sse2[0] + result_sse2[1];
 #elif defined(SSE2_CUSTOM_ASM)
-            multiply_and_add_vector_elements_sse2_custom_asm(*row, *column, &result_sse2[0]);
+
+            size_t size = row->size();
+            if (size % 2 != 0)
+            {
+                size -= 1;
+            }
+
+            multiply_and_add_vector_elements_sse2_custom_asm(*row, *column, size, &result_sse2[0]);
+
+            if (size != row->size())
+            {
+                result_sse2[0] += (*row)[size] * (*column)[size];
+            }
+
             (*result)(result_row_index, result_column_index) = result_sse2[0] + result_sse2[1];
 #else
             (*result)(result_row_index, result_column_index) = multiply_and_add_vector_elements_naive(*row, *column);
@@ -61,7 +74,8 @@ std::string multiply::get_help() const
 }
 
 void multiply::multiply_and_add_vector_elements_sse2_custom_asm(const std::vector<double, sse2_aligned_allocator<double>>& left,
-                                                               const std::vector<double, sse2_aligned_allocator<double>>& right, double* result) const
+                                                                const std::vector<double, sse2_aligned_allocator<double>>& right,
+                                                                size_t size, double* result) const
 {
     __asm
 	(
@@ -69,9 +83,6 @@ void multiply::multiply_and_add_vector_elements_sse2_custom_asm(const std::vecto
 		"xorpd xmm2, xmm2\n"
 	);
 
-    size_t size = left.size();
-	if (size % 2 != 0)
-		size -= 1;
 	for (size_t i = 0; i < size; i +=2)
 	{
 		const double* left_mine = &left[i];
@@ -101,8 +112,6 @@ void multiply::multiply_and_add_vector_elements_sse2_custom_asm(const std::vecto
 		"movapd [edi], xmm2" :: [foo3] "m" (result)
 	);
 
-    if (size != left.size())
-        *result += left[size] * right[size];
 }
 
 double multiply::multiply_and_add_vector_elements_naive(const std::vector<double, sse2_aligned_allocator<double>>& left,

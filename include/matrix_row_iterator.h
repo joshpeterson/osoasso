@@ -29,7 +29,7 @@ public:
 
     const std::vector<ValueType, sse2_aligned_allocator<ValueType>>* operator->() const
     {
-        return &(*this);
+        return &matrix_->data_[current_row_index_];
     }
 
     matrix_row_iterator& operator++()

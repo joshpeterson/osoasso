@@ -5,11 +5,24 @@ using namespace osoasso;
 
 Define(Multiply)
 {
-    It("Multiplies two square matrices")
+    It("Multiplies two 2x2 square matrices")
     {
         auto expected = std::shared_ptr<matrix<double>>(new matrix<double>({{9, 7}, {7, 5}}));
         auto left = std::shared_ptr<matrix<double>>(new matrix<double>({{3, 1}, {2, 1}}));
         auto right = std::shared_ptr<matrix<double>>(new matrix<double>({{2, 2}, {3, 1}}));
+
+        multiply multiply_command;
+
+        std::shared_ptr<const matrix<double>> result = multiply_command.call(left, right);
+
+        AssertElementsEqual(*expected, *result);
+    } Done
+
+    It("Multiplies two 3x3 square matrices")
+    {
+        auto expected = std::shared_ptr<matrix<double>>(new matrix<double>({{11, 11, 16}, {11, 13, 20}, {24, 21, 43}}));
+        auto left = std::shared_ptr<matrix<double>>(new matrix<double>({{3, 1, 2}, {2, 1, 4}, {1, 5, 7}}));
+        auto right = std::shared_ptr<matrix<double>>(new matrix<double>({{2, 2, 2}, {3, 1, 4}, {1, 2, 3}}));
 
         multiply multiply_command;
 
