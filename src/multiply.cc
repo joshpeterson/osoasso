@@ -103,7 +103,6 @@ void multiply::multiply_and_add_vector_elements_sse2_custom_asm(const std::vecto
 
             // Load the next two doubles from the left vector into xmm4.
 			"movapd xmm4, [edx]\n"
-			"movapd xmm6, [edx+0x20]\n"
 
             // Load the next two doubles from the right vector into xmm0.
 			"movapd xmm0, [esi]\n"
