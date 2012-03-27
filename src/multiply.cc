@@ -77,39 +77,52 @@ void multiply::multiply_and_add_vector_elements_sse2_custom_asm(const std::vecto
                                                                 const std::vector<double, sse2_aligned_allocator<double>>& right,
                                                                 size_t size, double* result) const
 {
+    //
+    // This method assumes size is an even number.
+    //
     __asm
 	(
         ".intel_syntax noprefix\n"
+
+        // Zero xmm2, where we store the result.
 		"xorpd xmm2, xmm2\n"
 	);
 
 	for (size_t i = 0; i < size; i +=2)
 	{
-		const double* left_mine = &left[i];
-		const double* right_mine = &right[i];
+		const double* left_ptr = &left[i];
+		const double* right_ptr = &right[i];
 
 		__asm
 		(
             ".intel_syntax noprefix\n"
-			"mov esi, %[foo2]\n"
-			"mov edx, %[foo1]\n"
 
+            // Load the addresses of one of two doubles in the left and right vectors into esi and edx.
+			"mov esi, %[right_pointer]\n"
+			"mov edx, %[left_pointer]\n"
+
+            // Load the next two doubles from the left vector into xmm4.
 			"movapd xmm4, [edx]\n"
 			"movapd xmm6, [edx+0x20]\n"
 
+            // Load the next two doubles from the right vector into xmm0.
 			"movapd xmm0, [esi]\n"
 
+            // Multiply two doubles.
 			"mulpd xmm0, xmm4\n"
 
-			"addpd xmm2, xmm0" :: [foo1] "m" (left_mine), [foo2] "m" (right_mine)
+            // Accumulate the result of both multiplies into xmm2.
+			"addpd xmm2, xmm0" :: [left_pointer] "m" (left_ptr), [right_pointer] "m" (right_ptr)
 		);
 	}
 
 	__asm
 	(
         ".intel_syntax noprefix\n"
-		"mov	edi, %[foo3]\n"
-		"movapd [edi], xmm2" :: [foo3] "m" (result)
+        // Load the result pointer into edi.
+		"mov	edi, %[result_pointer]\n"
+        // Move the accumulated result from xmm2 into the result pointer.
+		"movapd [edi], xmm2" :: [result_pointer] "m" (result)
 	);
 
 }
