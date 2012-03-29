@@ -123,7 +123,7 @@ public class Osoasso extends Composite implements EntryPoint
                 inputField.setReadOnly(true);
             }
         };
-        displayHelpTimer.schedule(1000);
+        displayHelpTimer.schedule(3000);
 
         // If the executable doesn't load in some time, print an error message.
         naclModuleLoadErrorTimer = new Timer()
