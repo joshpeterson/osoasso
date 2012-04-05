@@ -7,9 +7,14 @@ Define(Multiply)
 {
     It("Multiplies two 2x2 square matrices")
     {
-        auto expected = std::shared_ptr<matrix<double>>(new matrix<double>({{9, 7}, {7, 5}}));
-        auto left = std::shared_ptr<matrix<double>>(new matrix<double>({{3, 1}, {2, 1}}));
-        auto right = std::shared_ptr<matrix<double>>(new matrix<double>({{2, 2}, {3, 1}}));
+        auto expected = std::shared_ptr<matrix<double>>(new matrix<double>({{9, 7},
+                                                                            {7, 5}}));
+
+        auto left = std::shared_ptr<matrix<double>>(new matrix<double>({{3, 1},
+                                                                        {2, 1}}));
+
+        auto right = std::shared_ptr<matrix<double>>(new matrix<double>({{2, 2},
+                                                                         {3, 1}}));
 
         multiply multiply_command;
 
@@ -20,9 +25,71 @@ Define(Multiply)
 
     It("Multiplies two 3x3 square matrices")
     {
-        auto expected = std::shared_ptr<matrix<double>>(new matrix<double>({{11, 11, 16}, {11, 13, 20}, {24, 21, 43}}));
-        auto left = std::shared_ptr<matrix<double>>(new matrix<double>({{3, 1, 2}, {2, 1, 4}, {1, 5, 7}}));
-        auto right = std::shared_ptr<matrix<double>>(new matrix<double>({{2, 2, 2}, {3, 1, 4}, {1, 2, 3}}));
+        auto expected = std::shared_ptr<matrix<double>>(new matrix<double>({{11, 11, 16},
+                                                                            {11, 13, 20},
+                                                                            {24, 21, 43}}));
+
+        auto left = std::shared_ptr<matrix<double>>(new matrix<double>({{3, 1, 2},
+                                                                        {2, 1, 4},
+                                                                        {1, 5, 7}}));
+
+        auto right = std::shared_ptr<matrix<double>>(new matrix<double>({{2, 2, 2},
+                                                                         {3, 1, 4},
+                                                                         {1, 2, 3}}));
+
+        multiply multiply_command;
+
+        std::shared_ptr<const matrix<double>> result = multiply_command.call(left, right);
+
+        AssertElementsEqual(*expected, *result);
+    } Done
+
+    It("Multiplies two 4x4 square matrices")
+    {
+        auto expected = std::shared_ptr<matrix<double>>(new matrix<double>({{15, 19, 28, 27	},
+	                                                                        {19, 29, 44, 45	},
+	                                                                        {29, 31, 58, 59	},
+	                                                                        {24, 19, 39, 19	}}));
+                    
+
+        auto left = std::shared_ptr<matrix<double>>(new matrix<double>({{3, 1, 2, 4},
+                                                                        {2, 1, 4, 8},
+                                                                        {1, 5, 7, 5},
+                                                                        {2, 5, 0, 5}}));
+
+        auto right = std::shared_ptr<matrix<double>>(new matrix<double>({{2, 2, 2, 2},
+                                                                         {3, 1, 4, 1},
+                                                                         {1, 2, 3, 6},
+                                                                         {1, 2, 3, 2}}));
+
+        multiply multiply_command;
+
+        std::shared_ptr<const matrix<double>> result = multiply_command.call(left, right);
+
+        AssertElementsEqual(*expected, *result);
+    } Done
+
+    It("Multiplies two 5x5 square matrices")
+    {
+        auto expected = std::shared_ptr<matrix<double>>(new matrix<double>({{17, 23, 34, 35, 40},
+                                                                            {21, 33, 50, 53, 55},
+                                                                            {31, 35, 64, 67, 64},
+                                                                            {26, 23, 45, 27, 46},
+                                                                            {20, 28, 46, 50, 55}}));
+        
+                    
+
+        auto left = std::shared_ptr<matrix<double>>(new matrix<double>({{3, 1, 2, 4, 2},
+                                                                        {2, 1, 4, 8, 2},
+                                                                        {1, 5, 7, 5, 2},
+                                                                        {2, 5, 0, 5, 2},
+                                                                        {1, 2, 3, 4, 5}}));
+
+        auto right = std::shared_ptr<matrix<double>>(new matrix<double>({{2, 2, 2, 2, 3},
+                                                                         {3, 1, 4, 1, 3},
+                                                                         {1, 2, 3, 6, 3},
+                                                                         {1, 2, 3, 2, 3},
+                                                                         {1, 2, 3, 4, 5}}));
 
         multiply multiply_command;
 

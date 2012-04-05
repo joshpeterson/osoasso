@@ -44,7 +44,7 @@ std::shared_ptr<const matrix<double>> multiply::call(std::shared_ptr<const matri
                 size -= 1;
             }
 
-            multiply_and_add_vector_elements_sse2_custom_asm(*row, *column, size, &result_sse2[0]);
+            multiply_and_add_vector_elements_sse2_custom_asm(&(*row)[0], &(*column)[0], size, &result_sse2[0]);
 
             if (size != row->size())
             {
@@ -73,58 +73,53 @@ std::string multiply::get_help() const
     return "multiply(A,B) computes the product of two matrices A (m x n) and B (n x p), with A on the left.";
 }
 
-void multiply::multiply_and_add_vector_elements_sse2_custom_asm(const std::vector<double, sse2_aligned_allocator<double>>& left,
-                                                                const std::vector<double, sse2_aligned_allocator<double>>& right,
-                                                                size_t size, double* result) const
+void multiply::multiply_and_add_vector_elements_sse2_custom_asm(double* left, double* right, size_t len, double* result) const
 {
     //
-    // This method assumes size is an even number.
+    // This method assumes len is an even number.
     //
     __asm
 	(
         ".intel_syntax noprefix\n"
 
+        // These registers are used to handle the loop.
+        "xor eax, eax\n"
+        "mov ebx, %[length]\n"
+
         // Zero xmm2, where we store the result.
 		"xorpd xmm2, xmm2\n"
-	);
 
-	for (size_t i = 0; i < size; i +=2)
-	{
-		const double* left_ptr = &left[i];
-		const double* right_ptr = &right[i];
-
-		__asm
-		(
-            ".intel_syntax noprefix\n"
-
-            // Load the addresses of doubles from the left and right vectors into esi and edx to start the loop.
-			"mov esi, %[right_address]\n"
-			"mov edx, %[left_address]\n"
-
-            // Load the next two doubles from the left vector into xmm4.
-			"movapd xmm4, [edx]\n"
-            "movapd xmm6, [edx+0x20]\n"
-
-            // Load the next two doubles from the right vector into xmm0.
-			"movapd xmm0, [esi]\n"
-
-            // Multiply two doubles.
-			"mulpd xmm0, xmm4\n"
-
-            // Accumulate the result of both multiplies into xmm2.
-			"addpd xmm2, xmm0" :: [left_address] "m" (left_ptr), [right_address] "m" (right_ptr)
-		);
-	}
-
-	__asm
-	(
-        ".intel_syntax noprefix\n"
         // Load the result pointer into edi.
-		"mov	edi, %[result_address]\n"
-        // Move the accumulated result from xmm2 into the result pointer.
-		"movapd [edi], xmm2" :: [result_address] "m" (result)
-	);
+		"mov edi, %[result_address]\n"
 
+        // Load the addresses of doubles from the left and right vectors into esi and edx to start the loop.
+        "mov edx, %[left_address]\n"
+        "mov esi, %[right_address]\n"
+
+        "1:\n"
+        // Load the next two doubles from the left vector into xmm4.
+        "movapd xmm4, [edx]\n"
+
+        // Load the next two doubles from the right vector into xmm0.
+        "movapd xmm0, [esi]\n"
+
+        "add edx, 0x10\n"
+        "add esi, 0x10\n"
+
+        // Multiply two doubles.
+        "mulpd xmm0, xmm4\n"
+
+        // Accumulate the result of both multiplies into xmm2.
+        "addpd xmm2, xmm0\n"
+
+        // Increment the counter and test to see if the loop is done.
+        "add eax, 2\n"
+        "cmp eax, ebx\n"
+        "jnz 1b\n"
+
+        // Move the accumulated result from xmm2 into the result pointer.
+		"movapd [edi], xmm2" :: [length] "r" (len), [left_address] "m" (left), [right_address] "m" (right), [result_address] "m" (result) : "%eax", "%ebx", "%edi", "%edx", "%esi"
+	);
 }
 
 double multiply::multiply_and_add_vector_elements_naive(const std::vector<double, sse2_aligned_allocator<double>>& left,

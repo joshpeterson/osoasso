@@ -24,9 +24,7 @@ private:
     void multiply_and_add_vector_elements_sse2_intrinsics(const std::vector<double, sse2_aligned_allocator<double>>& left,
                                                           const std::vector<double, sse2_aligned_allocator<double>>& right, double* result) const;
 
-    void multiply_and_add_vector_elements_sse2_custom_asm(const std::vector<double, sse2_aligned_allocator<double>>& left,
-                                                          const std::vector<double, sse2_aligned_allocator<double>>& right,
-                                                          size_t size, double* result) const;
+    void multiply_and_add_vector_elements_sse2_custom_asm(double* left, double* right, size_t len, double* result) const;
 };
 
 }
