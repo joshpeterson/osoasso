@@ -33,22 +33,24 @@ std::shared_ptr<const matrix<double>> multiply::call(std::shared_ptr<const matri
         for (auto column = right->column_begin(); column != right->column_end(); ++column)
         {
 #if defined(SSE2_INTRINSICS)
-            result_sse2[0] = result_sse2[1] = 0.0;
             multiply_and_add_vector_elements_sse2_intrinsics(*row, *column, &result_sse2[0]);
             (*result)(result_row_index, result_column_index) = result_sse2[0] + result_sse2[1];
 #elif defined(SSE2_CUSTOM_ASM)
+            result_sse2[0] = result_sse2[1] = 0.0;
 
             size_t size = row->size();
-            if (size % 2 != 0)
+            size_t leftover = size % 4;
+            if (leftover != 0)
             {
-                size -= 1;
+                size -= leftover;
             }
 
-            multiply_and_add_vector_elements_sse2_custom_asm(&(*row)[0], &(*column)[0], size, &result_sse2[0]);
+            if (size >= 4)
+                multiply_and_add_vector_elements_sse2_custom_asm(&(*row)[0], &(*column)[0], size, &result_sse2[0]);
 
-            if (size != row->size())
+            for (int i = leftover-1; i >= 0; i--)
             {
-                result_sse2[0] += (*row)[size] * (*column)[size];
+                result_sse2[0] += (*row)[size + i] * (*column)[size + i];
             }
 
             (*result)(result_row_index, result_column_index) = result_sse2[0] + result_sse2[1];
@@ -76,7 +78,7 @@ std::string multiply::get_help() const
 void multiply::multiply_and_add_vector_elements_sse2_custom_asm(double* left, double* right, size_t len, double* result) const
 {
     //
-    // This method assumes len is an even number.
+    // This method assumes len is a multiple of four.
     //
     __asm
 	(
@@ -86,34 +88,39 @@ void multiply::multiply_and_add_vector_elements_sse2_custom_asm(double* left, do
         "xor eax, eax\n"
         "mov ebx, %[length]\n"
 
-        // Zero xmm2, where we store the result.
+        // Zero xmm2 and xmm3, where we store the result.
 		"xorpd xmm2, xmm2\n"
 
         // Load the result pointer into edi.
 		"mov edi, %[result_address]\n"
 
-        // Load the addresses of doubles from the left and right vectors into esi and edx to start the loop.
+        // Load the addresses of doubles from the left and right vectors into edx and esi to start the loop.
         "mov edx, %[left_address]\n"
         "mov esi, %[right_address]\n"
 
         "1:\n"
-        // Load the next two doubles from the left vector into xmm4.
-        "movapd xmm4, [edx]\n"
+        // Load the next four doubles from the left vector into xmm3 and xmm4.
+        "movapd xmm3, [edx]\n"
+        "movapd xmm4, [edx+0x10]\n"
 
-        // Load the next two doubles from the right vector into xmm0.
+        // Load the next four doubles from the right vector into xmm0 and xmm1.
         "movapd xmm0, [esi]\n"
+        "movapd xmm1, [esi+0x10]\n"
 
-        "add edx, 0x10\n"
-        "add esi, 0x10\n"
-
-        // Multiply two doubles.
-        "mulpd xmm0, xmm4\n"
+        // Multiply four doubles.
+        "mulpd xmm0, xmm3\n"
+        "mulpd xmm1, xmm4\n"
 
         // Accumulate the result of both multiplies into xmm2.
         "addpd xmm2, xmm0\n"
+        "addpd xmm2, xmm1\n"
+
+        // Increment the pointers for the next loop.
+        "add edx, 0x20\n"
+        "add esi, 0x20\n"
 
         // Increment the counter and test to see if the loop is done.
-        "add eax, 2\n"
+        "add eax, 4\n"
         "cmp eax, ebx\n"
         "jnz 1b\n"
 
