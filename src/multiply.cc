@@ -99,6 +99,10 @@ void multiply::multiply_and_add_vector_elements_sse2_custom_asm(double* left, do
         "mov esi, %[right_address]\n"
 
         "1:\n"
+
+        "prefetchnta [edx+0x20]\n"
+        "prefetchnta [esi+0x20]\n"
+
         // Load the next four doubles from the left vector into xmm3 and xmm4.
         "movapd xmm3, [edx]\n"
         "movapd xmm4, [edx+0x10]\n"
