@@ -59,10 +59,6 @@ public class Osoasso extends Composite implements EntryPoint
 
     private StringConcatenator concatenator = new StringConcatenator();
 
-    private boolean initalHelpMessageDisplayed = false;
-
-    private Timer naclModuleLoadErrorTimer;
-
     final private String UsernameCookieName = "OsoassoUsernameCookie";
 
     @UiField
@@ -141,6 +137,7 @@ public class Osoasso extends Composite implements EntryPoint
     public void onNaclMessage(String naclMessage)
     {
         inputField.setReadOnly(false);
+        inputField.setText("");
         if (concatenator.addString(naclMessage))
         {
             // Done concatenating strings from the NaCl module
@@ -158,15 +155,7 @@ public class Osoasso extends Composite implements EntryPoint
             else if (message.startsWith("text"))
             {
                 TextFormatter formatter = new TextFormatter(message);
-                if (this.initalHelpMessageDisplayed)
-                {
-                    this.AddHTMLToResultsPanel(formatter.formatAction());
-                }
-                else
-                {
-                    naclModuleLoadErrorTimer.cancel();
-                    this.initalHelpMessageDisplayed = true;
-                }
+                this.AddHTMLToResultsPanel(formatter.formatAction());
 
                 for (String line : formatter.formatLines())
                 {

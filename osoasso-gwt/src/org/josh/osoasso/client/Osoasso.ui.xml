@@ -48,7 +48,7 @@
     		</g:ScrollPanel>
   		</g:center>
   		<g:south size='4'>
-  			<g:TextBox ui:field='inputField' addStyleNames='{style.inputArea}' title="Type commands here.  If you're not sure what to type, try typing this: help"/>
+  			<g:TextBox ui:field='inputField' addStyleNames='{style.inputArea}'/>
   		</g:south>
 	</g:DockLayoutPanel>
 </ui:UiBinder> 
