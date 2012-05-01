@@ -7,7 +7,7 @@ using namespace osoasso;
 class integer_summer
 {
 public:
-    integer_summer(int& result) : sum_(0), result_(result)
+    integer_summer() : sum_(0)
     {
     }
 
@@ -20,14 +20,18 @@ public:
         }
     }
 
-    void reduce()
+    void reduce(const integer_summer& other)
     {
-        result_ += sum_;
+        sum_ += other.sum_;
+    }
+
+    int get_sum() const
+    {
+        return sum_;
     }
 
 private:
     int sum_;
-    int& result_;
 };
 
 Define(ParallelTask)
@@ -35,14 +39,26 @@ Define(ParallelTask)
     It("Can sum a vector of integers serially")
     {
         std::vector<int> values(10, 1);
-        int result = 0;
 
-        integer_summer summer(result);
+        integer_summer summer;
 
-        auto task = make_parallel_task(values.begin(), values.end(), summer);
+        auto task = make_parallel_task(values.begin(), values.end(), summer, 1);
         task.start();
         task.complete();
 
-        AssertEqual(10, result);
+        AssertEqual(10, summer.get_sum());
+    } Done
+
+    It("Can sum a vector of integers on two threads")
+    {
+        std::vector<int> values(10, 1);
+
+        integer_summer summer;
+
+        auto task = make_parallel_task(values.begin(), values.end(), summer, 2);
+        task.start();
+        task.complete();
+
+        AssertEqual(10, summer.get_sum());
     } Done
 }
