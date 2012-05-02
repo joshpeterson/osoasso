@@ -61,4 +61,30 @@ Define(ParallelTask)
 
         AssertEqual(10, summer.get_sum());
     } Done
+
+    It("Can sum a vector of integers on three threads")
+    {
+        std::vector<int> values(10, 1);
+
+        integer_summer summer;
+
+        auto task = make_parallel_task(values.begin(), values.end(), summer, 3);
+        task.start();
+        task.complete();
+
+        AssertEqual(10, summer.get_sum());
+    } Done
+
+    It("Can sum a vector of many integers on two threads")
+    {
+        std::vector<int> values(10000, 1);
+
+        integer_summer summer;
+
+        auto task = make_parallel_task(values.begin(), values.end(), summer, 2);
+        task.start();
+        task.complete();
+
+        AssertEqual(10000, summer.get_sum());
+    } Done
 }
