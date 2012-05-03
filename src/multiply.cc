@@ -2,6 +2,7 @@
 #include <stdexcept>
 #include "../include/multiply.h"
 #include "../include/matrix.h"
+#include "../include/parallel_task.h"
 
 using namespace osoasso;
 
@@ -17,20 +18,13 @@ std::shared_ptr<const matrix<double>> multiply::call(std::shared_ptr<const matri
         throw std::invalid_argument(message.str());
     }
 
-    size_t result_row_index = 1;
-    auto result = std::make_shared<matrix<double>>(left->rows(), right->columns());
-    for (auto row = left->row_begin();  row != left->row_end(); ++row)
-    {
-        size_t result_column_index = 1;
-        for (auto column = right->column_begin(); column != right->column_end(); ++column)
-        {
-            (*result)(result_row_index, result_column_index) = multiply_and_add_vector_elements(*row, *column);
-            ++result_column_index;
-        }
-        ++result_row_index;
-    }
+    row_multiplier multiplier(left->rows(), right->columns());
 
-    return result;
+    auto task = make_parallel_task(left->row_begin(), right->row_end(), multiplier, right, 2);
+    task.start();
+    task.complete();
+
+    return multiplier.get_result();
 }
 
 int multiply::number_of_arguments() const
@@ -43,7 +37,46 @@ std::string multiply::get_help() const
     return "multiply(A,B) computes the product of two matrices A (m x n) and B (n x p), with A on the left.";
 }
 
-double multiply::multiply_and_add_vector_elements(const std::vector<double>& left, const std::vector<double>& right) const
+row_multiplier::row_multiplier(std::shared_ptr<const matrix<double>> right) : right_(right), task_results_()
+{
+}
+
+row_multiplier::row_multiplier(size_t rows, size_t columns) : rows_(rows), current_row_(1), columns_(columns), current_column_(1)
+{
+    result_matrix_ = std::make_shared<matrix<double>>(rows_, columns_);
+}
+
+template <typename IteratorType>
+void row_multiplier::map(IteratorType begin, IteratorType end)
+{
+    for (auto row = begin; row != end; ++row)
+        for (auto column = right_->column_begin(); column != right_->column_end(); ++column)
+            task_results_.push_back(multiply_and_add_vector_elements(*row, *column));
+}
+
+void row_multiplier::reduce(const row_multiplier& other)
+{
+    for (auto result = other.task_results_.begin(); result != other.task_results_.end(); ++result)
+    {
+        (*result_matrix_)(current_row_, current_column_) = *result;
+        if (current_column_ == columns_)
+        {
+            ++current_row_;
+            current_column_ = 1;
+        }
+        else
+        {
+            ++current_column_;
+        }
+    }
+}
+
+std::shared_ptr<const matrix<double>> row_multiplier::get_result() const
+{
+    return result_matrix_;
+}
+
+double row_multiplier::multiply_and_add_vector_elements(const std::vector<double>& left, const std::vector<double>& right) const
 {
     auto end = left.end();
 
@@ -61,3 +94,4 @@ double multiply::multiply_and_add_vector_elements(const std::vector<double>& lef
 
     return result;
 }
+

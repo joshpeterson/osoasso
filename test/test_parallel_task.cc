@@ -7,7 +7,7 @@ using namespace osoasso;
 class integer_summer
 {
 public:
-    integer_summer() : sum_(0)
+    integer_summer(std::string constructor_argument) : sum_(0)
     {
     }
 
@@ -40,9 +40,9 @@ Define(ParallelTask)
     {
         std::vector<int> values(10, 1);
 
-        integer_summer summer;
+        integer_summer summer("Test");
 
-        auto task = make_parallel_task(values.begin(), values.end(), summer, 1);
+        auto task = make_parallel_task(values.begin(), values.end(), summer, "Test", 1);
         task.start();
         task.complete();
 
@@ -53,9 +53,9 @@ Define(ParallelTask)
     {
         std::vector<int> values(10, 1);
 
-        integer_summer summer;
+        integer_summer summer("Test");
 
-        auto task = make_parallel_task(values.begin(), values.end(), summer, 2);
+        auto task = make_parallel_task(values.begin(), values.end(), summer, "Test", 2);
         task.start();
         task.complete();
 
@@ -66,9 +66,9 @@ Define(ParallelTask)
     {
         std::vector<int> values(10, 1);
 
-        integer_summer summer;
+        integer_summer summer("Test");
 
-        auto task = make_parallel_task(values.begin(), values.end(), summer, 3);
+        auto task = make_parallel_task(values.begin(), values.end(), summer, "Test", 3);
         task.start();
         task.complete();
 
@@ -79,9 +79,9 @@ Define(ParallelTask)
     {
         std::vector<int> values(10000, 1);
 
-        integer_summer summer;
+        integer_summer summer("Test");
 
-        auto task = make_parallel_task(values.begin(), values.end(), summer, 2);
+        auto task = make_parallel_task(values.begin(), values.end(), summer, "Test", 2);
         task.start();
         task.complete();
 

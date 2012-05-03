@@ -8,15 +8,15 @@
 namespace osoasso
 {
 
-template <typename IteratorType, typename TaskType>
+template <typename IteratorType, typename TaskType, typename TaskConstructorArgumentType>
 class parallel_task
 {
 private:
     struct task_thread_data;
 
 public:
-    parallel_task(IteratorType begin, IteratorType end, TaskType& task, int number_of_threads) : begin_(begin), end_(end), original_task_(task),
-                                                                                                 created_tasks_(), number_of_threads_(number_of_threads)
+    parallel_task(IteratorType begin, IteratorType end, TaskType& task, TaskConstructorArgumentType argument, int number_of_threads)
+        : begin_(begin), end_(end), original_task_(task), argument_(argument), created_tasks_(), number_of_threads_(number_of_threads)
     {
     }
 
@@ -29,7 +29,7 @@ public:
         auto it = begin_;
         for (int i = 0; i < number_of_threads_; ++i)
         {
-            auto thread_data = std::make_shared<task_thread_data>();
+            auto thread_data = std::make_shared<task_thread_data>(argument_);
             thread_data->begin = it;
             std::advance(it, task_range_size);
             if (i == number_of_threads_ - 1)
@@ -55,6 +55,10 @@ public:
 private:
     struct task_thread_data
     {
+        task_thread_data(TaskConstructorArgumentType argument) : task(argument)
+        {
+        }
+
         IteratorType begin;
         IteratorType end;
         TaskType task;
@@ -63,6 +67,7 @@ private:
     IteratorType begin_;
     IteratorType end_;
     TaskType& original_task_;
+    TaskConstructorArgumentType argument_;
     std::vector<std::pair<pthread_t, std::shared_ptr<task_thread_data>>> created_tasks_;
     int number_of_threads_;
 
@@ -75,10 +80,11 @@ private:
     }
 };
 
-template <typename IteratorType, typename TaskType>
-parallel_task<IteratorType, TaskType> make_parallel_task(IteratorType begin, IteratorType end, TaskType& task, int number_of_threads)
+template <typename IteratorType, typename TaskType, typename TaskConstructorArgumentType>
+parallel_task<IteratorType, TaskType, TaskConstructorArgumentType> make_parallel_task(IteratorType begin, IteratorType end, TaskType& task,
+                                                                                      TaskConstructorArgumentType argument, int number_of_threads)
 {
-    return parallel_task<IteratorType, TaskType>(begin, end, task, number_of_threads);
+    return parallel_task<IteratorType, TaskType, TaskConstructorArgumentType>(begin, end, task, argument, number_of_threads);
 }
 
 }
