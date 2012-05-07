@@ -6,8 +6,8 @@
 
 using namespace osoasso;
 
-std::shared_ptr<const matrix<double>> random::call(std::shared_ptr<const matrix<double>> rows,
-                                                std::shared_ptr<const matrix<double>> columns) const
+std::shared_ptr<const matrix<double>> random::call(std::shared_ptr<const matrix<double>> rows, std::shared_ptr<const matrix<double>> columns,
+                                                int number_of_threads) const
 {
     if (rows->rows() != 1 && rows->columns() != 1)
     {

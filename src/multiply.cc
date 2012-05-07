@@ -6,8 +6,8 @@
 
 using namespace osoasso;
 
-std::shared_ptr<const matrix<double>> multiply::call(std::shared_ptr<const matrix<double>> left,
-                                                     std::shared_ptr<const matrix<double>> right) const
+std::shared_ptr<const matrix<double>> multiply::call(std::shared_ptr<const matrix<double>> left, std::shared_ptr<const matrix<double>> right,
+                                                     int number_of_threads) const
 {
     if (left->columns() != right->rows())
     {
