@@ -13,7 +13,7 @@ Define(Multiply)
 
         multiply multiply_command;
 
-        std::shared_ptr<const matrix<double>> result = multiply_command.call(left, right);
+        std::shared_ptr<const matrix<double>> result = multiply_command.call(left, right, 1);
 
         AssertElementsEqual(*expected, *result);
     } Done
@@ -26,7 +26,7 @@ Define(Multiply)
 
         multiply multiply_command;
 
-        std::shared_ptr<const matrix<double>> result = multiply_command.call(left, right);
+        std::shared_ptr<const matrix<double>> result = multiply_command.call(left, right, 1);
 
         AssertElementsEqual(*expected, *result);
     } Done
@@ -43,7 +43,7 @@ Define(Multiply)
         std::string message;
         try
         {
-            multiply_command.call(left, right);
+            multiply_command.call(left, right, 1);
         }
         catch(const std::invalid_argument& e)
         {

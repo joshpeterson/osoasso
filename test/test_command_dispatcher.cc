@@ -20,12 +20,13 @@ public:
     {
     }
 
-    std::shared_ptr<const matrix<double>> call(std::shared_ptr<const matrix<double>> left,
-                                               std::shared_ptr<const matrix<double>> right) const
+    std::shared_ptr<const matrix<double>> call(std::shared_ptr<const matrix<double>> left, std::shared_ptr<const matrix<double>> right,
+                                               int number_of_threads) const
     {
         command_called_ = true;
         left_ = left;
         right_ = right;
+        number_of_threads_ = number_of_threads;
         auto test = std::shared_ptr<const matrix<double>>(new matrix<double>({{1}, {1}}));
         return test;
     }
@@ -55,11 +56,16 @@ public:
         return right_;
     }
 
+    int number_of_threads() const
+    {
+        return number_of_threads_;
+    }
 
 private:
     mutable bool command_called_;
     mutable std::shared_ptr<const matrix<double>> left_;
     mutable std::shared_ptr<const matrix<double>> right_;
+    mutable int number_of_threads_;
 };
 
 Define(CommandDispatcher)
@@ -101,7 +107,7 @@ Define(CommandDispatcher)
         }
 
         AssertTrue(exception_thrown);
-        AssertEqual(std::string("Command foo expected 2 arguments but 3 arugments were provided: [[1 2]], [[3 5]], [[2 6]]"), exception_message);
+        AssertEqual(std::string("Command foo expected 2 arguments but 3 arguments were provided: [[1 2]], [[3 5]], [[2 6]]"), exception_message);
     } Done
 
     It("Throws an exception with the correct wording when it sees the wrong number of arguments with 1 provided")
@@ -372,5 +378,33 @@ Define(CommandDispatcher)
         dispatcher.input("foo(2.3, [[3 5]])");
 
         AssertElementsEqual(*expected_left, *test_command->left_argument());
+    } Done
+
+    It("Calls a command with the correct default parameter")
+    {
+        std::shared_ptr<mock_dispatcher_command> test_command = std::make_shared<mock_dispatcher_command>();
+
+        command_factory commands = { std::make_pair("foo", std::shared_ptr<command>(test_command)) };
+        object_repository<std::shared_ptr<const matrix<double>>> matrices;
+        tag_repository tags;
+
+        command_dispatcher dispatcher(commands, matrices, tags);
+        dispatcher.input("foo([[1 2]], [[3 5]])");
+
+        AssertEqual(1, test_command->number_of_threads());
+    } Done
+
+    It("Calls a command with the correct optional parameter")
+    {
+        std::shared_ptr<mock_dispatcher_command> test_command = std::make_shared<mock_dispatcher_command>();
+
+        command_factory commands = { std::make_pair("foo", std::shared_ptr<command>(test_command)) };
+        object_repository<std::shared_ptr<const matrix<double>>> matrices;
+        tag_repository tags;
+
+        command_dispatcher dispatcher(commands, matrices, tags);
+        dispatcher.input("foo([[1 2]], [[3 5]], 3)");
+
+        AssertEqual(3, test_command->number_of_threads());
     } Done
 }

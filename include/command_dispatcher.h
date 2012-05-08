@@ -46,11 +46,9 @@ private:
     tag_repository& tags_;
 
     void validate_number_of_inputs(const std::string& command_name, const std::vector<std::string>& inputs,
-                                   std::shared_ptr<osoasso::command> command) const;
-    std::vector<std::shared_ptr<const osoasso::matrix<double>>> unpack_arguments(
-                                                            const std::vector<std::string>& inputs) const;
-    std::vector<std::string> add_inputs_to_matrix_repository(
-                                const std::vector<std::shared_ptr<const osoasso::matrix<double>>>& inputs);
+                                   std::shared_ptr<osoasso::command> command, bool allow_optional_parameter) const;
+    std::vector<std::shared_ptr<const osoasso::matrix<double>>> unpack_arguments(const std::vector<std::string>& inputs) const;
+    std::vector<std::string> add_inputs_to_matrix_repository(const std::vector<std::shared_ptr<const osoasso::matrix<double>>>& inputs);
     std::string add_to_object_repository(std::shared_ptr<const osoasso::matrix<double>> value);
 
     bool is_number(const std::string& input) const;
