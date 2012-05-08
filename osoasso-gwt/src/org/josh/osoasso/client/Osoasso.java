@@ -59,10 +59,6 @@ public class Osoasso extends Composite implements EntryPoint
 
     private StringConcatenator concatenator = new StringConcatenator();
 
-    private boolean initalHelpMessageDisplayed = false;
-
-    private Timer naclModuleLoadErrorTimer;
-
     final private String UsernameCookieName = "OsoassoUsernameCookie";
 
     @UiField
@@ -112,30 +108,6 @@ public class Osoasso extends Composite implements EntryPoint
         naclWidget.setHTML("<embed name=\"nacl_module\" " + "id=\"osoasso\" " + "width=0 height=0 " + "src=\"osoasso.nmf\" "
                         + "type=\"application/x-nacl\" />");
 
-        // Schedule a timer to display a help message when the NaCl executable
-        // loads.
-        Timer displayHelpTimer = new Timer()
-        {
-            public void run()
-            {
-                AddHTMLToResultsPanel("Attempting to communicate with the Osoasso NaCl executable...");
-                CallOsoassoNaclModuleInputMethod(naclModule, "help", usernameField.getText());
-                inputField.setReadOnly(true);
-            }
-        };
-        displayHelpTimer.schedule(1000);
-
-        // If the executable doesn't load in some time, print an error message.
-        naclModuleLoadErrorTimer = new Timer()
-        {
-            public void run()
-            {
-                AddHTMLToResultsPanel("It seems the Osoasso NaCl executable did not load.");
-                AddHTMLToResultsPanel("Make sure you are using the Google Chrome browser with Native Client enabled in about:flags.");
-            }
-        };
-        naclModuleLoadErrorTimer.schedule(10000);
-
         RootLayoutPanel root = RootLayoutPanel.get();
         root.add(naclWidget);
         root.add(outer);
@@ -165,6 +137,7 @@ public class Osoasso extends Composite implements EntryPoint
     public void onNaclMessage(String naclMessage)
     {
         inputField.setReadOnly(false);
+        inputField.setText("");
         if (concatenator.addString(naclMessage))
         {
             // Done concatenating strings from the NaCl module
@@ -182,15 +155,7 @@ public class Osoasso extends Composite implements EntryPoint
             else if (message.startsWith("text"))
             {
                 TextFormatter formatter = new TextFormatter(message);
-                if (this.initalHelpMessageDisplayed)
-                {
-                    this.AddHTMLToResultsPanel(formatter.formatAction());
-                }
-                else
-                {
-                    naclModuleLoadErrorTimer.cancel();
-                    this.initalHelpMessageDisplayed = true;
-                }
+                this.AddHTMLToResultsPanel(formatter.formatAction());
 
                 for (String line : formatter.formatLines())
                 {

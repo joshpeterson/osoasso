@@ -13,8 +13,8 @@ using namespace osoasso;
 class mock_command : public command
 {
 public:
-    std::shared_ptr<const matrix<double>> call(std::shared_ptr<const matrix<double>> left,
-                                               std::shared_ptr<const matrix<double>> right) const
+    std::shared_ptr<const matrix<double>> call(std::shared_ptr<const matrix<double>> left, std::shared_ptr<const matrix<double>> right,
+                                               int number_of_threads) const
     {
         auto test = std::shared_ptr<const matrix<double>>(new matrix<double>({{1}, {1}}));
         return test;

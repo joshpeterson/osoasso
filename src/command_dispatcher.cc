@@ -24,17 +24,27 @@ command_data command_dispatcher::input(const std::string& input)
     command_parser parser(input);
     std::shared_ptr<command> command = commands_.get(parser.name());
 
-    this->validate_number_of_inputs(parser.name(), parser.inputs(), command);
+    std::vector<std::shared_ptr<const matrix<double>>> matrix_inputs = this->unpack_arguments(parser.inputs());
 
-    std::vector<std::shared_ptr<const matrix<double>>> matrix_inputs = 
-                                                                    this->unpack_arguments(parser.inputs());
+    bool has_optional_parameter = false;
+    if (matrix_inputs.size() == 3 && matrix_inputs.back()->rows() == 1 && matrix_inputs.back()->columns() == 1)
+        has_optional_parameter = true;
+
+    this->validate_number_of_inputs(parser.name(), parser.inputs(), command, has_optional_parameter);
+
+    int number_of_threads = 1;
+    if (has_optional_parameter)
+    {
+        number_of_threads = (*matrix_inputs.back())(1,1);
+        matrix_inputs.pop_back();
+    }
 
     std::vector<std::string> input_names = this->add_inputs_to_matrix_repository(matrix_inputs);
 
     command_data command_result;
 
     timer command_timer;
-    auto result = command->call(matrix_inputs[0], matrix_inputs[1]);
+    auto result = command->call(matrix_inputs[0], matrix_inputs[1], number_of_threads);
     command_result.command_duration_seconds = command_timer.elapsed();
 
     std::string result_name = this->add_to_object_repository(result);
@@ -51,20 +61,20 @@ command_data command_dispatcher::input(const std::string& input)
     return command_result;
 }
 
-void command_dispatcher::validate_number_of_inputs(const std::string& command_name,
-                                                   const std::vector<std::string>& inputs,
-                                                   std::shared_ptr<command> command) const
+void command_dispatcher::validate_number_of_inputs(const std::string& command_name, const std::vector<std::string>& inputs,
+                                                   std::shared_ptr<command> command, bool allow_optional_parameter) const
 {
-    int number_of_arguments_provided = static_cast<int>(inputs.size());
-    int number_of_arguments_expected = command->number_of_arguments();
-    if (number_of_arguments_provided != number_of_arguments_expected)
+    int arguments_provided = static_cast<int>(inputs.size());
+    int arguments_expected = command->number_of_arguments();
+    if ((allow_optional_parameter && (arguments_provided < arguments_expected || arguments_provided > arguments_expected + 1)) ||
+        (!allow_optional_parameter && arguments_provided != arguments_expected))
     {
         std::stringstream message;
-        message << "Command " << command_name << " expected " << number_of_arguments_expected
-                << (number_of_arguments_expected == 1 ? " argument" : " arguments")
-                << " but " << number_of_arguments_provided
-                << (number_of_arguments_provided == 1 ? " argument" : " arugments")
-                << (number_of_arguments_provided == 1 ? " was" : " were")
+        message << "Command " << command_name << " expected " << arguments_expected
+                << (arguments_expected == 1 ? " argument" : " arguments")
+                << " but " << arguments_provided
+                << (arguments_provided == 1 ? " argument" : " arguments")
+                << (arguments_provided == 1 ? " was" : " were")
                 << " provided: ";
         for (auto i = inputs.cbegin(); i != inputs.cend(); ++i)
         {
@@ -77,8 +87,7 @@ void command_dispatcher::validate_number_of_inputs(const std::string& command_na
     }
 }
 
-std::vector<std::shared_ptr<const matrix<double>>> command_dispatcher::unpack_arguments(
-                                                                const std::vector<std::string>& inputs) const
+std::vector<std::shared_ptr<const matrix<double>>> command_dispatcher::unpack_arguments(const std::vector<std::string>& inputs) const
 {
     std::vector<std::shared_ptr<const matrix<double>>> matrix_inputs;
     for (auto i = inputs.cbegin(); i != inputs.cend(); ++i)

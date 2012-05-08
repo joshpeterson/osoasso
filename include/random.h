@@ -12,8 +12,8 @@ namespace osoasso
 class random : public command
 {
 public:
-    std::shared_ptr<const matrix<double>> call(std::shared_ptr<const matrix<double>> rows,
-                                               std::shared_ptr<const matrix<double>> columns) const;
+    std::shared_ptr<const matrix<double>> call(std::shared_ptr<const matrix<double>> rows, std::shared_ptr<const matrix<double>> columns,
+                                               int number_of_threads) const;
     int number_of_arguments() const;
     std::string get_help() const;
 };

@@ -3,13 +3,14 @@
 #include <emmintrin.h>
 #include "../include/multiply.h"
 #include "../include/matrix.h"
+#include "../include/parallel_task.h"
 
-#define SSE2_CUSTOM_ASM
+//#define SSE2_CUSTOM_ASM
 
 using namespace osoasso;
 
-std::shared_ptr<const matrix<double>> multiply::call(std::shared_ptr<const matrix<double>> left,
-                                                     std::shared_ptr<const matrix<double>> right) const
+std::shared_ptr<const matrix<double>> multiply::call(std::shared_ptr<const matrix<double>> left, std::shared_ptr<const matrix<double>> right,
+                                                     int number_of_threads) const
 {
     if (left->columns() != right->rows())
     {
@@ -20,21 +21,49 @@ std::shared_ptr<const matrix<double>> multiply::call(std::shared_ptr<const matri
         throw std::invalid_argument(message.str());
     }
 
+    row_multiplier multiplier(left->rows(), right->columns());
+
+    auto task = make_parallel_task(left->row_begin(), right->row_end(), multiplier, right, number_of_threads);
+    task.start();
+    task.complete();
+
+    return multiplier.get_result();
+}
+
+int multiply::number_of_arguments() const
+{
+    return 2;
+}
+
+std::string multiply::get_help() const
+{
+    return "multiply(A,B) computes the product of two matrices A (m x n) and B (n x p), with A on the left.";
+}
+
+row_multiplier::row_multiplier(std::shared_ptr<const matrix<double>> right) : right_(right), task_results_()
+{
+}
+
+row_multiplier::row_multiplier(size_t rows, size_t columns) : rows_(rows), current_row_(1), columns_(columns), current_column_(1)
+{
+    result_matrix_ = std::make_shared<matrix<double>>(rows_, columns_);
+}
+
+template <typename IteratorType>
+void row_multiplier::map(IteratorType begin, IteratorType end)
+{
 #if defined(SSE2_INTRINSICS) || defined(SSE2_CUSTOM_ASM)
     std::vector<double, sse2_aligned_allocator<double>> result_sse2;
     result_sse2.reserve(2);
 #endif
 
-    size_t result_row_index = 1;
-    auto result = std::make_shared<matrix<double>>(left->rows(), right->columns());
-    for (auto row = left->row_begin();  row != left->row_end(); ++row)
+    for (auto row = begin; row != end; ++row)
     {
-        size_t result_column_index = 1;
-        for (auto column = right->column_begin(); column != right->column_end(); ++column)
+        for (auto column = right_->column_begin(); column != right_->column_end(); ++column)
         {
 #if defined(SSE2_INTRINSICS)
             multiply_and_add_vector_elements_sse2_intrinsics(*row, *column, &result_sse2[0]);
-            (*result)(result_row_index, result_column_index) = result_sse2[0] + result_sse2[1];
+            task_results_.push_back(result_sse2[0] + result_sse2[1]);
 #elif defined(SSE2_CUSTOM_ASM)
             result_sse2[0] = result_sse2[1] = 0.0;
 
@@ -53,29 +82,37 @@ std::shared_ptr<const matrix<double>> multiply::call(std::shared_ptr<const matri
                 result_sse2[0] += (*row)[size + i] * (*column)[size + i];
             }
 
-            (*result)(result_row_index, result_column_index) = result_sse2[0] + result_sse2[1];
+            task_results_.push_back(result_sse2[0] + result_sse2[1]);
 #else
-            (*result)(result_row_index, result_column_index) = multiply_and_add_vector_elements_naive(*row, *column);
+            task_results_.push_back(multiply_and_add_vector_elements_naive(*row, *column));
 #endif
-            ++result_column_index;
         }
-        ++result_row_index;
     }
-
-    return result;
 }
 
-int multiply::number_of_arguments() const
+void row_multiplier::reduce(const row_multiplier& other)
 {
-    return 2;
+    for (auto result = other.task_results_.begin(); result != other.task_results_.end(); ++result)
+    {
+        (*result_matrix_)(current_row_, current_column_) = *result;
+        if (current_column_ == columns_)
+        {
+            ++current_row_;
+            current_column_ = 1;
+        }
+        else
+        {
+            ++current_column_;
+        }
+    }
 }
 
-std::string multiply::get_help() const
+std::shared_ptr<const matrix<double>> row_multiplier::get_result() const
 {
-    return "multiply(A,B) computes the product of two matrices A (m x n) and B (n x p), with A on the left.";
+    return result_matrix_;
 }
 
-void multiply::multiply_and_add_vector_elements_sse2_custom_asm(double* left, double* right, size_t len, double* result) const
+void row_multiplier::multiply_and_add_vector_elements_sse2_custom_asm(double* left, double* right, size_t len, double* result) const
 {
     //
     // This method assumes len is a multiple of four.
@@ -133,8 +170,8 @@ void multiply::multiply_and_add_vector_elements_sse2_custom_asm(double* left, do
 	);
 }
 
-double multiply::multiply_and_add_vector_elements_naive(const std::vector<double, sse2_aligned_allocator<double>>& left,
-                                                        const std::vector<double, sse2_aligned_allocator<double>>& right) const
+double row_multiplier::multiply_and_add_vector_elements_naive(const std::vector<double, sse2_aligned_allocator<double>>& left,
+                                                              const std::vector<double, sse2_aligned_allocator<double>>& right) const
 {
     double result = 0.0;
 
@@ -153,8 +190,8 @@ double multiply::multiply_and_add_vector_elements_naive(const std::vector<double
     return result;
 }
 
-void multiply::multiply_and_add_vector_elements_sse2_intrinsics(const std::vector<double, sse2_aligned_allocator<double>>& left,
-                                                                const std::vector<double, sse2_aligned_allocator<double>>& right, double* result) const
+void row_multiplier::multiply_and_add_vector_elements_sse2_intrinsics(const std::vector<double, sse2_aligned_allocator<double>>& left,
+                                                                      const std::vector<double, sse2_aligned_allocator<double>>& right, double* result) const
 {
     __m128d result_simd = _mm_load_pd(result);
     size_t end = left.size();

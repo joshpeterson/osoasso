@@ -30,7 +30,7 @@ Define(StressTestMultiply)
 
         timer multiply_timer;
 
-        multiply_command.call(left, right);
+        multiply_command.call(left, right, 2);
 
         std::cout << " Time to multiply: " << multiply_timer.elapsed() << "s" << std::endl;
     } Done
