@@ -5,7 +5,7 @@
 #include "../include/matrix.h"
 #include "../include/parallel_task.h"
 
-//#define SSE2_CUSTOM_ASM
+#define SSE2_CUSTOM_ASM
 
 using namespace osoasso;
 
@@ -52,7 +52,7 @@ row_multiplier::row_multiplier(size_t rows, size_t columns) : rows_(rows), curre
 template <typename IteratorType>
 void row_multiplier::map(IteratorType begin, IteratorType end)
 {
-#if defined(SSE2_INTRINSICS) || defined(SSE2_CUSTOM_ASM)
+#if defined(SSE2_CUSTOM_ASM)
     std::vector<double, sse2_aligned_allocator<double>> result_sse2;
     result_sse2.reserve(2);
 #endif
@@ -61,10 +61,7 @@ void row_multiplier::map(IteratorType begin, IteratorType end)
     {
         for (auto column = right_->column_begin(); column != right_->column_end(); ++column)
         {
-#if defined(SSE2_INTRINSICS)
-            multiply_and_add_vector_elements_sse2_intrinsics(*row, *column, &result_sse2[0]);
-            task_results_.push_back(result_sse2[0] + result_sse2[1]);
-#elif defined(SSE2_CUSTOM_ASM)
+#if defined(SSE2_CUSTOM_ASM)
             result_sse2[0] = result_sse2[1] = 0.0;
 
             size_t size = row->size();
@@ -190,23 +187,3 @@ double row_multiplier::multiply_and_add_vector_elements_naive(const std::vector<
     return result;
 }
 
-void row_multiplier::multiply_and_add_vector_elements_sse2_intrinsics(const std::vector<double, sse2_aligned_allocator<double>>& left,
-                                                                      const std::vector<double, sse2_aligned_allocator<double>>& right, double* result) const
-{
-    __m128d result_simd = _mm_load_pd(result);
-    size_t end = left.size();
-	if (end % 2 != 0)
-		end -= 1;
-    for (size_t i = 0; i < end; i+=2)
-    {
-        __m128d left_simd = _mm_load_pd(&left[i]);
-        __m128d right_simd = _mm_load_pd(&right[i]);
-        __m128d product_simd = _mm_mul_pd(left_simd, right_simd);
-        result_simd = _mm_add_pd(result_simd, product_simd);
-    }
-
-    _mm_store_pd(result, result_simd);
-
-    if (end != left.size())
-        *result += left[end] * right[end];
-}
