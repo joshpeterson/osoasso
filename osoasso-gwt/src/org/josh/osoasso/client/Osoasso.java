@@ -4,6 +4,7 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
@@ -11,7 +12,6 @@ import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
@@ -58,6 +58,7 @@ public class Osoasso extends Composite implements EntryPoint
     private JavaScriptObject naclModule = null;
 
     private StringConcatenator concatenator = new StringConcatenator();
+    private ActionHistory history = new ActionHistory();
 
     final private String UsernameCookieName = "OsoassoUsernameCookie";
 
@@ -121,16 +122,46 @@ public class Osoasso extends Composite implements EntryPoint
         {
             if (e.getCharCode() == KeyCodes.KEY_ENTER)
             {
-                CallOsoassoNaclModuleInputMethod(naclModule, inputField.getText(), usernameField.getText());
-
-                scrollPanel.scrollToBottom();
-
-                inputField.setReadOnly(true);
+                String action = inputField.getText();
+                if (!action.isEmpty())
+                {
+                    CallOsoassoNaclModuleInputMethod(naclModule, action, usernameField.getText());
+    
+                    history.add(action);
+                    scrollPanel.scrollToBottom();
+    
+                    inputField.setReadOnly(true);
+                }
             }
         }
         else if (e.getSource() == this.usernameField)
         {
             Cookies.setCookie(UsernameCookieName, usernameField.getText() + e.getCharCode());
+        }
+    }
+    
+    @UiHandler({ "inputField", })
+    void onKeyDown(KeyDownEvent e)
+    {
+        // For some reason, onKeyPress is not called for the up and down keys.
+        int keyCode = e.getNativeKeyCode();
+        if (keyCode == KeyCodes.KEY_UP)
+        {
+            history.movePrevious();
+            String action = history.getCurrent();
+            if (action != null)
+                inputField.setText(action);
+        }
+        else if (keyCode == KeyCodes.KEY_DOWN)
+        {
+            history.moveNext();
+            String action = history.getCurrent();
+            if (action != null)
+                inputField.setText(action);
+        }
+        else if (keyCode == KeyCodes.KEY_ESCAPE)
+        {
+            inputField.setText(null);
         }
     }
 
