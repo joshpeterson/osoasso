@@ -5,6 +5,8 @@
 #include <vector>
 #include "../test_harness/test.h"
 #include "../include/command.h"
+#include "../include/command_with_one_argument.h"
+#include "../include/command_with_two_arguments.h"
 #include "../include/command_factory.h"
 #include "../include/command_dispatcher.h"
 #include "../include/object_repository.h"
@@ -13,10 +15,10 @@
 
 using namespace osoasso;
 
-class mock_dispatcher_command : public command
+class mock_dispatcher_command_two : public command_with_two_arguments
 {
 public:
-    mock_dispatcher_command() : command_called_(false)
+    mock_dispatcher_command_two() : command_called_(false)
     {
     }
 
@@ -68,11 +70,53 @@ private:
     mutable int number_of_threads_;
 };
 
+class mock_dispatcher_command_one : public command_with_one_argument
+{
+public:
+    mock_dispatcher_command_one() : command_called_(false)
+    {
+    }
+
+    std::shared_ptr<const matrix<double>> call(std::shared_ptr<const matrix<double>> input, int number_of_threads) const
+    {
+        command_called_ = true;
+        input_ = input;
+        number_of_threads_ = number_of_threads;
+        auto test = std::shared_ptr<const matrix<double>>(new matrix<double>({{1}, {1}}));
+        return test;
+    }
+
+    std::string get_help() const
+    {
+        return std::string();
+    }
+
+    bool command_called() const
+    {
+        return command_called_;
+    }
+
+    std::shared_ptr<const matrix<double>>input_argument() const
+    {
+        return input_;
+    }
+
+    int number_of_threads() const
+    {
+        return number_of_threads_;
+    }
+
+private:
+    mutable bool command_called_;
+    mutable std::shared_ptr<const matrix<double>> input_;
+    mutable int number_of_threads_;
+};
+
 Define(CommandDispatcher)
 {
     It("Accepts an input string and calls the correct command")
     {
-        std::shared_ptr<mock_dispatcher_command> test_command = std::make_shared<mock_dispatcher_command>();
+        std::shared_ptr<mock_dispatcher_command_two> test_command = std::make_shared<mock_dispatcher_command_two>();
 
         command_factory commands = { std::make_pair("foo", std::shared_ptr<command>(test_command)) };
         object_repository<std::shared_ptr<const matrix<double>>> matrices;
@@ -86,7 +130,7 @@ Define(CommandDispatcher)
 
     It("Throws an exception when it sees the wrong number of arguments")
     {
-        std::shared_ptr<mock_dispatcher_command> test_command = std::make_shared<mock_dispatcher_command>();
+        std::shared_ptr<mock_dispatcher_command_two> test_command = std::make_shared<mock_dispatcher_command_two>();
 
         command_factory commands = { std::make_pair("foo", std::shared_ptr<command>(test_command)) };
         object_repository<std::shared_ptr<const matrix<double>>> matrices;
@@ -112,7 +156,7 @@ Define(CommandDispatcher)
 
     It("Throws an exception with the correct wording when it sees the wrong number of arguments with 1 provided")
     {
-        std::shared_ptr<mock_dispatcher_command> test_command = std::make_shared<mock_dispatcher_command>();
+        std::shared_ptr<mock_dispatcher_command_two> test_command = std::make_shared<mock_dispatcher_command_two>();
 
         command_factory commands = { std::make_pair("foo", std::shared_ptr<command>(test_command)) };
         object_repository<std::shared_ptr<const matrix<double>>> matrices;
@@ -138,7 +182,7 @@ Define(CommandDispatcher)
 
     It("Passes the correct arguments to the command")
     {
-        std::shared_ptr<mock_dispatcher_command> test_command = std::make_shared<mock_dispatcher_command>();
+        std::shared_ptr<mock_dispatcher_command_two> test_command = std::make_shared<mock_dispatcher_command_two>();
 
         command_factory commands = { std::make_pair("foo", std::shared_ptr<command>(test_command)) };
         object_repository<std::shared_ptr<const matrix<double>>> matrices;
@@ -156,7 +200,7 @@ Define(CommandDispatcher)
 
     It("Stores the arguments to the command in the object repository")
     {
-        std::shared_ptr<mock_dispatcher_command> test_command = std::make_shared<mock_dispatcher_command>();
+        std::shared_ptr<mock_dispatcher_command_two> test_command = std::make_shared<mock_dispatcher_command_two>();
 
         command_factory commands = { std::make_pair("foo", std::shared_ptr<command>(test_command)) };
         object_repository<std::shared_ptr<const matrix<double>>> matrices;
@@ -178,7 +222,7 @@ Define(CommandDispatcher)
 
     It("Stores the result of the command in the object repository")
     {
-        std::shared_ptr<mock_dispatcher_command> test_command = std::make_shared<mock_dispatcher_command>();
+        std::shared_ptr<mock_dispatcher_command_two> test_command = std::make_shared<mock_dispatcher_command_two>();
 
         command_factory commands = { std::make_pair("foo", std::shared_ptr<command>(test_command)) };
         object_repository<std::shared_ptr<const matrix<double>>> matrices;
@@ -197,7 +241,7 @@ Define(CommandDispatcher)
 
     It("Returns the name of the result matrix in a command data struct")
     {
-        std::shared_ptr<mock_dispatcher_command> test_command = std::make_shared<mock_dispatcher_command>();
+        std::shared_ptr<mock_dispatcher_command_two> test_command = std::make_shared<mock_dispatcher_command_two>();
 
         command_factory commands = { std::make_pair("foo", std::shared_ptr<command>(test_command)) };
         object_repository<std::shared_ptr<const matrix<double>>> matrices;
@@ -216,7 +260,7 @@ Define(CommandDispatcher)
 
     It("Returns the name of the input matrices in a command data struct")
     {
-        std::shared_ptr<mock_dispatcher_command> test_command = std::make_shared<mock_dispatcher_command>();
+        std::shared_ptr<mock_dispatcher_command_two> test_command = std::make_shared<mock_dispatcher_command_two>();
 
         command_factory commands = { std::make_pair("foo", std::shared_ptr<command>(test_command)) };
         object_repository<std::shared_ptr<const matrix<double>>> matrices;
@@ -239,7 +283,7 @@ Define(CommandDispatcher)
 
     It("Returns the tag in a command data struct")
     {
-        std::shared_ptr<mock_dispatcher_command> test_command = std::make_shared<mock_dispatcher_command>();
+        std::shared_ptr<mock_dispatcher_command_two> test_command = std::make_shared<mock_dispatcher_command_two>();
 
         command_factory commands = { std::make_pair("foo", std::shared_ptr<command>(test_command)) };
         object_repository<std::shared_ptr<const matrix<double>>> matrices;
@@ -252,7 +296,7 @@ Define(CommandDispatcher)
 
     It("Finds an input by name in the object repository")
     {
-        std::shared_ptr<mock_dispatcher_command> test_command = std::make_shared<mock_dispatcher_command>();
+        std::shared_ptr<mock_dispatcher_command_two> test_command = std::make_shared<mock_dispatcher_command_two>();
 
         command_factory commands = { std::make_pair("foo", std::shared_ptr<command>(test_command)) };
 
@@ -276,7 +320,7 @@ Define(CommandDispatcher)
 
     It("Stores the tag with the correct result name in the tag repository")
     {
-        std::shared_ptr<mock_dispatcher_command> test_command = std::make_shared<mock_dispatcher_command>();
+        std::shared_ptr<mock_dispatcher_command_two> test_command = std::make_shared<mock_dispatcher_command_two>();
 
         command_factory commands = { std::make_pair("foo", std::shared_ptr<command>(test_command)) };
         object_repository<std::shared_ptr<const matrix<double>>> matrices;
@@ -290,7 +334,7 @@ Define(CommandDispatcher)
 
     It("Finds an input by tag in the tag repository")
     {
-        std::shared_ptr<mock_dispatcher_command> test_command = std::make_shared<mock_dispatcher_command>();
+        std::shared_ptr<mock_dispatcher_command_two> test_command = std::make_shared<mock_dispatcher_command_two>();
 
         command_factory commands = { std::make_pair("foo", std::shared_ptr<command>(test_command)) };
 
@@ -313,7 +357,7 @@ Define(CommandDispatcher)
 
     It("Does not add a tag if one is not represent in the input")
     {
-        std::shared_ptr<mock_dispatcher_command> test_command = std::make_shared<mock_dispatcher_command>();
+        std::shared_ptr<mock_dispatcher_command_two> test_command = std::make_shared<mock_dispatcher_command_two>();
 
         command_factory commands = { std::make_pair("foo", std::shared_ptr<command>(test_command)) };
         object_repository<std::shared_ptr<const matrix<double>>> matrices;
@@ -327,7 +371,7 @@ Define(CommandDispatcher)
 
     It("Returns the time to execute the command")
     {
-        std::shared_ptr<mock_dispatcher_command> test_command = std::make_shared<mock_dispatcher_command>();
+        std::shared_ptr<mock_dispatcher_command_two> test_command = std::make_shared<mock_dispatcher_command_two>();
 
         command_factory commands = { std::make_pair("foo", std::shared_ptr<command>(test_command)) };
         object_repository<std::shared_ptr<const matrix<double>>> matrices;
@@ -342,7 +386,7 @@ Define(CommandDispatcher)
 
     It("Creates a new matrix for a single integer input")
     {
-        std::shared_ptr<mock_dispatcher_command> test_command = std::make_shared<mock_dispatcher_command>();
+        std::shared_ptr<mock_dispatcher_command_two> test_command = std::make_shared<mock_dispatcher_command_two>();
 
         command_factory commands = { std::make_pair("foo", std::shared_ptr<command>(test_command)) };
 
@@ -362,7 +406,7 @@ Define(CommandDispatcher)
 
     It("Creates a new matrix for a single double input")
     {
-        std::shared_ptr<mock_dispatcher_command> test_command = std::make_shared<mock_dispatcher_command>();
+        std::shared_ptr<mock_dispatcher_command_two> test_command = std::make_shared<mock_dispatcher_command_two>();
 
         command_factory commands = { std::make_pair("foo", std::shared_ptr<command>(test_command)) };
 
@@ -382,7 +426,7 @@ Define(CommandDispatcher)
 
     It("Calls a command with the correct default parameter")
     {
-        std::shared_ptr<mock_dispatcher_command> test_command = std::make_shared<mock_dispatcher_command>();
+        std::shared_ptr<mock_dispatcher_command_two> test_command = std::make_shared<mock_dispatcher_command_two>();
 
         command_factory commands = { std::make_pair("foo", std::shared_ptr<command>(test_command)) };
         object_repository<std::shared_ptr<const matrix<double>>> matrices;
@@ -396,7 +440,7 @@ Define(CommandDispatcher)
 
     It("Calls a command with the correct optional parameter")
     {
-        std::shared_ptr<mock_dispatcher_command> test_command = std::make_shared<mock_dispatcher_command>();
+        std::shared_ptr<mock_dispatcher_command_two> test_command = std::make_shared<mock_dispatcher_command_two>();
 
         command_factory commands = { std::make_pair("foo", std::shared_ptr<command>(test_command)) };
         object_repository<std::shared_ptr<const matrix<double>>> matrices;
@@ -406,5 +450,21 @@ Define(CommandDispatcher)
         dispatcher.input("foo([[1 2]], [[3 5]], 3)");
 
         AssertEqual(3, test_command->number_of_threads());
+    } Done
+
+    It("Calls a command with one argument")
+    {
+        std::shared_ptr<mock_dispatcher_command_one> test_command = std::make_shared<mock_dispatcher_command_one>();
+
+        command_factory commands = { std::make_pair("foo", std::shared_ptr<command>(test_command)) };
+        object_repository<std::shared_ptr<const matrix<double>>> matrices;
+        tag_repository tags;
+
+        command_dispatcher dispatcher(commands, matrices, tags);
+        dispatcher.input("foo([[1 2]], 3)");
+
+        matrix<double> expected_input = {{ 1, 2 }};
+
+        AssertElementsEqual(expected_input, *test_command->input_argument());
     } Done
 }

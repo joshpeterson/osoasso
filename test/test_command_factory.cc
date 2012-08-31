@@ -6,11 +6,12 @@
 #include "../test_harness/test.h"
 #include "../include/matrix.h"
 #include "../include/command.h"
+#include "../include/command_with_two_arguments.h"
 #include "../include/command_factory.h"
 
 using namespace osoasso;
 
-class mock_command : public command
+class mock_command : public command_with_two_arguments
 {
 public:
     std::shared_ptr<const matrix<double>> call(std::shared_ptr<const matrix<double>> left, std::shared_ptr<const matrix<double>> right,

@@ -4,7 +4,7 @@
 #include <memory>
 #include <string>
 #include "matrix.h"
-#include "command.h"
+#include "command_with_two_arguments.h"
 
 namespace osoasso
 {
@@ -31,12 +31,11 @@ private:
     double multiply_and_add_vector_elements(const std::vector<double>& left, const std::vector<double>& right) const;
 };
 
-class multiply : public command
+class multiply : public command_with_two_arguments
 {
 public:
     std::shared_ptr<const matrix<double>> call(std::shared_ptr<const matrix<double>> left, std::shared_ptr<const matrix<double>> right,
                                                int number_of_threads) const;
-    int number_of_arguments() const;
     std::string get_help() const;
 };
 

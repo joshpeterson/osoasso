@@ -35,11 +35,6 @@ std::shared_ptr<const matrix<double>> subtract::call(std::shared_ptr<const matri
     return result;
 }
 
-int subtract::number_of_arguments() const
-{
-    return 2;
-}
-
 std::string subtract::get_help() const
 {
     return "subtract(A,B) computes the difference of two matrices m x n A and B, with A on the left.";

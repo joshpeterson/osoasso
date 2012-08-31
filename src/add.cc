@@ -35,11 +35,6 @@ std::shared_ptr<const matrix<double>> add::call(std::shared_ptr<const matrix<dou
     return result;
 }
 
-int add::number_of_arguments() const
-{
-    return 2;
-}
-
 std::string add::get_help() const
 {
     return "add(A,B) computes the sum of two matrices m x n A and B.";

@@ -19,11 +19,6 @@ std::shared_ptr<const matrix<double>> transpose::call(std::shared_ptr<const matr
     return result;
 }
 
-int transpose::number_of_arguments() const
-{
-    return 1;
-}
-
 std::string transpose::get_help() const
 {
     return "";
