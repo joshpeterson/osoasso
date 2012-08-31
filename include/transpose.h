@@ -4,15 +4,15 @@
 #include <memory>
 #include <string>
 #include "matrix.h"
-#include "command_with_two_arguments.h"
+#include "command_with_one_argument.h"
 
 namespace osoasso
 {
 
-class transpose : public command_with_two_arguments
+class transpose : public command_with_one_argument
 {
 public:
-    std::shared_ptr<const matrix<double>> call(std::shared_ptr<const matrix<double>> input, std::shared_ptr<const matrix<double>> dummy, int number_of_threads) const;
+    std::shared_ptr<const matrix<double>> call(std::shared_ptr<const matrix<double>> input, int number_of_threads) const;
     std::string get_help() const;
 };
 
