@@ -1,6 +1,8 @@
 #include <memory>
 #include <sstream>
 #include <stdexcept>
+#include "../include/command_with_one_argument.h"
+#include "../include/command_with_two_arguments.h"
 #include "../include/command_dispatcher.h"
 #include "../include/command_parser.h"
 #include "../include/matrix_parser.h"
@@ -27,7 +29,8 @@ command_data command_dispatcher::input(const std::string& input)
     std::vector<std::shared_ptr<const matrix<double>>> matrix_inputs = this->unpack_arguments(parser.inputs());
 
     bool has_optional_parameter = false;
-    if (matrix_inputs.size() == 3 && matrix_inputs.back()->rows() == 1 && matrix_inputs.back()->columns() == 1)
+    if (matrix_inputs.size() == static_cast<size_t>(command->number_of_arguments() + 1) &&
+        matrix_inputs.back()->rows() == 1 && matrix_inputs.back()->columns() == 1)
         has_optional_parameter = true;
 
     this->validate_number_of_inputs(parser.name(), parser.inputs(), command, has_optional_parameter);
@@ -43,8 +46,21 @@ command_data command_dispatcher::input(const std::string& input)
 
     command_data command_result;
 
+    std::shared_ptr<const matrix<double>> result;
+
     timer command_timer;
-    auto result = command->call(matrix_inputs[0], matrix_inputs[1], number_of_threads);
+    std::shared_ptr<command_with_two_arguments> command_two = std::dynamic_pointer_cast<command_with_two_arguments>(command);
+    if (command_two)
+    {
+        result = command_two->call(matrix_inputs[0], matrix_inputs[1], number_of_threads);
+    }
+    else
+    {
+        std::shared_ptr<command_with_one_argument> command_one = std::dynamic_pointer_cast<command_with_one_argument>(command);
+
+        result = command_one->call(matrix_inputs[0], number_of_threads);
+    }
+
     command_result.command_duration_seconds = command_timer.elapsed();
 
     std::string result_name = this->add_to_object_repository(result);

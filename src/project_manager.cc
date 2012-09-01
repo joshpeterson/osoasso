@@ -3,14 +3,16 @@
 #include "../include/subtract.h"
 #include "../include/multiply.h"
 #include "../include/random.h"
+#include "../include/transpose.h"
 
 using namespace osoasso;
 
 project_manager::project_manager() 
-   : commands_({ std::make_pair("add", std::shared_ptr<command>(new add)),
-                 std::make_pair("subtract", std::shared_ptr<command>(new subtract)),
-                 std::make_pair("multiply", std::shared_ptr<command>(new multiply)),
-                 std::make_pair("random", std::shared_ptr<command>(new random)) }),
+   : commands_({ std::make_pair("add", std::shared_ptr<command_with_two_arguments>(new add)),
+                 std::make_pair("subtract", std::shared_ptr<command_with_two_arguments>(new subtract)),
+                 std::make_pair("multiply", std::shared_ptr<command_with_two_arguments>(new multiply)),
+                 std::make_pair("random", std::shared_ptr<command_with_two_arguments>(new random)),
+                 std::make_pair("transpose", std::shared_ptr<command_with_one_argument>(new transpose)) }),
      matrices_(),
      commits_(),
      commit_tree_()

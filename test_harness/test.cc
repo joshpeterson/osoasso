@@ -40,6 +40,7 @@ int main(int argc, char** argv)
     RUN_TEST_FIXTURE(Subtract)
     RUN_TEST_FIXTURE(Multiply)
     RUN_TEST_FIXTURE(Random)
+    RUN_TEST_FIXTURE(Transpose)
 
     if (all_tests_passed__)
     {
