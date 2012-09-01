@@ -28,4 +28,18 @@ Define(Transpose)
 
         AssertElementsEqual(*expected, *result);
     } Done
+
+    It("Reports its number of arguments")
+    {
+        transpose transpose_command;
+        
+        AssertEqual(1, transpose_command.number_of_arguments());
+    } Done
+
+    It("Provides a help message")
+    {
+        transpose transpose_command;
+        
+        AssertEqual(std::string("transpose(A) computes the transpose of matrix A."), transpose_command.get_help());
+    } Done
 }

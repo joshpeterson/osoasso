@@ -21,5 +21,5 @@ std::shared_ptr<const matrix<double>> transpose::call(std::shared_ptr<const matr
 
 std::string transpose::get_help() const
 {
-    return "";
+    return "transpose(A) computes the transpose of matrix A.";
 }
