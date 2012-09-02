@@ -196,6 +196,38 @@ Define(Matrix)
         AssertElementsEqual(expected_column_2, actual_columns[2]);
         AssertElementsEqual(expected_column_3, actual_columns[3]);
     } Done
+
+    It ("Reports that a matrix is equal to itself")
+    {
+        matrix<double> test_matrix1 = { { 3.14, 1.0, 3.19 }, { 2.72, 8.9, 5.42} };
+        matrix<double> test_matrix2 = { { 3.14, 1.0, 3.19 }, { 2.72, 8.9, 5.42} };
+
+        AssertTrue(test_matrix1 == test_matrix2);
+    } Done
+
+    It ("Reports that two different matrices are not equal")
+    {
+        matrix<double> test_matrix1 = { { 3.14, 1.0, 3.19 }, { 2.72, 8.9, 5.42} };
+        matrix<double> test_matrix2 = { { 3.14, 1.1, 3.19 }, { 2.72, 8.9, 5.42} };
+
+        AssertFalse(test_matrix1 == test_matrix2);
+    } Done
+
+    It ("Reports that two matrices with a differnt number of rows are not equal")
+    {
+        matrix<double> test_matrix1 = { { 3.14, 1.0, 3.19 }, { 2.72, 8.9, 5.42} };
+        matrix<double> test_matrix2 = { { 3.14, 1.1, 3.19 } };
+
+        AssertFalse(test_matrix1 == test_matrix2);
+    } Done
+
+    It ("Reports that two matrices with a different number of columns are not equal")
+    {
+        matrix<double> test_matrix1 = { { 3.14, 1.0, 3.19 }, { 2.72, 8.9, 5.42} };
+        matrix<double> test_matrix2 = { { 3.14, 1.1 }, { 2.72, 8.9} };
+
+        AssertFalse(test_matrix1 == test_matrix2);
+    } Done
 }
 
 matrix<double> test_move()

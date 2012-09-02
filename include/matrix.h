@@ -8,6 +8,7 @@
 #include "matrix_row_iterator.h"
 #include "matrix_column_iterator.h"
 #include "blob.h"
+#include "utility.h"
 
 namespace osoasso
 {
@@ -108,6 +109,23 @@ public:
     matrix_column_iterator<ValueType> column_end() const
     {
         return matrix_column_iterator<ValueType>();
+    }
+
+    bool operator==(const matrix<ValueType>& other)
+    {
+        if (rows_ != other.rows_ || columns_ != other.columns_)
+            return false;
+
+        for (size_t i = 0; i <= rows_-1; ++i)
+        {
+            for (size_t j = 0; j <= columns_-1; ++j)
+            {
+                if (!osoasso::double_equal(data_[i][j], other.data_[i][j]))
+                    return false;
+            }
+        }
+
+        return true;
     }
 
     template <typename T> friend class matrix_builder;
