@@ -4,6 +4,7 @@
 #include "../include/multiply.h"
 #include "../include/random.h"
 #include "../include/transpose.h"
+#include "../include/random_symmetric.h"
 
 using namespace osoasso;
 
@@ -13,7 +14,7 @@ project_manager::project_manager()
                  std::make_pair("multiply", std::shared_ptr<command_with_two_arguments>(new multiply)),
                  std::make_pair("random", std::shared_ptr<command_with_two_arguments>(new random)),
                  std::make_pair("transpose", std::shared_ptr<command_with_one_argument>(new transpose)),
-                 std::make_pair("random_symmetric", std::shared_ptr<command_with_one_argument>(new transpose)) }),
+                 std::make_pair("random_symmetric", std::shared_ptr<command_with_one_argument>(new random_symmetric)) }),
      matrices_(),
      commits_(),
      commit_tree_()
