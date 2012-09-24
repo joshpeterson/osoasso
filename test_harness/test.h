@@ -61,6 +61,27 @@ void AssertEqual(ComparisonType expected, ComparisonType actual)
     }
 }
 
+template <typename FirstType, typename SecondType>
+void AssertEqual(std::pair<FirstType, SecondType> expected, std::pair<FirstType, SecondType> actual)
+{
+    if (expected.first != actual.first)
+    {
+        std::stringstream message;
+        message << "\t\t\tFirst entry in the pair differs:" << std::endl;
+        message << "\t\t\tExpected: " << expected.first << std::endl;
+        message << "\t\t\tActual:   " << actual.first << std::endl;
+        throw test_assertion_failed_exception__(message.str().c_str());
+    }
+    else if (expected.second != actual.second)
+    {
+        std::stringstream message;
+        message << "\t\t\tSecond entry in the pair differs:" << std::endl;
+        message << "\t\t\tExpected: " << expected.second << std::endl;
+        message << "\t\t\tActual:   " << actual.second << std::endl;
+        throw test_assertion_failed_exception__(message.str().c_str());
+    }
+}
+
 template <typename ContainerType>
 void AssertElementsEqual(ContainerType expected, ContainerType actual)
 {
