@@ -43,6 +43,7 @@ int main(int argc, char** argv)
     RUN_TEST_FIXTURE(Random)
     RUN_TEST_FIXTURE(Transpose)
     RUN_TEST_FIXTURE(RandomSymmetric)
+    RUN_TEST_FIXTURE(Identity)
 
     if (all_tests_passed__)
     {
