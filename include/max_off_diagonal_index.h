@@ -10,7 +10,7 @@ namespace osoasso
 {
 
 template <typename ValueType>
-std::pair<size_t, size_t> max_off_diagonal_indexes(const matrix<ValueType>& input)
+std::pair<size_t, size_t> find_max_off_diagonal_index(const matrix<ValueType>& input)
 {
     size_t row_index_For_maximum_value = 0;
     size_t column_index_For_maximum_value = 0;

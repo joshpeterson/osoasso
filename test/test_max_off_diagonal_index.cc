@@ -13,7 +13,7 @@ Define(MaxOffDiagonalIndex)
                                                                          {1.0, 1.0, 9.41},
                                                                          {3.10, 9.41, 3.14}}));
         std::pair<size_t, size_t> expected = {2, 3};
-        auto result = max_off_diagonal_indexes(*input);
+        auto result = find_max_off_diagonal_index(*input);
         
         AssertEqual(expected, result);
     } Done
@@ -24,7 +24,7 @@ Define(MaxOffDiagonalIndex)
                                                                          {1.0, 1.0, 9.41},
                                                                          {-10.10, -9.41, 3.14}}));
         std::pair<size_t, size_t> expected = {1, 3};
-        auto result = max_off_diagonal_indexes(*input);
+        auto result = find_max_off_diagonal_index(*input);
         
         AssertEqual(expected, result);
     } Done
