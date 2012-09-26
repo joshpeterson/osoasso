@@ -37,3 +37,9 @@ std::string identity::get_help() const
 {
     return "identity(n) generates the identity matrix of size n x n.";
 }
+
+std::shared_ptr<const matrix<double>> identity::operator()(int size) const
+{
+    auto size_matrix = std::shared_ptr<matrix<double>>(new matrix<double>({{static_cast<double>(size)}}));
+    return call(size_matrix, 1);
+}

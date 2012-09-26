@@ -29,6 +29,17 @@ Define(Identity)
         AssertElementsEqual(*expected, *result);
     } Done
 
+    It("Overloaded () operator converts integer input to a matrix")
+    {
+        auto expected = std::shared_ptr<matrix<double>>(new matrix<double>({{1, 0}, {0, 1}}));
+
+        identity identity_command;
+
+        auto result = identity_command(2);
+
+        AssertElementsEqual(*expected, *result);
+    } Done
+
     It("Throws an exception when called with an input of a size that is not 1,1")
     {
         auto matrix1 = std::shared_ptr<matrix<double>>(new matrix<double>({{3.14, 1.0, 3.10},
