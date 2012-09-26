@@ -15,7 +15,10 @@ public:
     std::shared_ptr<const matrix<double>> call(std::shared_ptr<const matrix<double>> size, int number_of_threads) const;
     std::string get_help() const;
 
-    std::shared_ptr<const matrix<double>> operator()(int size) const;
+    std::shared_ptr<matrix<double>> operator()(int size) const;
+
+private:
+    std::shared_ptr<matrix<double>> call_implementation(std::shared_ptr<const matrix<double>> size, int number_of_threads) const;
 };
 
 }
