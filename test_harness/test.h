@@ -45,10 +45,13 @@ private:
         all_tests_passed__ = false;\
     }
 
+bool AreEqual(double expected, double actual, double threshold);
+
 void AssertEqual(std::string expected, std::string actual);
 void AssertEqual(double expected, double actual, double threshold);
 void AssertTrue(bool value);
 void AssertFalse(bool value);
+void AssertFail(const std::string& message);
 
 template <typename ComparisonType>
 void AssertEqual(ComparisonType expected, ComparisonType actual)

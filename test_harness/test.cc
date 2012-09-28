@@ -87,13 +87,18 @@ void AssertEqual(std::string expected, std::string actual)
     }
 }
 
-void AssertEqual(double expected, double actual, double threshold = 0.0)
+bool AreEqual(double expected, double actual, double threshold = 0.0)
 {
     bool elements_equal = osoasso::double_equal(expected, actual);
     if (threshold != 0.0)
         elements_equal = fabs(expected - actual) < threshold;
 
-    if (!elements_equal)
+    return elements_equal;
+}
+
+void AssertEqual(double expected, double actual, double threshold = 0.0)
+{
+    if (!AreEqual(expected, actual, threshold))
     {
         std::stringstream message;
 
@@ -129,3 +134,9 @@ void AssertFalse(bool value)
     }
 }
 
+void AssertFail(const std::string& message)
+{
+    std::stringstream formatted_message;
+    formatted_message << "\t\t\t" << message;
+    throw test_assertion_failed_exception__(formatted_message.str().c_str());
+}
