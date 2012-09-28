@@ -6,7 +6,6 @@
 #include <iostream>
 #include <sstream>
 #include <vector>
-#include <math.h>
 #include "../include/matrix.h"
 #include "../include/utility.h"
 
@@ -47,6 +46,7 @@ private:
     }
 
 void AssertEqual(std::string expected, std::string actual);
+void AssertEqual(double expected, double actual, double threshold);
 void AssertTrue(bool value);
 void AssertFalse(bool value);
 
@@ -130,20 +130,14 @@ inline void AssertElementsEqual(const osoasso::matrix<double>& expected, const o
         {
             for (size_t j = 1; j <= expected.columns(); ++j)
             {
-                bool elements_equal = osoasso::double_equal(expected(i,j), actual(i,j));
-                if (threshold != 0.0)
-                    elements_equal = fabs(expected(i,j) - actual(i,j)) < threshold;
-
-                if (!elements_equal)
+                try
                 {
-                    osoasso::double_bytes converter;
-                    converter.double_value = expected(i,j);
+                    AssertEqual(expected(i,j), actual(i,j), threshold);
+                }
+                catch (test_assertion_failed_exception__& e)
+                {
                     message << "\t\t\tMatrices differ at index " << i << "," << j << std::endl;
-                    message << "\t\t\tExpected: " << expected(i,j) << " (" << converter.int_value
-                            << ")"<< std::endl;
-                    converter.double_value = actual(i,j);
-                    message << "\t\t\tActual:   " << actual(i,j) << " (" << converter.int_value
-                            << ")" << std::endl;
+                    message << e.what();
 
                     throw test_assertion_failed_exception__(message.str().c_str());
                 }

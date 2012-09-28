@@ -1,5 +1,6 @@
 #include <iostream>
 #include <ctime>
+#include <math.h>
 #include "test.h"
 #include "../include/timer.h"
 
@@ -81,6 +82,26 @@ void AssertEqual(std::string expected, std::string actual)
                 message << " ";
             }
         }
+
+        throw test_assertion_failed_exception__(message.str().c_str());
+    }
+}
+
+void AssertEqual(double expected, double actual, double threshold = 0.0)
+{
+    bool elements_equal = osoasso::double_equal(expected, actual);
+    if (threshold != 0.0)
+        elements_equal = fabs(expected - actual) < threshold;
+
+    if (!elements_equal)
+    {
+        std::stringstream message;
+
+        osoasso::double_bytes converter;
+        converter.double_value = expected;
+        message << "\t\t\tExpected: " << expected << " (" << converter.int_value << ")"<< std::endl;
+        converter.double_value = actual;
+        message << "\t\t\tActual:   " << actual << " (" << converter.int_value << ")" << std::endl;
 
         throw test_assertion_failed_exception__(message.str().c_str());
     }
