@@ -3,17 +3,52 @@
 
 using namespace osoasso;
 
+const double threshold = 0.0001;
+
+void find_eigenvalue(std::shared_ptr<matrix<double>> input, double eigenvalue)
+{
+    jacobi_eigen_solver jacobi_command;
+
+    auto result = jacobi_command.call(input, 1);
+
+    bool eigenvalue_found = false;
+    for (auto it = result->begin(); it != result->end() && !eigenvalue_found; ++it)
+    {
+        if (AreEqual(eigenvalue, *it, threshold))
+            eigenvalue_found = true;
+    }
+
+    if (!eigenvalue_found)
+    {
+        std::stringstream message;
+        message << "The eigenvalue " << eigenvalue << " was not found in the result: ";
+        for (auto it = result->begin(); it != result->end(); ++it)
+        {
+            message << *it << " ";
+        }
+        message << std::endl;
+
+        AssertFail(message.str());
+    }
+}
+
 Define(JacobiEigenSolver)
 {
-    It ("Finds the eigenvalues of a 3x3 matrix")
+    It ("Finds the first eigenvalue of a 3x3 matrix")
     {
         auto input = std::shared_ptr<matrix<double>>(new matrix<double>({{1, 0, 2}, {0, 2, 1}, {2, 1, 1}}));
-        auto expected = std::shared_ptr<matrix<double>>(new matrix<double>({{1.7728}, {-1.16424}, {3.39138}}));
+        find_eigenvalue(input, 1.7728);
+    } Done
 
-        jacobi_eigen_solver jacobi_command;
+    It ("Finds the second eigenvalue of a 3x3 matrix")
+    {
+        auto input = std::shared_ptr<matrix<double>>(new matrix<double>({{1, 0, 2}, {0, 2, 1}, {2, 1, 1}}));
+        find_eigenvalue(input, -1.16424);
+    } Done
 
-        auto result = jacobi_command.call(input, 1);
-
-        AssertElementsEqual(*expected, *result, 0.0001);
+    It ("Finds the third eigenvalue of a 3x3 matrix")
+    {
+        auto input = std::shared_ptr<matrix<double>>(new matrix<double>({{1, 0, 2}, {0, 2, 1}, {2, 1, 1}}));
+        find_eigenvalue(input, 3.39138);
     } Done
 }
