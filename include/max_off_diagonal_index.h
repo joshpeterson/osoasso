@@ -5,6 +5,7 @@
 #include <utility>
 #include <cmath>
 #include "matrix.h"
+#include "utility.h"
 
 namespace osoasso
 {
@@ -20,9 +21,10 @@ std::pair<size_t, size_t> find_max_off_diagonal_index(const matrix<ValueType>& i
     {
         for (size_t j = 1; j <= input.columns(); ++j)
         {
-            if (i != j && std::abs(input(i,j)) > maximum_value)
+            double current_value = std::abs(input(i,j));
+            if (i != j && (!double_equal(current_value, maximum_value) && current_value > maximum_value))
             {
-                maximum_value = std::abs(input(i,j));
+                maximum_value = current_value;
                 row_index_For_maximum_value = i;
                 column_index_For_maximum_value = j;
             }

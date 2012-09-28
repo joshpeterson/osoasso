@@ -28,4 +28,15 @@ Define(MaxOffDiagonalIndex)
         
         AssertEqual(expected, result);
     } Done
+
+    It ("Finds the lowest index of the non-diagonal entry which has the greatest value")
+    {
+        auto input = std::shared_ptr<matrix<double>>(new matrix<double>({{3.0, 0.707, 0.0},
+                                                                         {0.707, 2.0, 0.707},
+                                                                         {0.0, 0.707, -1.0}}));
+        std::pair<size_t, size_t> expected = {1, 2};
+        auto result = find_max_off_diagonal_index(*input);
+        
+        AssertEqual(expected, result);
+    } Done
 }

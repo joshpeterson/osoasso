@@ -6,6 +6,7 @@
 #include <iostream>
 #include <sstream>
 #include <vector>
+#include <math.h>
 #include "../include/matrix.h"
 #include "../include/utility.h"
 
@@ -108,7 +109,7 @@ void AssertElementsEqual(ContainerType expected, ContainerType actual)
     }
 }
 
-inline void AssertElementsEqual(const osoasso::matrix<double>& expected, const osoasso::matrix<double>& actual)
+inline void AssertElementsEqual(const osoasso::matrix<double>& expected, const osoasso::matrix<double>& actual, double threshold = 0.0)
 {
     std::stringstream message;
     if (expected.rows() != actual.rows())
@@ -129,7 +130,11 @@ inline void AssertElementsEqual(const osoasso::matrix<double>& expected, const o
         {
             for (size_t j = 1; j <= expected.columns(); ++j)
             {
-                if (!osoasso::double_equal(expected(i,j), actual(i,j)))
+                bool elements_equal = osoasso::double_equal(expected(i,j), actual(i,j));
+                if (threshold != 0.0)
+                    elements_equal = fabs(expected(i,j) - actual(i,j)) < threshold;
+
+                if (!elements_equal)
                 {
                     osoasso::double_bytes converter;
                     converter.double_value = expected(i,j);
