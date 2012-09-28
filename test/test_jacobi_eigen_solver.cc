@@ -51,4 +51,17 @@ Define(JacobiEigenSolver)
         auto input = std::shared_ptr<matrix<double>>(new matrix<double>({{1, 0, 2}, {0, 2, 1}, {2, 1, 1}}));
         find_eigenvalue(input, 3.39138);
     } Done
+
+    It ("Finds the first unique eigenvalue of another 3x3 matrix")
+    {
+        // This matrix has eigenvalues of -1, -1, and 8
+        auto input = std::shared_ptr<matrix<double>>(new matrix<double>({{3, 2, 4}, {2, 0, 2}, {4, 2, 3}}));
+        find_eigenvalue(input, -1);
+    } Done
+
+    It ("Finds the second unique eigenvalue of another 3x3 matrix")
+    {
+        auto input = std::shared_ptr<matrix<double>>(new matrix<double>({{3, 2, 4}, {2, 0, 2}, {4, 2, 3}}));
+        find_eigenvalue(input, 8);
+    } Done
 }
