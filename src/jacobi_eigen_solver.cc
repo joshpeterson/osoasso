@@ -72,7 +72,12 @@ std::shared_ptr<const matrix<double>> jacobi_eigen_solver::call(std::shared_ptr<
         A = A_prime;
     }
 
-    return std::shared_ptr<matrix<double>>(new matrix<double>({{(*A)(1,1)}, {(*A)(2,2)}, {(*A)(3,3)}}));
+    auto eigenvalues = std::shared_ptr<matrix<double>>(new matrix<double>(1, input->rows()));
+
+    for (size_t i = 1; i <= input->rows(); ++i)
+        (*eigenvalues)(1, i) = (*A)(i,i);
+
+    return eigenvalues;
 }
 
 std::string jacobi_eigen_solver::get_help() const
