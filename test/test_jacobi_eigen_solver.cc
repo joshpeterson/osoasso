@@ -68,4 +68,23 @@ Define(JacobiEigenSolver)
 
         validate_eigenvalues(expected_eigenvalues, result);
     } Done
+
+    It ("Throws an exception when the input is not a symmetric matrix")
+    {
+        auto input = std::shared_ptr<matrix<double>>(new matrix<double>({{3, 1, 4}, {2, 0, 2}, {4, 2, 3}}));
+
+        bool exception_occurred = false;
+        try
+        {
+            jacobi_eigen_solver jacobi_command;
+
+            jacobi_command.call(input, 1);
+        }
+        catch (std::exception&)
+        {
+            exception_occurred = true;
+        }
+
+        AssertTrue(exception_occurred);
+    } Done
 }

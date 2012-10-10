@@ -1,4 +1,5 @@
 #include <math.h>
+#include <stdexcept>
 #include "../include/jacobi_eigen_solver.h"
 #include "../include/max_off_diagonal_index.h"
 #include "../include/identity.h"
@@ -15,6 +16,11 @@ using namespace osoasso;
 
 std::shared_ptr<const matrix<double>> jacobi_eigen_solver::call(std::shared_ptr<const matrix<double>> input, int number_of_threads) const
 {
+    transpose transpose_command;
+    auto input_transpose = transpose_command.call(input, 1);
+    if (*input != *input_transpose)
+        throw std::invalid_argument("The input matrix is not a symmetric matrix. This command requires a symmetric matrix.");
+    
     std::shared_ptr<const matrix<double>> A = input;
 #ifdef DEBUG_OUTPUT
     int iteration = 0;
@@ -58,7 +64,6 @@ std::shared_ptr<const matrix<double>> jacobi_eigen_solver::call(std::shared_ptr<
         std::cout << std::endl << std::endl;
 #endif
 
-        transpose transpose_command;
         multiply multiply_command;
 
         auto A_prime = multiply_command.call(multiply_command.call(transpose_command.call(V,1), A, 1), V, 1);
