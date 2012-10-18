@@ -18,7 +18,9 @@ union double_bytes
 };
 
 // Implementation from http://www.cygnus-software.com/papers/comparingfloats/comparingfloats.htm
-inline bool double_equal(double lhs, double rhs)
+// Use default maxUlps of 4 based on comments from Google Test implementation:
+// http://code.google.com/p/googletest/source/browse/trunk/include/gtest/internal/gtest-internal.h
+inline bool double_equal(double lhs, double rhs, int64_t maxUlps = 4)
 {
     double_bytes converter;
     converter.double_value = lhs;
@@ -61,9 +63,7 @@ inline bool double_equal(double lhs, double rhs)
     std::cout << "int diff: " << int_diff << std::endl;
 #endif
 
-    // Use maxUlps of 4 based on comments from Google Test implementation:
-    // http://code.google.com/p/googletest/source/browse/trunk/include/gtest/internal/gtest-internal.h
-    if (int_diff <= 4 && int_diff >= -4)
+    if (int_diff <= maxUlps && int_diff >= -maxUlps)
     {
         return true;
     }

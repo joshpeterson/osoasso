@@ -111,7 +111,7 @@ public:
         return matrix_column_iterator<ValueType>();
     }
 
-    bool operator==(const matrix<ValueType>& other)
+    bool operator==(const matrix<ValueType>& other) const
     {
         if (rows_ != other.rows_ || columns_ != other.columns_)
             return false;
@@ -126,6 +126,11 @@ public:
         }
 
         return true;
+    }
+
+    bool operator!=(const matrix<ValueType>& other) const
+    {
+        return !(*this == other);
     }
 
     template <typename T> friend class matrix_builder;

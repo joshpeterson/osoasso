@@ -1,5 +1,6 @@
 #include <iostream>
 #include <ctime>
+#include <math.h>
 #include "test.h"
 #include "../include/timer.h"
 
@@ -36,12 +37,16 @@ int main(int argc, char** argv)
     RUN_TEST_FIXTURE(HelpManager)
     RUN_TEST_FIXTURE(Osoasso)
     RUN_TEST_FIXTURE(ParallelTask)
+    RUN_TEST_FIXTURE(MaxOffDiagonalIndex)
+    RUN_TEST_FIXTURE(PrintMatrix)
     RUN_TEST_FIXTURE(Add)
     RUN_TEST_FIXTURE(Subtract)
     RUN_TEST_FIXTURE(Multiply)
     RUN_TEST_FIXTURE(Random)
     RUN_TEST_FIXTURE(Transpose)
     RUN_TEST_FIXTURE(RandomSymmetric)
+    RUN_TEST_FIXTURE(Identity)
+    RUN_TEST_FIXTURE(JacobiEigenSolver)
 
     if (all_tests_passed__)
     {
@@ -82,6 +87,31 @@ void AssertEqual(std::string expected, std::string actual)
     }
 }
 
+bool AreEqual(double expected, double actual, double threshold = 0.0)
+{
+    bool elements_equal = osoasso::double_equal(expected, actual);
+    if (threshold != 0.0)
+        elements_equal = fabs(expected - actual) < threshold;
+
+    return elements_equal;
+}
+
+void AssertEqual(double expected, double actual, double threshold = 0.0)
+{
+    if (!AreEqual(expected, actual, threshold))
+    {
+        std::stringstream message;
+
+        osoasso::double_bytes converter;
+        converter.double_value = expected;
+        message << "\t\t\tExpected: " << expected << " (" << converter.int_value << ")"<< std::endl;
+        converter.double_value = actual;
+        message << "\t\t\tActual:   " << actual << " (" << converter.int_value << ")" << std::endl;
+
+        throw test_assertion_failed_exception__(message.str().c_str());
+    }
+}
+
 void AssertTrue(bool value)
 {
     if (!value)
@@ -104,3 +134,9 @@ void AssertFalse(bool value)
     }
 }
 
+void AssertFail(const std::string& message)
+{
+    std::stringstream formatted_message;
+    formatted_message << "\t\t\t" << message;
+    throw test_assertion_failed_exception__(formatted_message.str().c_str());
+}

@@ -45,9 +45,13 @@ private:
         all_tests_passed__ = false;\
     }
 
+bool AreEqual(double expected, double actual, double threshold);
+
 void AssertEqual(std::string expected, std::string actual);
+void AssertEqual(double expected, double actual, double threshold);
 void AssertTrue(bool value);
 void AssertFalse(bool value);
+void AssertFail(const std::string& message);
 
 template <typename ComparisonType>
 void AssertEqual(ComparisonType expected, ComparisonType actual)
@@ -57,6 +61,27 @@ void AssertEqual(ComparisonType expected, ComparisonType actual)
         std::stringstream message;
         message << "\t\t\tExpected: " << expected << std::endl;
         message << "\t\t\tActual:   " << actual << std::endl;
+        throw test_assertion_failed_exception__(message.str().c_str());
+    }
+}
+
+template <typename FirstType, typename SecondType>
+void AssertEqual(std::pair<FirstType, SecondType> expected, std::pair<FirstType, SecondType> actual)
+{
+    if (expected.first != actual.first)
+    {
+        std::stringstream message;
+        message << "\t\t\tFirst entry in the pair differs:" << std::endl;
+        message << "\t\t\tExpected: " << expected.first << std::endl;
+        message << "\t\t\tActual:   " << actual.first << std::endl;
+        throw test_assertion_failed_exception__(message.str().c_str());
+    }
+    else if (expected.second != actual.second)
+    {
+        std::stringstream message;
+        message << "\t\t\tSecond entry in the pair differs:" << std::endl;
+        message << "\t\t\tExpected: " << expected.second << std::endl;
+        message << "\t\t\tActual:   " << actual.second << std::endl;
         throw test_assertion_failed_exception__(message.str().c_str());
     }
 }
@@ -87,7 +112,7 @@ void AssertElementsEqual(ContainerType expected, ContainerType actual)
     }
 }
 
-inline void AssertElementsEqual(const osoasso::matrix<double>& expected, const osoasso::matrix<double>& actual)
+inline void AssertElementsEqual(const osoasso::matrix<double>& expected, const osoasso::matrix<double>& actual, double threshold = 0.0)
 {
     std::stringstream message;
     if (expected.rows() != actual.rows())
@@ -108,16 +133,14 @@ inline void AssertElementsEqual(const osoasso::matrix<double>& expected, const o
         {
             for (size_t j = 1; j <= expected.columns(); ++j)
             {
-                if (!osoasso::double_equal(expected(i,j), actual(i,j)))
+                try
                 {
-                    osoasso::double_bytes converter;
-                    converter.double_value = expected(i,j);
+                    AssertEqual(expected(i,j), actual(i,j), threshold);
+                }
+                catch (test_assertion_failed_exception__& e)
+                {
                     message << "\t\t\tMatrices differ at index " << i << "," << j << std::endl;
-                    message << "\t\t\tExpected: " << expected(i,j) << " (" << converter.int_value
-                            << ")"<< std::endl;
-                    converter.double_value = actual(i,j);
-                    message << "\t\t\tActual:   " << actual(i,j) << " (" << converter.int_value
-                            << ")" << std::endl;
+                    message << e.what();
 
                     throw test_assertion_failed_exception__(message.str().c_str());
                 }
