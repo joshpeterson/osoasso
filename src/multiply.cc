@@ -20,7 +20,7 @@ std::shared_ptr<const matrix<double>> multiply::call(std::shared_ptr<const matri
 
     row_multiplier multiplier(left->rows(), right->columns());
 
-    auto task = make_parallel_task(left->row_begin(), right->row_end(), multiplier, right, number_of_threads);
+    auto task = make_parallel_task(left->row_begin(), left->row_end(), multiplier, right, number_of_threads);
     task.start();
     task.complete();
 
