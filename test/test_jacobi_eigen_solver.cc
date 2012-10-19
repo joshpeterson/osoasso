@@ -111,4 +111,11 @@ Define(JacobiEigenSolver)
 
         AssertTrue(exception_occurred);
     } Done
+
+    It("Provides a help message")
+    {
+        jacobi_eigen_solver jacobi_command;
+        
+        AssertEqual(std::string("jacobi_eigen_solver(A) computes the eigen values of a symmetric matrix A."), jacobi_command.get_help());
+    } Done
 }

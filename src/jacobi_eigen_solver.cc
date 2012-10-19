@@ -87,5 +87,5 @@ std::shared_ptr<const matrix<double>> jacobi_eigen_solver::call(std::shared_ptr<
 
 std::string jacobi_eigen_solver::get_help() const
 {
-    return std::string();
+    return "jacobi_eigen_solver(A) computes the eigen values of a symmetric matrix A.";
 }
