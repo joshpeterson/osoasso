@@ -48,7 +48,7 @@
     		</g:ScrollPanel>
   		</g:center>
   		<g:south size='4'>
-  			<g:TextBox ui:field='inputField' addStyleNames='{style.inputArea}'/>
+  			<g:TextBox ui:field='inputField' addStyleNames='{style.inputArea}' width="99%"/>
   		</g:south>
 	</g:DockLayoutPanel>
 </ui:UiBinder> 
