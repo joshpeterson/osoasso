@@ -7,6 +7,18 @@ Osoasso is an experimental project to perform vector-based math operations in a 
 
 It is currently running [here](http://osoasso.appspot.com).
 
+To use Osoasso, you must enable Native Client for all web applications, even those not installed from the Chrome web store. To do so, visit [chrome://flags](chrome://flags) in Chrome and enable this option:
+
+![Screen shot of Chrome about://flags](enable-nacl.png)
+
+Once Native Client is enabled, type the `help` command, and the following output should be visible:
+
+```
+> help
+Osoasso Version 11
+For a list of commands, type this: help commands
+```
+
 Architecture
 ------------
 
