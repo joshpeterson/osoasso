@@ -10,7 +10,7 @@ Define(Random)
         auto rows = std::shared_ptr<matrix<double>>(new matrix<double>({{3}}));
         auto columns = std::shared_ptr<matrix<double>>(new matrix<double>({{3}}));
 
-        random random_command;
+        osoasso::random random_command;
 
         std::shared_ptr<const matrix<double>> result = random_command.call(rows, columns, 1);
 
@@ -23,7 +23,7 @@ Define(Random)
         auto rows = std::shared_ptr<matrix<double>>(new matrix<double>({{2}}));
         auto columns = std::shared_ptr<matrix<double>>(new matrix<double>({{5}}));
 
-        random random_command;
+        osoasso::random random_command;
 
         std::shared_ptr<const matrix<double>> result = random_command.call(rows, columns, 1);
 
@@ -37,7 +37,7 @@ Define(Random)
                                                                            {2.72, 1.0, 9.41}}));
         auto matrix2 = std::shared_ptr<matrix<double>>(new matrix<double>({{2}}));
 
-        random random_command;
+        osoasso::random random_command;
 
         bool exception_thrown = false;
         try
@@ -58,7 +58,7 @@ Define(Random)
         auto matrix2 = std::shared_ptr<matrix<double>>(new matrix<double>({{3.14, 1.0, 3.10},
                                                                            {2.72, 1.0, 9.41}}));
 
-        random random_command;
+        osoasso::random random_command;
 
         bool exception_thrown = false;
         try
@@ -75,14 +75,14 @@ Define(Random)
 
     It("Reports its number of arguments")
     {
-        random random_command;
+        osoasso::random random_command;
         
         AssertEqual(2, random_command.number_of_arguments());
     } Done
 
     It("Provides a help message")
     {
-        random random_command;
+        osoasso::random random_command;
         
         AssertEqual(std::string("random(m,n) generates a random matrix of size m x n."), random_command.get_help());
     } Done

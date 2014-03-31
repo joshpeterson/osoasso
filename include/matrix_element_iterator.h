@@ -2,6 +2,7 @@
 #define __MATRIX_ELEMENT_ITERATOR_H
 
 #include <iterator>
+#include <cstddef>
 
 namespace osoasso
 {

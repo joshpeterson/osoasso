@@ -1,6 +1,8 @@
 #ifndef __SCOPED_LOCK_H
 #define __SCOPED_LOCK_H
 
+#include <pthread.h>
+
 namespace osoasso
 {
 

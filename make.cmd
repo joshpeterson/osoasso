@@ -2,7 +2,10 @@
 
 setlocal
 
-set NACL_SDK_ROOT=c:\nacl_sdk
+set NACL_SDK_ROOT=c:\Users\Josh\Documents\development\nacl_sdk\pepper_33
+set TOOLCHAIN=newlib
+set CONFIG=Release
+set NACL_ARCH=x86_32
 
 :: NACL_SDK_ROOT must be set.
 if not defined NACL_SDK_ROOT (
@@ -13,45 +16,46 @@ if not defined NACL_SDK_ROOT (
   goto end
 )
 
-:: NACL_TARGET_PLATFORM is really the name of a folder with the base dir -
-:: usually NACL_SDK_ROOT - within which the toolchain for the target platform
-:: are found.
-:: Replace the platform with the name of your target platform.  For example, to
-:: build applications that target the pepper_15 API, set
-::   NACL_TARGET_PLATFORM=pepper_16
-if not defined NACL_TARGET_PLATFORM (
-  set NACL_TARGET_PLATFORM=pepper_15
+if "%1"=="test" (
+    %NACL_SDK_ROOT%\tools\make -f Makefile_test
+    %NACL_SDK_ROOT%\tools\sel_ldr.py %TOOLCHAIN%\Release\osoasso_test_x86_32.nexe
+    goto :end
 )
 
-set NACL_PLATFORM_DIR=%NACL_SDK_ROOT%\%NACL_TARGET_PLATFORM%
-
-if "%1"=="clean" (
-    scons -c
+if "%1"=="stress" (
+    %NACL_SDK_ROOT%\tools\make -f Makefile_stress_test
+    %NACL_SDK_ROOT%\tools\sel_ldr.py %TOOLCHAIN%\Release\osoasso_stress_test_x86_32.nexe
     goto :end
 )
 
 if "%1"=="deploy" (
-    scons osoasso_x86_32.nexe osoasso_x86_64.nexe
-    %NACL_PLATFORM_DIR%\toolchain\win_x86_newlib\bin\i686-nacl-strip.exe osoasso_x86_32.nexe
-    %NACL_PLATFORM_DIR%\toolchain\win_x86_newlib\bin\x86_64-nacl-strip.exe osoasso_x86_64.nexe
-    copy /y osoasso_x86_??.nexe osoasso-gwt\war
+    set NACL_ARCH=
+)
+
+%NACL_SDK_ROOT%\tools\make
+
+if "%1"=="deploy" (
+    copy /y %TOOLCHAIN%\Release\osoasso_x86_32.nexe osoasso-gwt\war
+    copy /y %TOOLCHAIN%\Release\osoasso_x86_64.nexe osoasso-gwt\war
+    copy /y %TOOLCHAIN%\Release\osoasso_arm.nexe osoasso-gwt\war
+    copy /y %TOOLCHAIN%\Release\osoasso.nmf osoasso-gwt\war
+    copy /y favicon.ico osoasso-gwt\war
     goto :end
 )
 
 if "%1"=="deploy32" (
-    scons osoasso_x86_32.nexe
-    %NACL_PLATFORM_DIR%\toolchain\win_x86_newlib\bin\i686-nacl-strip.exe osoasso_x86_32.nexe
-    copy /y osoasso_x86_32.nexe osoasso-gwt\war
+    copy /y %TOOLCHAIN%\Release\osoasso_x86_32.nexe osoasso-gwt\war
+    copy /y %TOOLCHAIN%\Release\osoasso.nmf osoasso-gwt\war
+    copy /y favicon.ico osoasso-gwt\war
     goto :end
 )
 
 if "%1"=="deploy64" (
-    scons osoasso_x86_64.nexe
-    %NACL_PLATFORM_DIR%\toolchain\win_x86_newlib\bin\x86_64-nacl-strip.exe osoasso_x86_64.nexe
-    copy /y osoasso_x86_64.nexe osoasso-gwt\war
+    copy /y %TOOLCHAIN%\Release\osoasso_x86_64.nexe osoasso-gwt\war
+    copy /y %TOOLCHAIN%\Release\osoasso.nmf osoasso-gwt\war
+    copy /y favicon.ico osoasso-gwt\war
     goto :end
 )
 
-scons %*
 
 :end
