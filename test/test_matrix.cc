@@ -125,6 +125,8 @@ Define(Matrix)
     {
         matrix<double> test_matrix = { { 3.14, 1.0, 3.19 }, { 2.72, 8.9, 5.42} };
         auto it = test_matrix.end();
+
+        AssertEqual(5.42, *it);
     } Done
 
     It("Can be iterated")

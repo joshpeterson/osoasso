@@ -5,6 +5,10 @@ include $(NACL_SDK_ROOT)/tools/common.mk
 
 LIBS = ppapi_cpp ppapi
 CFLAGS = -Wall -Wno-long-long -pthread -Werror -std=c++0x -O2
+# Use gnu++11 for pnacl
+# CFLAGS = -Wall -Wno-long-long -pthread -Werror -std=gnu++11 -O2
+# This should work at Pepper 33, but it doesn't work yet.
+# LDFLAGS = --pnacl-exceptions=sjlj
 
 TARGET = osoasso_stress_test
 SOURCES = 	src/sha1.cc\

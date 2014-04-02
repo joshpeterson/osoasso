@@ -105,6 +105,7 @@ public class Osoasso extends Composite implements EntryPoint
         Window.enableScrolling(false);
         Window.setMargin("0px");
 
+        // Change the embed element to use x-pnacl to load the pnacl module.
         final NaclWidget naclWidget = new NaclWidget();
         naclWidget.setHTML("<embed name=\"nacl_module\" " + "id=\"osoasso\" " + "width=0 height=0 " + "src=\"osoasso.nmf\" "
                         + "type=\"application/x-nacl\" />");

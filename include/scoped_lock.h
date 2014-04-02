@@ -9,7 +9,7 @@ namespace osoasso
 class scoped_lock
 {
 public:
-    explicit scoped_lock(pthread_mutex_t mutex) : mutex_(&mutex)
+    explicit scoped_lock(pthread_mutex_t* mutex) : mutex_(mutex)
     {
         if (!pthread_mutex_lock(mutex_))
         {

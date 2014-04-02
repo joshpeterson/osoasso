@@ -10,7 +10,7 @@ class locking_ptr
 {
 public:
     locking_ptr(volatile T& object_to_lock, pthread_mutex_t& mutex) :
-        locked_object_(const_cast<T*>(&object_to_lock)), lock_(mutex)
+        locked_object_(const_cast<T*>(&object_to_lock)), lock_(&mutex)
     {
     }
 
