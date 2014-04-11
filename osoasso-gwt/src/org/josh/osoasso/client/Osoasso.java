@@ -12,10 +12,12 @@ import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.TextBox;
@@ -90,10 +92,23 @@ public class Osoasso extends Composite implements EntryPoint
     {
         instance.onNaclMessage(naclMessage);
     }
-
+    
+    /**
+     * We need a static method to allow the JavaScript code to call GWT when
+     * the Nacl module loads.
+     * 
+     */
+    public static void onNaclModuleLoaded()
+    {
+    	instance.AddHTMLToResultsPanel("Welcome to &Theta;(soasso) - vector math in your browser");
+    	instance.CallOsoassoNaclModuleInputMethod(instance.naclModule, "help", instance.usernameField.getText());
+    }
+ 
     @Override
     public void onModuleLoad()
     {
+    	exportOnNaclModuleLoadedMethod();
+    	
         DockLayoutPanel outer = uiBinder.createAndBindUi(this);
 
         String username = Cookies.getCookie(UsernameCookieName);
@@ -104,14 +119,14 @@ public class Osoasso extends Composite implements EntryPoint
 
         Window.enableScrolling(false);
         Window.setMargin("0px");
-
-        final NaclWidget naclWidget = new NaclWidget();
-        naclWidget.setHTML("<embed name=\"nacl_module\" " + "id=\"osoasso\" " + "width=0 height=0 " + "src=\"osoasso.nmf\" "
-                        + "type=\"application/x-nacl\" />");
+        
+        DOM.getElementById("initialMessage").removeFromParent();
 
         RootLayoutPanel root = RootLayoutPanel.get();
-        root.add(naclWidget);
         root.add(outer);
+    	
+    	naclModule = GetNaclModule();
+        RegisterNaclListener(naclModule);
     }
 
     @UiHandler(
@@ -216,7 +231,7 @@ public class Osoasso extends Composite implements EntryPoint
     {
         @Override
         protected void onLoad()
-        {
+        {       	
             naclModule = GetNaclModule();
             RegisterNaclListener(naclModule);
 
@@ -251,4 +266,11 @@ public class Osoasso extends Composite implements EntryPoint
     /*-{
 		naclModule.postMessage('input:' + input + ":" + username);
     }-*/;
+    
+    private static native void exportOnNaclModuleLoadedMethod() /*-{
+    $wnd.onNaclModuleLoaded = function() {
+       $entry(@org.josh.osoasso.client.Osoasso::onNaclModuleLoaded()());
+    }
+ }-*/;
+
 }
