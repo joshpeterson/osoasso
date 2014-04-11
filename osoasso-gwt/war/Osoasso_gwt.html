@@ -80,7 +80,8 @@
 			}
 			
 			function moduleLoadError() {
-  			  console.log('error: ' + common.naclModule.lastError);
+			  var naclModule = document.getElementById("osoasso")
+  			  console.log('error: ' + naclModule.lastError);
 			}
 			
 			function moduleCrash() {
