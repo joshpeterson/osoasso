@@ -48,7 +48,7 @@ Define(ObjectRepository)
         auto object1 = std::make_pair("Object 1", 3);
         auto object2 = std::make_pair("Object 2", 4);
 
-        object_repository<int> test_repo = { object1, object2 };
+        object_repository<int> test_repo(2, { object1, object2 });
 
         AssertEqual(3, test_repo.get("Object 1"));
         AssertEqual(4, test_repo.get("Object 2"));
@@ -59,7 +59,7 @@ Define(ObjectRepository)
         auto object1 = std::make_pair("Object 1", 3);
         auto object2 = std::make_pair("Object 2", 4);
 
-        object_repository<int> test_repo = { object1, object2 };
+        object_repository<int> test_repo(2, { object1, object2 });
 
         AssertEqual<size_t>(2, test_repo.size());
     } Done
@@ -82,7 +82,7 @@ Define(ObjectRepository)
         auto object1 = std::make_pair("Object 1", 3);
         auto object2 = std::make_pair("Object 1", 4);
 
-        object_repository<int> test_repo = { object1, object2 };
+        object_repository<int> test_repo(2, { object1, object2 });
 
         AssertEqual<size_t>(1, test_repo.size());
         AssertEqual(3, test_repo.get("Object 1"));
@@ -93,7 +93,7 @@ Define(ObjectRepository)
         auto object1 = std::make_pair("Object 1", 3);
         auto object2 = std::make_pair("Object 2", 4);
 
-        object_repository<int> test_repo = { object1, object2 };
+        object_repository<int> test_repo(2, { object1, object2 });
 
         std::vector<std::string> names = test_repo.get_keys();
         AssertEqual(std::string("Object 1"), names[0]);
@@ -105,7 +105,7 @@ Define(ObjectRepository)
         auto object1 = std::make_pair("Object 1", 3);
         auto object2 = std::make_pair("Object 2", 4);
 
-        object_repository<int> test_repo = { object1, object2 };
+        object_repository<int> test_repo(2, { object1, object2 });
 
         std::vector<int> values = test_repo.get_values();
         AssertEqual(3, values[0]);

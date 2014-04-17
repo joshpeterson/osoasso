@@ -12,7 +12,8 @@
 using namespace osoasso;
 
 project_manager::project_manager() 
-   : commands_({ std::make_pair("add", std::shared_ptr<command_with_two_arguments>(new add)),
+   : commands_(8,
+               { std::make_pair("add", std::shared_ptr<command_with_two_arguments>(new add)),
                  std::make_pair("subtract", std::shared_ptr<command_with_two_arguments>(new subtract)),
                  std::make_pair("multiply", std::shared_ptr<command_with_two_arguments>(new multiply)),
                  std::make_pair("random", std::shared_ptr<command_with_two_arguments>(new random)),

@@ -18,6 +18,7 @@ SOURCES =	src/osoasso.cc\
 			src/commit_factory.cc\
 			src/project_manager.cc\
 			src/help_manager.cc\
+			src/log.cc\
 			src/add.cc\
 			src/subtract.cc\
 			src/multiply.cc\

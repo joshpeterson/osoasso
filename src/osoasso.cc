@@ -14,7 +14,6 @@
 #include "../include/scoped_lock.h"
 #include "../include/locking_ptr.h"
 #include "../include/string_splitter.h"
-#include "../include/log.h"
 
 namespace osoasso
 {
@@ -26,10 +25,8 @@ class OsoassoInstance : public pp::Instance
 public:
     explicit OsoassoInstance(PP_Instance pp_instance) : pp::Instance(pp_instance), instance(manager)
     {
-        LOG("Starting OsoassoInstance constructor");
         // Don't check the error code, it seems that it is non-zero even on success.
         pthread_mutex_init(&message_mutex_, NULL);
-        LOG("Completed OsoassoInstance constructor");
     }
 
     virtual ~OsoassoInstance()
@@ -109,12 +106,7 @@ public:
 
     virtual pp::Instance* CreateInstance(PP_Instance instance)
     {
-        LOG("Starting CreateInstance");
-
-        auto osoasso_app = new OsoassoInstance(instance);
-
-        LOG("Completing CreateInstance");
-        return osoasso_app;
+        return new OsoassoInstance(instance);
     }
 };
 
@@ -125,11 +117,7 @@ namespace pp
 
 Module* CreateModule()
 {
-    LOG("Starting CreateModule");
-    auto module = new osoasso::OsoassoModule();
-
-    LOG("Completing CreateModule");
-    return module;
+    return new osoasso::OsoassoModule();
 }
 
 }  // namespace pp

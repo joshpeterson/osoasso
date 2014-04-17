@@ -14,7 +14,7 @@ namespace osoasso
 class command_factory
 {
 public:
-    command_factory(std::initializer_list<std::pair<std::string, std::shared_ptr<command>>> commands);
+    command_factory(int number_of_entries, std::initializer_list<std::pair<std::string, std::shared_ptr<command>>> commands);
     std::shared_ptr<command> get(std::string name) const;
     std::vector<std::string> get_names() const;
 

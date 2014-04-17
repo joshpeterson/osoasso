@@ -118,7 +118,7 @@ Define(CommandDispatcher)
     {
         std::shared_ptr<mock_dispatcher_command_two> test_command = std::make_shared<mock_dispatcher_command_two>();
 
-        command_factory commands = { std::make_pair("foo", std::shared_ptr<command>(test_command)) };
+        command_factory commands(1, { std::make_pair("foo", std::shared_ptr<command>(test_command)) });
         object_repository<std::shared_ptr<const matrix<double>>> matrices;
         tag_repository tags;
 
@@ -132,7 +132,7 @@ Define(CommandDispatcher)
     {
         std::shared_ptr<mock_dispatcher_command_two> test_command = std::make_shared<mock_dispatcher_command_two>();
 
-        command_factory commands = { std::make_pair("foo", std::shared_ptr<command>(test_command)) };
+        command_factory commands(1, { std::make_pair("foo", std::shared_ptr<command>(test_command)) });
         object_repository<std::shared_ptr<const matrix<double>>> matrices;
         tag_repository tags;
 
@@ -158,7 +158,7 @@ Define(CommandDispatcher)
     {
         std::shared_ptr<mock_dispatcher_command_two> test_command = std::make_shared<mock_dispatcher_command_two>();
 
-        command_factory commands = { std::make_pair("foo", std::shared_ptr<command>(test_command)) };
+        command_factory commands(1, { std::make_pair("foo", std::shared_ptr<command>(test_command)) });
         object_repository<std::shared_ptr<const matrix<double>>> matrices;
         tag_repository tags;
 
@@ -184,7 +184,7 @@ Define(CommandDispatcher)
     {
         std::shared_ptr<mock_dispatcher_command_two> test_command = std::make_shared<mock_dispatcher_command_two>();
 
-        command_factory commands = { std::make_pair("foo", std::shared_ptr<command>(test_command)) };
+        command_factory commands(1, { std::make_pair("foo", std::shared_ptr<command>(test_command)) });
         object_repository<std::shared_ptr<const matrix<double>>> matrices;
         tag_repository tags;
 
@@ -202,7 +202,7 @@ Define(CommandDispatcher)
     {
         std::shared_ptr<mock_dispatcher_command_two> test_command = std::make_shared<mock_dispatcher_command_two>();
 
-        command_factory commands = { std::make_pair("foo", std::shared_ptr<command>(test_command)) };
+        command_factory commands(1, { std::make_pair("foo", std::shared_ptr<command>(test_command)) });
         object_repository<std::shared_ptr<const matrix<double>>> matrices;
         tag_repository tags;
 
@@ -224,7 +224,7 @@ Define(CommandDispatcher)
     {
         std::shared_ptr<mock_dispatcher_command_two> test_command = std::make_shared<mock_dispatcher_command_two>();
 
-        command_factory commands = { std::make_pair("foo", std::shared_ptr<command>(test_command)) };
+        command_factory commands(1, { std::make_pair("foo", std::shared_ptr<command>(test_command)) });
         object_repository<std::shared_ptr<const matrix<double>>> matrices;
         tag_repository tags;
 
@@ -243,7 +243,7 @@ Define(CommandDispatcher)
     {
         std::shared_ptr<mock_dispatcher_command_two> test_command = std::make_shared<mock_dispatcher_command_two>();
 
-        command_factory commands = { std::make_pair("foo", std::shared_ptr<command>(test_command)) };
+        command_factory commands(1, { std::make_pair("foo", std::shared_ptr<command>(test_command)) });
         object_repository<std::shared_ptr<const matrix<double>>> matrices;
         tag_repository tags;
 
@@ -262,7 +262,7 @@ Define(CommandDispatcher)
     {
         std::shared_ptr<mock_dispatcher_command_two> test_command = std::make_shared<mock_dispatcher_command_two>();
 
-        command_factory commands = { std::make_pair("foo", std::shared_ptr<command>(test_command)) };
+        command_factory commands(1, { std::make_pair("foo", std::shared_ptr<command>(test_command)) });
         object_repository<std::shared_ptr<const matrix<double>>> matrices;
         tag_repository tags;
 
@@ -285,7 +285,7 @@ Define(CommandDispatcher)
     {
         std::shared_ptr<mock_dispatcher_command_two> test_command = std::make_shared<mock_dispatcher_command_two>();
 
-        command_factory commands = { std::make_pair("foo", std::shared_ptr<command>(test_command)) };
+        command_factory commands(1, { std::make_pair("foo", std::shared_ptr<command>(test_command)) });
         object_repository<std::shared_ptr<const matrix<double>>> matrices;
         tag_repository tags;
 
@@ -298,7 +298,7 @@ Define(CommandDispatcher)
     {
         std::shared_ptr<mock_dispatcher_command_two> test_command = std::make_shared<mock_dispatcher_command_two>();
 
-        command_factory commands = { std::make_pair("foo", std::shared_ptr<command>(test_command)) };
+        command_factory commands(1, { std::make_pair("foo", std::shared_ptr<command>(test_command)) });
 
         auto expected_left = std::shared_ptr<const matrix<double>>(new matrix<double>({{ 1, 2 }}));
 
@@ -322,7 +322,7 @@ Define(CommandDispatcher)
     {
         std::shared_ptr<mock_dispatcher_command_two> test_command = std::make_shared<mock_dispatcher_command_two>();
 
-        command_factory commands = { std::make_pair("foo", std::shared_ptr<command>(test_command)) };
+        command_factory commands(1, { std::make_pair("foo", std::shared_ptr<command>(test_command)) });
         object_repository<std::shared_ptr<const matrix<double>>> matrices;
         tag_repository tags;
 
@@ -336,7 +336,7 @@ Define(CommandDispatcher)
     {
         std::shared_ptr<mock_dispatcher_command_two> test_command = std::make_shared<mock_dispatcher_command_two>();
 
-        command_factory commands = { std::make_pair("foo", std::shared_ptr<command>(test_command)) };
+        command_factory commands(1, { std::make_pair("foo", std::shared_ptr<command>(test_command)) });
 
         auto expected_left = std::shared_ptr<const matrix<double>>(new matrix<double>({{ 1, 2 }}));
 
@@ -359,7 +359,7 @@ Define(CommandDispatcher)
     {
         std::shared_ptr<mock_dispatcher_command_two> test_command = std::make_shared<mock_dispatcher_command_two>();
 
-        command_factory commands = { std::make_pair("foo", std::shared_ptr<command>(test_command)) };
+        command_factory commands(1, { std::make_pair("foo", std::shared_ptr<command>(test_command)) });
         object_repository<std::shared_ptr<const matrix<double>>> matrices;
         tag_repository tags;
 
@@ -373,7 +373,7 @@ Define(CommandDispatcher)
     {
         std::shared_ptr<mock_dispatcher_command_two> test_command = std::make_shared<mock_dispatcher_command_two>();
 
-        command_factory commands = { std::make_pair("foo", std::shared_ptr<command>(test_command)) };
+        command_factory commands(1, { std::make_pair("foo", std::shared_ptr<command>(test_command)) });
         object_repository<std::shared_ptr<const matrix<double>>> matrices;
         tag_repository tags;
 
@@ -388,7 +388,7 @@ Define(CommandDispatcher)
     {
         std::shared_ptr<mock_dispatcher_command_two> test_command = std::make_shared<mock_dispatcher_command_two>();
 
-        command_factory commands = { std::make_pair("foo", std::shared_ptr<command>(test_command)) };
+        command_factory commands (1, { std::make_pair("foo", std::shared_ptr<command>(test_command)) });
 
         auto expected_left = std::shared_ptr<const matrix<double>>(new matrix<double>({{2}}));
 
@@ -408,7 +408,7 @@ Define(CommandDispatcher)
     {
         std::shared_ptr<mock_dispatcher_command_two> test_command = std::make_shared<mock_dispatcher_command_two>();
 
-        command_factory commands = { std::make_pair("foo", std::shared_ptr<command>(test_command)) };
+        command_factory commands(1, { std::make_pair("foo", std::shared_ptr<command>(test_command)) });
 
         auto expected_left = std::shared_ptr<const matrix<double>>(new matrix<double>({{2.3}}));
 
@@ -428,7 +428,7 @@ Define(CommandDispatcher)
     {
         std::shared_ptr<mock_dispatcher_command_two> test_command = std::make_shared<mock_dispatcher_command_two>();
 
-        command_factory commands = { std::make_pair("foo", std::shared_ptr<command>(test_command)) };
+        command_factory commands(1, { std::make_pair("foo", std::shared_ptr<command>(test_command)) });
         object_repository<std::shared_ptr<const matrix<double>>> matrices;
         tag_repository tags;
 
@@ -442,7 +442,7 @@ Define(CommandDispatcher)
     {
         std::shared_ptr<mock_dispatcher_command_two> test_command = std::make_shared<mock_dispatcher_command_two>();
 
-        command_factory commands = { std::make_pair("foo", std::shared_ptr<command>(test_command)) };
+        command_factory commands(1,  { std::make_pair("foo", std::shared_ptr<command>(test_command)) });
         object_repository<std::shared_ptr<const matrix<double>>> matrices;
         tag_repository tags;
 
@@ -456,7 +456,7 @@ Define(CommandDispatcher)
     {
         std::shared_ptr<mock_dispatcher_command_one> test_command = std::make_shared<mock_dispatcher_command_one>();
 
-        command_factory commands = { std::make_pair("foo", std::shared_ptr<command>(test_command)) };
+        command_factory commands(1, { std::make_pair("foo", std::shared_ptr<command>(test_command)) });
         object_repository<std::shared_ptr<const matrix<double>>> matrices;
         tag_repository tags;
 
