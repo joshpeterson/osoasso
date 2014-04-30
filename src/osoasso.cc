@@ -23,7 +23,7 @@ const int post_message_max_string_length_ = 65000;
 class OsoassoInstance : public pp::Instance
 {
 public:
-    explicit OsoassoInstance(PP_Instance instance) : pp::Instance(instance), instance(manager)
+    explicit OsoassoInstance(PP_Instance pp_instance) : pp::Instance(pp_instance), instance(manager)
     {
         // Don't check the error code, it seems that it is non-zero even on success.
         pthread_mutex_init(&message_mutex_, NULL);

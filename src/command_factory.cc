@@ -3,8 +3,8 @@
 
 using namespace osoasso;
 
-command_factory::command_factory(std::initializer_list<std::pair<std::string, std::shared_ptr<command>>> commands) :
-    commands_(commands)
+command_factory::command_factory(int number_of_entries, std::initializer_list<std::pair<std::string, std::shared_ptr<command>>> commands) :
+    commands_(number_of_entries, commands)
 {
 }
 

@@ -20,11 +20,17 @@ public:
     {
     }
 
-    object_repository<RepositoryValueType>(std::initializer_list<std::pair<std::string, RepositoryValueType>> list)
+    object_repository<RepositoryValueType>(int number_of_entries, std::initializer_list<std::pair<std::string, RepositoryValueType>> list)
     {
+        // Something is wrong with gcc 4.4.3 which causes this loop to iterate past the end of the std::initializer_list
+        // on 64-bit only. To mitigate the problem, I've had to explicitly pass the expected size of the list.
+        int iterations = 0;
         for (auto i = list.begin(); i != list.end(); ++i)
         {
             this->add(*i);
+            ++iterations;
+            if (iterations == number_of_entries)
+                break;
         }
     }
 

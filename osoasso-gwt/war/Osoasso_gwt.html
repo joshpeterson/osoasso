@@ -43,5 +43,53 @@
         in order for this application to display correctly.
       </div>
     </noscript>
+    
+    <div id="initialMessage", style='font-family:"Lucida Console", "Courier New", monospace";'>
+    	<h1>Loading &Theta;(soasso)...</h1>
+    </div>
+    
+    <div id="listener">
+	    <script type="text/javascript">
+		    var listener = document.getElementById('listener');
+		    listener.addEventListener('loadStart', moduleLoadStarted, true);
+		    listener.addEventListener('progress', moduleLoadProgress, true);
+		    listener.addEventListener('error', moduleLoadError, true);
+		    listener.addEventListener('crash', moduleCrash, true);
+		    listener.addEventListener('load', moduleDidLoad, true);
+		    
+		    function moduleLoadStarted() {
+		      console.log("Load started")
+			}
+		    
+		    function moduleDidLoad() {
+		      console.log("Load completed")		  
+			  window.onNaclModuleLoaded();
+			}
+			
+			function moduleLoadProgress(event) {
+			  var loadPercent = 0.0;
+			  var loadPercentString;
+			  if (event.lengthComputable && event.total > 0) {
+			    loadPercent = event.loaded / event.total * 100.0;
+			    loadPercentString = loadPercent + '%';
+			    console.log('progress: ' + event.url + ' ' + loadPercentString +
+			                     ' (' + event.loaded + ' of ' + event.total + ' bytes)');
+			  } else {
+			    console.log('progress: Computing...');
+			  }
+			}
+			
+			function moduleLoadError() {
+			  var naclModule = document.getElementById("osoasso")
+  			  console.log('error: ' + naclModule.lastError);
+			}
+			
+			function moduleCrash() {
+  			  console.log('crash: The Osoasso nacl module crashed');
+  			  alert('Bad news: something went very wrong, but it\'s not your fault! Please reload the page and try again.'); 
+			}
+	    </script>
+    	<embed name="nacl_module" id="osoasso" width="0" height="0" src="osoasso.nmf" type="application/x-nacl" />
+    </div>
   </body>
 </html>
