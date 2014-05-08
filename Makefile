@@ -4,11 +4,11 @@ NACL_SDK_ROOT ?= $(abspath $(CURDIR)/../development/nacl_sdk/pepper_33)
 include $(NACL_SDK_ROOT)/tools/common.mk
 
 LIBS = ppapi_cpp ppapi
-CFLAGS = -Wall -Wno-long-long -pthread -Werror -std=c++0x -O2
+# CFLAGS = -Wall -Wno-long-long -pthread -Werror -std=c++0x -O2
 # Use gnu++11 for pnacl
-# CFLAGS = -Wall -Wno-long-long -pthread -Werror -std=gnu++11 -O2
+CFLAGS = -Wall -Wno-long-long -pthread -Werror -std=gnu++11 -O2 --pnacl-exceptions=sjlj
 # This should work at Pepper 33, but it doesn't work yet.
-# LDFLAGS = --pnacl-exceptions=sjlj
+LDFLAGS = --pnacl-exceptions=sjlj
 
 TARGET = osoasso
 SOURCES =	src/osoasso.cc\
