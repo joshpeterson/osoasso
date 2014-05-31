@@ -121,12 +121,6 @@ Define(Matrix)
         AssertEqual(3.14, *it);
     } Done
 
-    It("Provides an ending iterator")
-    {
-        matrix<double> test_matrix = { { 3.14, 1.0, 3.19 }, { 2.72, 8.9, 5.42} };
-        auto it = test_matrix.end();
-    } Done
-
     It("Can be iterated")
     {
         std::vector<double> expected = { 3.14, 1.0, 3.19, 2.72, 8.9, 5.42 };

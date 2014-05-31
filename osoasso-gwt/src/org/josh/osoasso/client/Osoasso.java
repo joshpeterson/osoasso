@@ -119,7 +119,7 @@ public class Osoasso extends Composite implements EntryPoint
 
         Window.enableScrolling(false);
         Window.setMargin("0px");
-        
+
         DOM.getElementById("initialMessage").removeFromParent();
 
         RootLayoutPanel root = RootLayoutPanel.get();

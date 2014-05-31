@@ -1,13 +1,25 @@
 #include <vector>
 #include <iostream>
+#include <random>
 #include "../test_harness/test.h"
-#include "../test/million_doubles.h"
 #include "../include/timer.h"
 #include "../include/blob.h"
 
 using namespace osoasso;
 
-std::vector<double> load_doubles();
+std::vector<double> load_doubles()
+{
+    double lower_bound = 0;
+    double upper_bound = 10000;
+    std::uniform_real_distribution<double> unif(lower_bound,upper_bound);
+    std::default_random_engine re;
+
+    std::vector<double> many(1000000);
+    for (auto i = 0; i < 1000000;++i)
+        many.push_back(unif(re));
+
+    return many;
+}
 
 Define(StressTestBlob)
 {

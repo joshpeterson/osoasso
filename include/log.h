@@ -3,11 +3,12 @@
 
 #include <string>
 #include <iostream>
+#include <pthread.h>
 
 #define ENABLE_LOGGING
 
 #ifdef ENABLE_LOGGING
-#define LOG(message) osoasso::log(message)
+#define LOG(message) osoasso::logger::log(message)
 #else
 #define LOG(message)
 #endif
@@ -15,7 +16,14 @@
 namespace osoasso
 {
 
-void log(const std::string& message);
+class logger
+{
+public:
+    static void log(const std::string& message);
+
+private:
+    static pthread_mutex_t mutex_;
+};
 
 }
 

@@ -8,6 +8,7 @@
 #include <sstream>
 #include <stdexcept>
 #include <vector>
+#include <algorithm>
 
 namespace osoasso
 {
@@ -67,15 +68,18 @@ public:
             keys.push_back(i->first);
         }
 
+        std::sort(keys.begin(), keys.end());
+
         return keys;
     }
 
     std::vector<RepositoryValueType> get_values() const
     {
+        auto keys = get_keys();
         std::vector<RepositoryValueType> values;
-        for(auto i = objects_.begin(); i != objects_.end(); ++i)
+        for(auto key = keys.cbegin(); key != keys.cend(); ++key)
         {
-            values.push_back(i->second);
+            values.push_back(objects_.at(*key));
         }
 
         return values;

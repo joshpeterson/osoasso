@@ -3,7 +3,16 @@
 setlocal
 
 set NACL_SDK_ROOT=c:\Users\Josh\Documents\development\nacl_sdk\pepper_33
-set TOOLCHAIN=newlib
+set TOOLCHAIN=pnacl
+
+if "%1"=="newlib" (
+    set TOOLCHAIN=newlib
+)
+
+if "%2"=="newlib" (
+    set TOOLCHAIN=newlib
+)
+
 set CONFIG=Release
 set NACL_ARCH=x86_32
 
@@ -18,12 +27,18 @@ if not defined NACL_SDK_ROOT (
 
 if "%1"=="test" (
     %NACL_SDK_ROOT%\tools\make -f Makefile_test || goto :end
+    if not "%TOOLCHAIN%"=="newlib" (
+        %NACL_SDK_ROOT%\toolchain\win_pnacl\bin\pnacl-translate -arch x86-32 %TOOLCHAIN%\Release\osoasso_test.pexe -o %TOOLCHAIN%\Release\osoasso_test_x86_32.nexe
+    )
     %NACL_SDK_ROOT%\tools\sel_ldr.py %TOOLCHAIN%\Release\osoasso_test_x86_32.nexe
     goto :end
 )
 
 if "%1"=="stress" (
     %NACL_SDK_ROOT%\tools\make -f Makefile_stress_test || goto :end
+    if not "%TOOLCHAIN%"=="newlib" (
+        %NACL_SDK_ROOT%\toolchain\win_pnacl\bin\pnacl-translate -arch x86-32 %TOOLCHAIN%\Release\osoasso_stress_test.pexe -o %TOOLCHAIN%\Release\osoasso_stress_test_x86_32.nexe
+    )
     %NACL_SDK_ROOT%\tools\sel_ldr.py %TOOLCHAIN%\Release\osoasso_stress_test_x86_32.nexe
     goto :end
 )
@@ -35,9 +50,13 @@ if "%1"=="deploy" (
 %NACL_SDK_ROOT%\tools\make || goto :end
 
 if "%1"=="deploy" (
-    copy /y %TOOLCHAIN%\Release\osoasso_x86_32.nexe osoasso-gwt\war
-    copy /y %TOOLCHAIN%\Release\osoasso_x86_64.nexe osoasso-gwt\war
-    copy /y %TOOLCHAIN%\Release\osoasso_arm.nexe osoasso-gwt\war
+    if "%TOOLCHAIN%"=="newlib" (
+        copy /y %TOOLCHAIN%\Release\osoasso_x86_32.nexe osoasso-gwt\war
+        copy /y %TOOLCHAIN%\Release\osoasso_x86_64.nexe osoasso-gwt\war
+        copy /y %TOOLCHAIN%\Release\osoasso_arm.nexe osoasso-gwt\war
+    ) else (
+        copy /y %TOOLCHAIN%\Release\osoasso.pexe osoasso-gwt\war
+    )
     copy /y %TOOLCHAIN%\Release\osoasso.nmf osoasso-gwt\war
     copy /y favicon.ico osoasso-gwt\war
     goto :end
