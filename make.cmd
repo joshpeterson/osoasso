@@ -2,19 +2,20 @@
 
 setlocal
 
-set NACL_SDK_ROOT=c:\Users\Josh\Documents\development\nacl_sdk\pepper_33
+set NACL_SDK_ROOT=c:\Users\Josh\Documents\development\nacl_sdk\pepper_35
 set TOOLCHAIN=pnacl
 
 if "%1"=="newlib" (
     set TOOLCHAIN=newlib
+    set NACL_ARCH=x86_32
 )
 
 if "%2"=="newlib" (
     set TOOLCHAIN=newlib
+    set NACL_ARCH=x86_32
 )
 
 set CONFIG=Release
-set NACL_ARCH=x86_32
 
 :: NACL_SDK_ROOT must be set.
 if not defined NACL_SDK_ROOT (

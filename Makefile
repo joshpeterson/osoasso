@@ -1,6 +1,5 @@
 VALID_TOOLCHAINS := pnacl newlib glibc
 
-NACL_SDK_ROOT ?= $(abspath $(CURDIR)/../development/nacl_sdk/pepper_33)
 include $(NACL_SDK_ROOT)/tools/common.mk
 
 LIBS = ppapi_cpp ppapi
