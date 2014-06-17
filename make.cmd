@@ -4,6 +4,7 @@ setlocal
 
 set NACL_SDK_ROOT=c:\Users\Josh\Documents\development\nacl_sdk\pepper_35
 set TOOLCHAIN=pnacl
+set CORES=3
 
 if "%1"=="newlib" (
     set TOOLCHAIN=newlib
@@ -27,7 +28,7 @@ if not defined NACL_SDK_ROOT (
 )
 
 if "%1"=="test" (
-    %NACL_SDK_ROOT%\tools\make -f Makefile_test || goto :end
+    %NACL_SDK_ROOT%\tools\make -j %CORES% -f Makefile_test || goto :end
     if not "%TOOLCHAIN%"=="newlib" (
         %NACL_SDK_ROOT%\toolchain\win_pnacl\bin\pnacl-translate -arch i686 %TOOLCHAIN%\Release\osoasso_test.pexe -o %TOOLCHAIN%\Release\osoasso_test_x86_32.nexe
     )
@@ -36,7 +37,7 @@ if "%1"=="test" (
 )
 
 if "%1"=="stress" (
-    %NACL_SDK_ROOT%\tools\make -f Makefile_stress_test || goto :end
+    %NACL_SDK_ROOT%\tools\make -j %CORES% -f Makefile_stress_test || goto :end
     if not "%TOOLCHAIN%"=="newlib" (
         %NACL_SDK_ROOT%\toolchain\win_pnacl\bin\pnacl-translate -arch i686 %TOOLCHAIN%\Release\osoasso_stress_test.pexe -o %TOOLCHAIN%\Release\osoasso_stress_test_x86_32.nexe
     )
@@ -48,7 +49,7 @@ if "%1"=="deploy" (
     set NACL_ARCH=
 )
 
-%NACL_SDK_ROOT%\tools\make || goto :end
+%NACL_SDK_ROOT%\tools\make -j %CORES% || goto :end
 
 if "%1"=="deploy" (
     if "%TOOLCHAIN%"=="newlib" (
