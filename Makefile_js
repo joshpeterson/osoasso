@@ -30,6 +30,7 @@ include $(PEPPERJS_SRC_ROOT)/tools/common.mk
 #
 TARGET=osoasso
 
+CFLAGS = -Wall -Wno-long-long -pthread -Werror -std=gnu++11 -O2
 #
 # List of sources to compile
 #
@@ -59,7 +60,7 @@ ifneq (,$(findstring $(TOOLCHAIN),emscripten))
 #
 # Use the compile macro for each source.
 #
-$(foreach src,$(SOURCES),$(eval $(call COMPILE_RULE,$(src),)))
+$(foreach src,$(SOURCES),$(eval $(call COMPILE_RULE,$(src),$(CFLAGS))))
 
 #
 # Use the lib macro for this target on the list of sources.
