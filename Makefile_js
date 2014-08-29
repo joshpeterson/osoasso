@@ -56,17 +56,38 @@ SOURCES =	$(CURDIR)/src/osoasso.cc\
 			$(CURDIR)/src/jacobi_eigen_solver.cc
 # Note: absolute path to help Emscripten source mapping.
 
-ifneq (,$(findstring $(TOOLCHAIN),emscripten))
+#
+# List of libraries to link against.  Unlike some tools, the GCC and LLVM
+# based tools require libraries to be specified in the correct order.  The
+# order should be symbol reference followed by symbol definition, with direct
+# sources to the link (object files) are left most.  In this case:
+#    hello_world -> ppapi_main -> ppapi_cpp -> ppapi -> pthread -> libc
+# Notice that libc is implied and come last through standard compiler/link
+# switches.
+#
+# We break this list down into two parts, the set we need to rebuild (DEPS)
+# and the set we do not.  This example does not havea any additional library
+# dependencies.
+#
+LIBS=pthread
+
 #
 # Use the compile macro for each source.
 #
 $(foreach src,$(SOURCES),$(eval $(call COMPILE_RULE,$(src),$(CFLAGS))))
 
 #
-# Use the lib macro for this target on the list of sources.
+# Use the link macro for this target on the list of sources.
 #
-$(eval $(call LIB_RULE,osoasso,$(SOURCES)))
+ifeq ($(CONFIG),Release)
+$(eval $(call LINK_RULE,$(TARGET)_unstripped,$(SOURCES),$(LIBS),$(DEPS)))
+$(eval $(call STRIP_RULE,$(TARGET),$(TARGET)_unstripped))
 else
-$(STAMPDIR)/osoasso.stamp :
-	@echo "TOUCHED $$@" > $(STAMPDIR)/osoasso.stamp
+$(eval $(call LINK_RULE,$(TARGET),$(SOURCES),$(LIBS),$(DEPS)))
 endif
+
+#
+# Specify the NMF to be created with no additional arugments.
+#
+$(eval $(call NMF_RULE,$(TARGET),))
+
