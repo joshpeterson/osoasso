@@ -28,6 +28,17 @@
     <!-- be added before this line.                -->
     <!--                                           -->
     <script type="text/javascript" language="javascript" src="osoasso_gwt/osoasso_gwt.nocache.js"></script>
+    <script type="text/javascript" src="loadnacl.js"></script>
+    <script type="text/javascript" src="common.js"></script>
+    <script type="text/javascript" language="javascript" src="osoasso.js"></script>
+    <script type="text/javascript">
+    		document.DoIt = function Test(e)
+		    {
+		    	alert("Starting");
+		    	CreateInstance(200, 200, e);
+		    	alert("Done");
+		    }
+    </script>
   </head>
 
   <!--                                           -->
@@ -49,7 +60,7 @@
     </div>
     
     <div id="listener">
-	    <script type="text/javascript">
+	    <!-- <script type="text/javascript">
 		    var listener = document.getElementById('listener');
 		    listener.addEventListener('loadStart', moduleLoadStarted, true);
 		    listener.addEventListener('progress', moduleLoadProgress, true);
@@ -89,7 +100,8 @@
   			  alert('Bad news: something went very wrong, but it\'s not your fault! Please reload the page and try again.'); 
 			}
 	    </script>
-    	<embed name="nacl_module" id="osoasso" width="0" height="0" src="osoasso.nmf" type="application/x-pnacl" />
+    	<embed name="nacl_module" id="osoasso" width="0" height="0" src="osoasso.nmf" type="application/x-pnacl" /> -->
     </div>
+    <span id="emscripten"></span>
   </body>
 </html>

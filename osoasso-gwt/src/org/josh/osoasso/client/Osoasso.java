@@ -58,7 +58,8 @@ public class Osoasso extends Composite implements EntryPoint
     private static Osoasso instance;
 
     private JavaScriptObject naclModule = null;
-
+    private JavaScriptObject emscriptenModule = null;
+    
     private StringConcatenator concatenator = new StringConcatenator();
     private ActionHistory history = new ActionHistory();
 
@@ -126,7 +127,13 @@ public class Osoasso extends Composite implements EntryPoint
         root.add(outer);
     	
     	naclModule = GetNaclModule();
-        RegisterNaclListener(naclModule);
+    	if (naclModule != null)
+    		RegisterNaclListener(naclModule);
+    	else
+    	{
+    		emscriptenModule= GetEmscriptenElement();
+    		CallEmscriptenCreateInstance(emscriptenModule);
+    	}
     }
 
     @UiHandler(
@@ -140,7 +147,10 @@ public class Osoasso extends Composite implements EntryPoint
                 String action = inputField.getText();
                 if (!action.isEmpty())
                 {
-                    CallOsoassoNaclModuleInputMethod(naclModule, action, usernameField.getText());
+                	if (naclModule != null)
+                		CallOsoassoNaclModuleInputMethod(naclModule, action, usernameField.getText());
+                	else
+                		CallOsoassoNaclModuleInputMethod(emscriptenModule, action, usernameField.getText());
     
                     history.add(action);
                     scrollPanel.scrollToBottom();
@@ -267,10 +277,20 @@ public class Osoasso extends Composite implements EntryPoint
 		naclModule.postMessage('input:' + input + ":" + username);
     }-*/;
     
-    private static native void exportOnNaclModuleLoadedMethod() /*-{
-    $wnd.onNaclModuleLoaded = function() {
-       $entry(@org.josh.osoasso.client.Osoasso::onNaclModuleLoaded()());
-    }
- }-*/;
+    private static native void exportOnNaclModuleLoadedMethod()
+    /*-{
+	    $wnd.onNaclModuleLoaded = function() {
+	       $entry(@org.josh.osoasso.client.Osoasso::onNaclModuleLoaded()());
+	    }
+ 	}-*/;
 
+    private native JavaScriptObject GetEmscriptenElement()
+    /*-{
+		return $doc.getElementById("emscripten");
+    }-*/;
+    
+    private native void CallEmscriptenCreateInstance(JavaScriptObject emscriptenInstance)
+    /*-{
+    	$doc.DoIt(emscriptenInstance);
+    }-*/;
 }
