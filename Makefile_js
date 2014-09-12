@@ -69,7 +69,13 @@ SOURCES =	$(CURDIR)/src/osoasso.cc\
 # and the set we do not.  This example does not havea any additional library
 # dependencies.
 #
+DEPS=ppapi
 LIBS=pthread
+
+#
+# Use the library dependency macro for each dependency
+#
+$(foreach dep,$(DEPS),$(eval $(call DEPEND_RULE,$(dep))))
 
 #
 # Use the compile macro for each source.

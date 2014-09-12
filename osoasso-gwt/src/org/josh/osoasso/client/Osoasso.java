@@ -133,6 +133,7 @@ public class Osoasso extends Composite implements EntryPoint
     	{
     		emscriptenModule= GetEmscriptenElement();
     		CallEmscriptenCreateInstance(emscriptenModule);
+    		RegisterNaclListener(emscriptenModule);
     	}
     }
 
@@ -244,7 +245,6 @@ public class Osoasso extends Composite implements EntryPoint
         {       	
             naclModule = GetNaclModule();
             RegisterNaclListener(naclModule);
-
         }
     }
 
