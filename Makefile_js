@@ -30,7 +30,7 @@ include $(PEPPERJS_SRC_ROOT)/tools/common.mk
 #
 TARGET=osoasso
 
-CFLAGS = -Wall -Wno-long-long -pthread -Werror -std=gnu++11 -O2
+CFLAGS = -Wall -Wno-long-long -pthread -Werror -std=gnu++11 -O2	 
 #
 # List of sources to compile
 #
@@ -69,8 +69,8 @@ SOURCES =	$(CURDIR)/src/osoasso.cc\
 # and the set we do not.  This example does not havea any additional library
 # dependencies.
 #
-DEPS=ppapi
-LIBS=pthread
+DEPS=ppapi ppapi_cpp
+LIBS=$(DEPS) pthread
 
 #
 # Use the library dependency macro for each dependency
