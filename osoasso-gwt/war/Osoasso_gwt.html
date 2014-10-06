@@ -34,9 +34,8 @@
     <script type="text/javascript">
     		document.DoIt = function Test(e)
 		    {
-		    	alert("Starting");
 		    	CreateInstance(200, 200, e);
-		    	alert("Done");
+		    	e.finishLoading();
 		    }
     </script>
   </head>
