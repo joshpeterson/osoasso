@@ -3,20 +3,26 @@
 setlocal
 
 set NACL_SDK_ROOT=c:\Users\Josh\Documents\development\nacl_sdk\pepper_35
-set TOOLCHAIN=pnacl
 set CORES=3
 
-if "%1"=="newlib" (
+if "%1"=="pnacl" (
+    set TOOLCHAIN=pnacl
+    set NACL_ARCH=x86_32
+) else if "%1"=="newlib" (
     set TOOLCHAIN=newlib
+    set NACL_ARCH=x86_32
+) else if "%1"=="emscripten" (
+    set TOOLCHAIN=emscripten
+    set NACL_ARCH=x86_32
+) else (
+    echo Error: Please provide a valid target [pnacl|nacl|emscripten]
+    goto :end
+)
+
+if "%1"=="all" (
     set NACL_ARCH=x86_32
 )
 
-if "%2"=="newlib" (
-    set TOOLCHAIN=newlib
-    set NACL_ARCH=x86_32
-)
-
-set CONFIG=Release
 
 :: NACL_SDK_ROOT must be set.
 if not defined NACL_SDK_ROOT (
@@ -30,53 +36,84 @@ if not defined NACL_SDK_ROOT (
 if "%1"=="test" (
     %NACL_SDK_ROOT%\tools\make -j %CORES% -f Makefile_test || goto :end
     if not "%TOOLCHAIN%"=="newlib" (
-        %NACL_SDK_ROOT%\toolchain\win_pnacl\bin\pnacl-translate -arch i686 %TOOLCHAIN%\Release\osoasso_test.pexe -o %TOOLCHAIN%\Release\osoasso_test_x86_32.nexe
+        %NACL_SDK_ROOT%\toolchain\win_pnacl\bin\pnacl-translate -arch i686 %TOOLCHAIN%\release\osoasso_test.pexe -o %TOOLCHAIN%\release\osoasso_test_x86_32.nexe
     )
-    %NACL_SDK_ROOT%\tools\sel_ldr.py %TOOLCHAIN%\Release\osoasso_test_x86_32.nexe
+    %NACL_SDK_ROOT%\tools\sel_ldr.py %TOOLCHAIN%\release\osoasso_test_x86_32.nexe
     goto :end
 )
 
 if "%1"=="stress" (
     %NACL_SDK_ROOT%\tools\make -j %CORES% -f Makefile_stress_test || goto :end
     if not "%TOOLCHAIN%"=="newlib" (
-        %NACL_SDK_ROOT%\toolchain\win_pnacl\bin\pnacl-translate -arch i686 %TOOLCHAIN%\Release\osoasso_stress_test.pexe -o %TOOLCHAIN%\Release\osoasso_stress_test_x86_32.nexe
+        %NACL_SDK_ROOT%\toolchain\win_pnacl\bin\pnacl-translate -arch i686 %TOOLCHAIN%\release\osoasso_stress_test.pexe -o %TOOLCHAIN%\release\osoasso_stress_test_x86_32.nexe
     )
-    %NACL_SDK_ROOT%\tools\sel_ldr.py %TOOLCHAIN%\Release\osoasso_stress_test_x86_32.nexe
+    %NACL_SDK_ROOT%\tools\sel_ldr.py %TOOLCHAIN%\release\osoasso_stress_test_x86_32.nexe
     goto :end
 )
 
-if "%1"=="deploy" (
+if "%2"=="deploy" (
     set NACL_ARCH=
 )
 
-%NACL_SDK_ROOT%\tools\make -j %CORES% || goto :end
-
-if "%1"=="deploy" (
-    if "%TOOLCHAIN%"=="newlib" (
-        copy /y %TOOLCHAIN%\Release\osoasso_x86_32.nexe osoasso-gwt\war
-        copy /y %TOOLCHAIN%\Release\osoasso_x86_64.nexe osoasso-gwt\war
-        copy /y %TOOLCHAIN%\Release\osoasso_arm.nexe osoasso-gwt\war
+if "%1"=="all" (
+    echo Building all targets
+    call :build_nacl || goto :end
+    call :build_emscripten || goto :end
+) else (
+    if "%TOOLCHAIN%"=="emscripten" (
+        call :build_emscripten || goto :end
     ) else (
-        copy /y %TOOLCHAIN%\Release\osoasso.pexe osoasso-gwt\war
+        call :build_nacl || goto :end
     )
-    copy /y %TOOLCHAIN%\Release\osoasso.nmf osoasso-gwt\war
-    copy /y favicon.ico osoasso-gwt\war
+)
+
+if "%2"=="deploy" (
+    if "%1"=="all" (
+        call :deploy_emscripten
+        call :deploy_nacl
+    ) else (
+        if "%TOOLCHAIN%"=="emscripten" (
+            call :deploy_emscripten
+        ) else (
+            call :deploy_nacl
+        )
+    )
+    call :deploy_resources
     goto :end
 )
 
-if "%1"=="deploy32" (
-    copy /y %TOOLCHAIN%\Release\osoasso_x86_32.nexe osoasso-gwt\war
-    copy /y %TOOLCHAIN%\Release\osoasso.nmf osoasso-gwt\war
-    copy /y favicon.ico osoasso-gwt\war
-    goto :end
-)
+goto :end
 
-if "%1"=="deploy64" (
-    copy /y %TOOLCHAIN%\Release\osoasso_x86_64.nexe osoasso-gwt\war
-    copy /y %TOOLCHAIN%\Release\osoasso.nmf osoasso-gwt\war
-    copy /y favicon.ico osoasso-gwt\war
-    goto :end
-)
+:build_emscripten
+echo Build for emscripten target
+%NACL_SDK_ROOT%\tools\make -j %CORES% -f Makefile_js CONFIG=release || goto :end
+goto end
 
+:deploy_emscripten
+echo Deploying for emscripten target
+copy /y emscripten\release\osoasso.js osoasso-gwt\war
+goto :end
+
+:build_nacl
+echo Build for nacl target
+%NACL_SDK_ROOT%\tools\make -j %CORES% CONFIG=Release || goto :end
+goto end
+
+:deploy_nacl
+echo Deploying for nacl target
+if "%TOOLCHAIN%"=="newlib" (
+    copy /y %TOOLCHAIN%\release\osoasso_x86_32.nexe osoasso-gwt\war
+    copy /y %TOOLCHAIN%\release\osoasso_x86_64.nexe osoasso-gwt\war
+    copy /y %TOOLCHAIN%\release\osoasso_arm.nexe osoasso-gwt\war
+) else (
+    copy /y %TOOLCHAIN%\release\osoasso.pexe osoasso-gwt\war
+)
+copy /y %TOOLCHAIN%\release\osoasso.nmf osoasso-gwt\war
+goto :end
+
+:deploy_resources
+echo Deploying resources
+copy /y favicon.ico osoasso-gwt\war
+goto :end
 
 :end
