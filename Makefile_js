@@ -30,7 +30,7 @@ include $(PEPPERJS_SRC_ROOT)/tools/common.mk
 #
 TARGET=osoasso
 
-CFLAGS = -Wall -Wno-long-long -pthread -Werror -std=gnu++11 -O2	 
+CFLAGS = -Wall -Wno-long-long -pthread -Werror -std=gnu++11 -O2	-s ALLOW_MEMORY_GROWTH=1 -s DISABLE_EXCEPTION_CATCHING=0
 #
 # List of sources to compile
 #
