@@ -49,15 +49,17 @@ command_data command_dispatcher::input(const std::string& input)
     std::shared_ptr<const matrix<double>> result;
 
     timer command_timer;
-    std::shared_ptr<command_with_two_arguments> command_two = std::dynamic_pointer_cast<command_with_two_arguments>(command);
-    if (command_two)
+    //std::shared_ptr<command_with_two_arguments> command_two = std::dynamic_pointer_cast<command_with_two_arguments>(command);
+    if (command->number_of_arguments() == 2)
     {
+        command_with_two_arguments* command_two = (command_with_two_arguments*)command.get();
         result = command_two->call(matrix_inputs[0], matrix_inputs[1], number_of_threads);
     }
     else
     {
-        std::shared_ptr<command_with_one_argument> command_one = std::dynamic_pointer_cast<command_with_one_argument>(command);
+        //std::shared_ptr<command_with_one_argument> command_one = std::dynamic_pointer_cast<command_with_one_argument>(command);
 
+        command_with_one_argument* command_one = (command_with_one_argument*)command.get();
         result = command_one->call(matrix_inputs[0], number_of_threads);
     }
 
