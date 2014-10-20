@@ -17,7 +17,6 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.TextBox;
@@ -58,7 +57,6 @@ public class Osoasso extends Composite implements EntryPoint
     private static Osoasso instance;
 
     private JavaScriptObject naclModule = null;
-    private JavaScriptObject emscriptenModule = null;
     
     private StringConcatenator concatenator = new StringConcatenator();
     private ActionHistory history = new ActionHistory();
@@ -127,14 +125,13 @@ public class Osoasso extends Composite implements EntryPoint
         root.add(outer);
     	
     	naclModule = GetNaclModule();
-    	if (naclModule != null)
-    		RegisterNaclListener(naclModule);
-    	else
+    	if (naclModule == null)
     	{
-    		emscriptenModule= GetEmscriptenElement();
-    		CallEmscriptenCreateInstance(emscriptenModule);
-    		RegisterNaclListener(emscriptenModule);
+    		naclModule = GetEmscriptenElement();
+    		CallEmscriptenCreateInstance(naclModule);
     	}
+    	
+    	RegisterNaclListener(naclModule);
     }
 
     @UiHandler(
@@ -148,10 +145,7 @@ public class Osoasso extends Composite implements EntryPoint
                 String action = inputField.getText();
                 if (!action.isEmpty())
                 {
-                	if (naclModule != null)
-                		CallOsoassoNaclModuleInputMethod(naclModule, action, usernameField.getText());
-                	else
-                		CallOsoassoNaclModuleInputMethod(emscriptenModule, action, usernameField.getText());
+                	CallOsoassoNaclModuleInputMethod(naclModule, action, usernameField.getText());
     
                     history.add(action);
                     scrollPanel.scrollToBottom();
