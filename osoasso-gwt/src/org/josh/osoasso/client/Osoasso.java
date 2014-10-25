@@ -283,8 +283,8 @@ public class Osoasso extends Composite implements EntryPoint
 		return $doc.getElementById("emscripten");
     }-*/;
     
-    private native void CallEmscriptenCreateInstance(JavaScriptObject emscriptenInstance)
+    private native JavaScriptObject CallEmscriptenCreateInstance(JavaScriptObject emscriptenInstance)
     /*-{
-    	$doc.DoIt(emscriptenInstance);
+    	return $doc.CreateEmscriptenInstance(emscriptenInstance);
     }-*/;
 }
