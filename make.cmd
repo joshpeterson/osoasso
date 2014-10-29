@@ -7,7 +7,7 @@ set CORES=3
 
 if "%1"=="pnacl" (
     set TOOLCHAIN=pnacl
-    set NACL_ARCH=x86_32
+    set NACL_ARCH=
 ) else if "%1"=="newlib" (
     set TOOLCHAIN=newlib
     set NACL_ARCH=x86_32
@@ -15,7 +15,7 @@ if "%1"=="pnacl" (
     set TOOLCHAIN=emscripten
     set NACL_ARCH=x86_32
 ) else (
-    echo Error: Please provide a valid target [pnacl|nacl|emscripten]
+    echo Error: Please provide a valid target [pnacl or nacl or emscripten]
     goto :end
 )
 
@@ -33,7 +33,7 @@ if not defined NACL_SDK_ROOT (
   goto end
 )
 
-if "%1"=="test" (
+if "%2"=="test" (
     %NACL_SDK_ROOT%\tools\make -j %CORES% -f Makefile_test || goto :end
     if not "%TOOLCHAIN%"=="newlib" (
         %NACL_SDK_ROOT%\toolchain\win_pnacl\bin\pnacl-translate -arch i686 %TOOLCHAIN%\release\osoasso_test.pexe -o %TOOLCHAIN%\release\osoasso_test_x86_32.nexe
@@ -42,7 +42,7 @@ if "%1"=="test" (
     goto :end
 )
 
-if "%1"=="stress" (
+if "%2"=="stress" (
     %NACL_SDK_ROOT%\tools\make -j %CORES% -f Makefile_stress_test || goto :end
     if not "%TOOLCHAIN%"=="newlib" (
         %NACL_SDK_ROOT%\toolchain\win_pnacl\bin\pnacl-translate -arch i686 %TOOLCHAIN%\release\osoasso_stress_test.pexe -o %TOOLCHAIN%\release\osoasso_stress_test_x86_32.nexe

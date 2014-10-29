@@ -3,10 +3,12 @@ VALID_TOOLCHAINS := pnacl newlib glibc
 include $(NACL_SDK_ROOT)/tools/common.mk
 
 LIBS = ppapi_cpp ppapi
-#CFLAGS = -Wall -Wno-long-long -pthread -Werror -std=c++0x -O2
-# Use gnu++11 for pnacl
+ifeq ($(TOOLCHAIN),newlib)
+CFLAGS = -Wall -Wno-long-long -pthread -Werror -std=c++0x -O2
+else
 CFLAGS = -Wall -Wno-long-long -pthread -Werror -std=gnu++11 -O2 --pnacl-exceptions=sjlj
 LDFLAGS = --pnacl-exceptions=sjlj
+endif
 
 TARGET = osoasso_test
 SOURCES = 	src/osoasso_instance.cc\
@@ -55,6 +57,7 @@ SOURCES = 	src/osoasso_instance.cc\
 			test/test_parallel_task.cc\
 			test/test_max_off_diagonal_index.cc\
 			test/test_print_matrix.cc\
+			test/test_expected.cc\
 			test/test_add.cc\
 			test/test_subtract.cc\
 			test/test_multiply.cc\
