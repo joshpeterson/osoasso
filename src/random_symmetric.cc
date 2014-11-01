@@ -6,14 +6,14 @@
 
 using namespace osoasso;
 
-std::shared_ptr<const matrix<double>> random_symmetric::call(std::shared_ptr<const matrix<double>> size, int number_of_threads) const
+expected_const_matrix random_symmetric::call(std::shared_ptr<const matrix<double>> size, int number_of_threads) const
 {
     if (size->rows() != 1 && size->columns() != 1)
     {
         std::stringstream message;
         message << "The size argument must have one element, but it is of size " << size->rows()
                 << "x" << size->columns();
-        throw std::invalid_argument(message.str());
+        INVALID_ARGUMENT_CONST(std::invalid_argument(message.str()));
     }
 
     size_t num_rows = (*size)(1,1);
@@ -30,7 +30,7 @@ std::shared_ptr<const matrix<double>> random_symmetric::call(std::shared_ptr<con
         }
     }
 
-    return result;
+    return expected_const_matrix(result);
 }
 
 std::string random_symmetric::get_help() const

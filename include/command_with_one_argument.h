@@ -11,7 +11,7 @@ namespace osoasso
 class command_with_one_argument : public command
 {
 public:
-    virtual std::shared_ptr<const matrix<double>> call(std::shared_ptr<const matrix<double>> input, int number_of_threads) const = 0;
+    virtual expected_const_matrix call(std::shared_ptr<const matrix<double>> input, int number_of_threads) const = 0;
 
     virtual int number_of_arguments() const
     {
