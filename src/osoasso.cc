@@ -72,14 +72,7 @@ private:
 
     std::string HandleMessageNoLocks(const std::string& message)
     {
-        try
-        {
-            return instance.handle_message(message);
-        }
-        catch (std::exception& e)
-        {
-            return e.what();
-        }
+        return instance.handle_message(message);
     }
 
 #if !defined(__EMSCRIPTEN__)

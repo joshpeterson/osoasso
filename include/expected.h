@@ -11,35 +11,35 @@ template <typename T>
 class expected
 {
 public:
-    explicit expected(T value) : _value(value), _has_value(true)
+    explicit expected(T value) : value_(value), has_value_(true)
     {
     }
 
-    explicit expected(std::shared_ptr<std::exception> e) : _e(e), _has_value(false)
+    explicit expected(std::shared_ptr<std::exception> e) : e_(e), has_value_(false)
     {
     }
 
     bool has_value() const
     {
-        return _has_value;
+        return has_value_;
     }
 
-    T get_value() const
+    T& get_value()
     {
-        if (!_has_value)
+        if (!has_value_)
             throw std::logic_error("No value exists to get.");
-        return _value;
+        return value_;
     }
     
-    const std::exception& get_exception() const
+    std::shared_ptr<std::exception> get_exception()
     {
-        return *_e;
+        return e_;
     }
 
 private:
-    T _value;
-    std::shared_ptr<std::exception> _e;
-    bool _has_value;
+    T value_;
+    std::shared_ptr<std::exception> e_;
+    bool has_value_;
 };
 
 }

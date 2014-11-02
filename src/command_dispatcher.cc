@@ -21,7 +21,7 @@ command_dispatcher::command_dispatcher(const command_factory& commands,
 {
 }
 
-command_data command_dispatcher::input(const std::string& input)
+expected<command_data> command_dispatcher::input(const std::string& input)
 {
     command_parser parser(input);
     std::shared_ptr<command> command = commands_.get(parser.name());
@@ -33,7 +33,9 @@ command_data command_dispatcher::input(const std::string& input)
         matrix_inputs.back()->rows() == 1 && matrix_inputs.back()->columns() == 1)
         has_optional_parameter = true;
 
-    this->validate_number_of_inputs(parser.name(), parser.inputs(), command, has_optional_parameter);
+    auto expected_bool = this->validate_number_of_inputs(parser.name(), parser.inputs(), command, has_optional_parameter);
+    if (!expected_bool.has_value())
+        return expected<command_data>(expected_bool.get_exception());
 
     int number_of_threads = 1;
     if (has_optional_parameter)
@@ -77,10 +79,10 @@ command_data command_dispatcher::input(const std::string& input)
     command_result.output = result_name;
     command_result.inputs = input_names;
 
-    return command_result;
+    return expected<command_data>(command_result);
 }
 
-void command_dispatcher::validate_number_of_inputs(const std::string& command_name, const std::vector<std::string>& inputs,
+expected<bool> command_dispatcher::validate_number_of_inputs(const std::string& command_name, const std::vector<std::string>& inputs,
                                                    std::shared_ptr<command> command, bool allow_optional_parameter) const
 {
     int arguments_provided = static_cast<int>(inputs.size());
@@ -102,8 +104,10 @@ void command_dispatcher::validate_number_of_inputs(const std::string& command_na
                 message << ", ";
         }
 
-        throw std::runtime_error(message.str());
+        return expected<bool>(std::make_shared<std::runtime_error>(std::runtime_error(message.str())));
     }
+
+    return expected<bool>(true);
 }
 
 std::vector<std::shared_ptr<const matrix<double>>> command_dispatcher::unpack_arguments(const std::vector<std::string>& inputs) const
@@ -116,7 +120,7 @@ std::vector<std::shared_ptr<const matrix<double>>> command_dispatcher::unpack_ar
             if (tags_.contains(*i))
             {
                 // First look for a tag name
-                matrix_inputs.push_back(matrices_.get(tags_.get(*i)));
+                matrix_inputs.push_back(matrices_.get(tags_.get(*i).get_value()));
             }
             else if (is_number(*i))
             {

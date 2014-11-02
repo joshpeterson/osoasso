@@ -27,17 +27,20 @@ project_manager::project_manager()
 {
 }
 
-commit_data project_manager::input(const std::string& action, const std::string& user)
+expected<commit_data> project_manager::input(const std::string& action, const std::string& user)
 {
     time_t commit_time = time(NULL);
 
     command_dispatcher dispatcher(commands_, matrices_, tags_);
-    auto command_data = dispatcher.input(action);
+    auto expected_command_data = dispatcher.input(action);
+    if (!expected_command_data.has_value())
+        return expected<commit_data>(expected_command_data.get_exception());
+    auto command_data = expected_command_data.get_value();
 
     commit_factory factory(commits_, commit_tree_);
     factory.create(action, user, commit_time, command_data.inputs, command_data.output);
 
-    return this->get_last_commit(command_data.tag, command_data.command_duration_seconds);
+    return expected<commit_data>(this->get_last_commit(command_data.tag, command_data.command_duration_seconds));
 }
 
 std::shared_ptr<const matrix<double>> project_manager::get_matrix(const std::string& name) const

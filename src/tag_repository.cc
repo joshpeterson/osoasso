@@ -9,17 +9,17 @@ void tag_repository::add(const std::string& tag, const std::string& object_name)
     tags_[tag] = object_name;
 }
 
-std::string tag_repository::get(const std::string& tag) const
+expected<std::string> tag_repository::get(const std::string& tag) const
 {
     auto found = tags_.find(tag);
     if (found != tags_.end())
     {
-        return found->second;
+        return expected<std::string>(found->second);
     }
 
     std::stringstream message;
     message << "The tag " << tag << " does not exist.";
-    throw std::runtime_error(message.str());
+    return expected<std::string>(std::make_shared<std::runtime_error>(std::runtime_error(message.str())));
 }
 
 bool tag_repository::contains(const std::string& tag) const

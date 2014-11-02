@@ -11,6 +11,7 @@
 #include "tree.h"
 #include "commit_factory.h"
 #include "tag_repository.h"
+#include "expected.h"
 
 namespace osoasso
 {
@@ -18,6 +19,12 @@ namespace osoasso
 struct commit_data
 {
     commit_data()
+    {
+    }
+
+    commit_data(const commit_data& other) : action(other.action), user(other.user),
+        time(other.time), output(other.output), name(other.name),
+        tag(other.tag), command_duration_seconds(other.command_duration_seconds)
     {
     }
 
@@ -41,7 +48,7 @@ class project_manager
 public:
     project_manager();
     virtual ~project_manager() {}
-    virtual commit_data input(const std::string& action, const std::string& user);
+    virtual expected<commit_data> input(const std::string& action, const std::string& user);
     virtual std::shared_ptr<const matrix<double>> get_matrix(const std::string& name) const;
 
     std::vector<std::string> get_command_names() const;
