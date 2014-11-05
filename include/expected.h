@@ -27,7 +27,7 @@ public:
     T& get_value()
     {
         if (!has_value_)
-            throw std::logic_error("No value exists to get.");
+            throw *e_;
         return value_;
     }
     

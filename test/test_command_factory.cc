@@ -14,11 +14,11 @@ using namespace osoasso;
 class mock_command : public command_with_two_arguments
 {
 public:
-    std::shared_ptr<const matrix<double>> call(std::shared_ptr<const matrix<double>> left, std::shared_ptr<const matrix<double>> right,
+    expected_const_matrix call(std::shared_ptr<const matrix<double>> left, std::shared_ptr<const matrix<double>> right,
                                                int number_of_threads) const
     {
         auto test = std::shared_ptr<const matrix<double>>(new matrix<double>({{1}, {1}}));
-        return test;
+        return expected_const_matrix(test);
     }
 
     int number_of_arguments() const

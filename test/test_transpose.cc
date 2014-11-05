@@ -12,7 +12,7 @@ Define(Transpose)
 
         transpose transpose_command;
 
-        std::shared_ptr<const matrix<double>> result = transpose_command.call(input, 1);
+        std::shared_ptr<const matrix<double>> result = transpose_command.call(input, 1).get_value();
 
         AssertElementsEqual(*expected, *result);
     } Done
@@ -24,7 +24,7 @@ Define(Transpose)
 
         transpose transpose_command;
 
-        std::shared_ptr<const matrix<double>> result = transpose_command.call(input, 1);
+        std::shared_ptr<const matrix<double>> result = transpose_command.call(input, 1).get_value();
 
         AssertElementsEqual(*expected, *result);
     } Done

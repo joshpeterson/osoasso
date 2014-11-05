@@ -31,7 +31,8 @@ Define(Expected)
 
     It("Throws an exception if a value does not exist and get_value is called")
     {
-        auto e = std::make_shared<std::invalid_argument>(std::invalid_argument("Unused"));
+        const std::string expected_message = "Exception message";
+        auto e = std::make_shared<std::invalid_argument>(std::invalid_argument(expected_message.c_str()));
         expected<int> expected_int(e);
 
         bool exception_occurred = false;
@@ -39,9 +40,10 @@ Define(Expected)
         {
             expected_int.get_value();
         }
-        catch (const std::logic_error&)
+        catch (const std::invalid_argument& e)
         {
             exception_occurred = true;
+            AssertEqual(expected_message, e.what());
         }
 
         AssertTrue(exception_occurred);
@@ -52,6 +54,6 @@ Define(Expected)
         const std::string expected_message = "Expected message";
         auto e = std::make_shared<std::invalid_argument>(std::invalid_argument(expected_message));
         expected<int> expected_int(e);
-        AssertEqual(expected_message, expected_int.get_exception().what());
+        AssertEqual(expected_message, expected_int.get_exception()->what());
     } Done
 }

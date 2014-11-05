@@ -12,7 +12,7 @@ Define(Identity)
 
         identity identity_command;
 
-        auto result = identity_command.call(size, 1);
+        auto result = identity_command.call(size, 1).get_value();
 
         AssertElementsEqual(*expected, *result);
     } Done
@@ -24,7 +24,7 @@ Define(Identity)
 
         identity identity_command;
 
-        auto result = identity_command.call(size, 1);
+        auto result = identity_command.call(size, 1).get_value();
 
         AssertElementsEqual(*expected, *result);
     } Done
@@ -37,7 +37,7 @@ Define(Identity)
 
         auto result = identity_command(2);
 
-        AssertElementsEqual(*expected, *result);
+        AssertElementsEqual(*expected, *result.get_value());
     } Done
 
     It("Throws an exception when called with an input of a size that is not 1,1")
@@ -50,7 +50,7 @@ Define(Identity)
         bool exception_thrown = false;
         try
         {
-            identity_command.call(matrix1, 1);
+            identity_command.call(matrix1, 1).get_value();
         }
         catch(const std::invalid_argument&)
         {

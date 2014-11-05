@@ -12,7 +12,7 @@ Define(Random)
 
         osoasso::random random_command;
 
-        std::shared_ptr<const matrix<double>> result = random_command.call(rows, columns, 1);
+        std::shared_ptr<const matrix<double>> result = random_command.call(rows, columns, 1).get_value();
 
         AssertEqual<size_t>(3, result->rows());
         AssertEqual<size_t>(3, result->columns());
@@ -25,7 +25,7 @@ Define(Random)
 
         osoasso::random random_command;
 
-        std::shared_ptr<const matrix<double>> result = random_command.call(rows, columns, 1);
+        std::shared_ptr<const matrix<double>> result = random_command.call(rows, columns, 1).get_value();
 
         AssertEqual<size_t>(2, result->rows());
         AssertEqual<size_t>(5, result->columns());
@@ -42,7 +42,7 @@ Define(Random)
         bool exception_thrown = false;
         try
         {
-            random_command.call(matrix1, matrix2, 1);
+            random_command.call(matrix1, matrix2, 1).get_value();
         }
         catch(const std::invalid_argument&)
         {

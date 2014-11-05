@@ -2,6 +2,7 @@
 #include "../test_harness/test.h"
 #include "../include/osoasso_instance.h"
 #include "../include/project_manager.h"
+#include "../include/expected.h"
 #include "../include/version.h"
 
 using namespace osoasso;
@@ -13,7 +14,7 @@ public:
     {
     }
 
-    commit_data input(const std::string& action, const std::string& user)
+    expected<commit_data> input(const std::string& action, const std::string& user)
     {
         if (action == "error action")
         {
@@ -37,7 +38,7 @@ public:
             data.tag = "tag";
         }
 
-        return data;
+        return expected<commit_data>(data);
     }
 
     std::shared_ptr<const matrix<double>> get_matrix(const std::string& name) const
