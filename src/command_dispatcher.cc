@@ -33,9 +33,9 @@ expected<command_data> command_dispatcher::input(const std::string& input)
         matrix_inputs.back()->rows() == 1 && matrix_inputs.back()->columns() == 1)
         has_optional_parameter = true;
 
-    auto expected_bool = this->validate_number_of_inputs(parser.name(), parser.inputs(), command, has_optional_parameter);
-    if (!expected_bool.has_value())
-        return expected<command_data>(expected_bool.get_exception());
+    auto expected_command_data = this->validate_number_of_inputs(parser.name(), parser.inputs(), command, has_optional_parameter);
+    if (!expected_command_data.has_value())
+        return expected_command_data;
 
     int number_of_threads = 1;
     if (has_optional_parameter)
@@ -82,7 +82,7 @@ expected<command_data> command_dispatcher::input(const std::string& input)
     return expected<command_data>(command_result);
 }
 
-expected<bool> command_dispatcher::validate_number_of_inputs(const std::string& command_name, const std::vector<std::string>& inputs,
+expected<command_data> command_dispatcher::validate_number_of_inputs(const std::string& command_name, const std::vector<std::string>& inputs,
                                                    std::shared_ptr<command> command, bool allow_optional_parameter) const
 {
     int arguments_provided = static_cast<int>(inputs.size());
@@ -104,10 +104,10 @@ expected<bool> command_dispatcher::validate_number_of_inputs(const std::string& 
                 message << ", ";
         }
 
-        return expected<bool>(std::make_shared<std::runtime_error>(std::runtime_error(message.str())));
+        return expected<command_data>::from_exception(std::runtime_error(message.str()));
     }
 
-    return expected<bool>(true);
+    return expected<command_data>(command_data());
 }
 
 std::vector<std::shared_ptr<const matrix<double>>> command_dispatcher::unpack_arguments(const std::vector<std::string>& inputs) const

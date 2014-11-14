@@ -51,7 +51,7 @@ std::string osoasso_instance::handle_message(const std::string& message)
                 }
                 else
                 {
-                    output << "error#" << action << "#" << expected_data.get_exception()->what();
+                    output << "error#" << action << "#" << expected_data.get_exception_message();
                 }
             }
         }

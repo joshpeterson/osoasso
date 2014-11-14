@@ -13,15 +13,13 @@ typedef expected<std::shared_ptr<matrix<double>>> expected_matrix;
 
 #define INVALID_ARGUMENT(e) \
     do { \
-    auto __error = std::make_shared<std::invalid_argument>(e); \
-    return expected_matrix(__error); \
+        return expected_matrix::from_exception(e); \
     } while (0) \
     
 
 #define INVALID_ARGUMENT_CONST(e) \
     do { \
-    auto __error = std::make_shared<std::invalid_argument>(e); \
-    return expected_const_matrix(__error); \
+        return expected_const_matrix::from_exception(e); \
     } while (0) \
 
 class command

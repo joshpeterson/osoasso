@@ -2,7 +2,7 @@
 
 setlocal
 
-set NACL_SDK_ROOT=c:\Users\Josh\Documents\development\nacl_sdk\pepper_35
+set NACL_SDK_ROOT=c:\Users\Josh\Documents\development\nacl_sdk\pepper_38
 set CORES=3
 
 if "%1"=="pnacl" (
@@ -36,7 +36,7 @@ if not defined NACL_SDK_ROOT (
 if "%2"=="test" (
     %NACL_SDK_ROOT%\tools\make -j %CORES% -f Makefile_test || goto :end
     if not "%TOOLCHAIN%"=="newlib" (
-        %NACL_SDK_ROOT%\toolchain\win_pnacl\bin\pnacl-translate -arch i686 %TOOLCHAIN%\release\osoasso_test.pexe -o %TOOLCHAIN%\release\osoasso_test_x86_32.nexe
+        %NACL_SDK_ROOT%\toolchain\win_pnacl\bin\pnacl-translate -arch i686 %TOOLCHAIN%\release\osoasso_test_unstripped.pexe -o %TOOLCHAIN%\release\osoasso_test_x86_32.nexe
     )
     %NACL_SDK_ROOT%\tools\sel_ldr.py %TOOLCHAIN%\release\osoasso_test_x86_32.nexe
     goto :end
@@ -45,7 +45,7 @@ if "%2"=="test" (
 if "%2"=="stress" (
     %NACL_SDK_ROOT%\tools\make -j %CORES% -f Makefile_stress_test || goto :end
     if not "%TOOLCHAIN%"=="newlib" (
-        %NACL_SDK_ROOT%\toolchain\win_pnacl\bin\pnacl-translate -arch i686 %TOOLCHAIN%\release\osoasso_stress_test.pexe -o %TOOLCHAIN%\release\osoasso_stress_test_x86_32.nexe
+        %NACL_SDK_ROOT%\toolchain\win_pnacl\bin\pnacl-translate -arch i686 %TOOLCHAIN%\release\osoasso_stress_test_unstripped.pexe -o %TOOLCHAIN%\release\osoasso_stress_test_x86_32.nexe
     )
     %NACL_SDK_ROOT%\tools\sel_ldr.py %TOOLCHAIN%\release\osoasso_stress_test_x86_32.nexe
     goto :end

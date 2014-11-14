@@ -49,11 +49,11 @@ Define(Expected)
         AssertTrue(exception_occurred);
     } Done
 
-    It("Stores a copy of a pointer to an exception")
+    It("Stores the message from the exception")
     {
         const std::string expected_message = "Expected message";
         auto e = std::make_shared<std::invalid_argument>(std::invalid_argument(expected_message));
         expected<int> expected_int(e);
-        AssertEqual(expected_message, expected_int.get_exception()->what());
+        AssertEqual(expected_message, expected_int.get_exception_message());
     } Done
 }

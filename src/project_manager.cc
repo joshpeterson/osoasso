@@ -34,7 +34,7 @@ expected<commit_data> project_manager::input(const std::string& action, const st
     command_dispatcher dispatcher(commands_, matrices_, tags_);
     auto expected_command_data = dispatcher.input(action);
     if (!expected_command_data.has_value())
-        return expected<commit_data>(expected_command_data.get_exception());
+        return expected<commit_data>(expected_command_data);
     auto command_data = expected_command_data.get_value();
 
     commit_factory factory(commits_, commit_tree_);

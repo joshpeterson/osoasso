@@ -28,6 +28,11 @@ Define(TagRepository)
             exception_occurred = true;
             exception_message = e.what();
         }
+        catch (const std::exception& e)
+        {
+            exception_occurred = true;
+            exception_message = e.what();
+        }
 
         AssertTrue(exception_occurred);
         AssertEqual(std::string("The tag foo does not exist."), exception_message);

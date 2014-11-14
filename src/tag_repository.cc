@@ -19,7 +19,7 @@ expected<std::string> tag_repository::get(const std::string& tag) const
 
     std::stringstream message;
     message << "The tag " << tag << " does not exist.";
-    return expected<std::string>(std::make_shared<std::runtime_error>(std::runtime_error(message.str())));
+    return expected<std::string>::from_exception(std::runtime_error(message.str()));
 }
 
 bool tag_repository::contains(const std::string& tag) const
