@@ -44,7 +44,7 @@ Define(Random)
         {
             random_command.call(matrix1, matrix2, 1).get_value();
         }
-        catch(const std::invalid_argument&)
+        catch(const std::runtime_error&)
         {
             exception_thrown = true;
         }
@@ -63,9 +63,9 @@ Define(Random)
         bool exception_thrown = false;
         try
         {
-            random_command.call(matrix1, matrix2, 1);
+            random_command.call(matrix1, matrix2, 1).get_value();
         }
-        catch(const std::invalid_argument&)
+        catch(const std::runtime_error&)
         {
             exception_thrown = true;
         }

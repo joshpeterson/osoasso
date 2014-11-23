@@ -44,7 +44,7 @@ Define(RandomSymmetric)
         {
             random_symmetric_command.call(matrix1, 1).get_value();
         }
-        catch(const std::invalid_argument&)
+        catch(const std::runtime_error&)
         {
             exception_thrown = true;
         }

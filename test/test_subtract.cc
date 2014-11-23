@@ -31,7 +31,7 @@ Define(Subtract)
         {
             subtract_command.call(matrix1, matrix2, 1).get_value();
         }
-        catch(const std::invalid_argument&)
+        catch(const std::runtime_error&)
         {
             exception_thrown = true;
         }

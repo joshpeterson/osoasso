@@ -45,7 +45,7 @@ Define(Multiply)
         {
             multiply_command.call(left, right, 1).get_value();
         }
-        catch(const std::invalid_argument& e)
+        catch(const std::runtime_error& e)
         {
             exception_thrown = true;
             message = e.what();

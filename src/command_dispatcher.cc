@@ -10,8 +10,6 @@
 #include "../include/tag_repository.h"
 #include "../include/timer.h"
 
-#include <iostream>
-
 using namespace osoasso;
 
 command_dispatcher::command_dispatcher(const command_factory& commands,
@@ -57,6 +55,8 @@ expected<command_data> command_dispatcher::input(const std::string& input)
         auto expected_result = command_two->call(matrix_inputs[0], matrix_inputs[1], number_of_threads);
         if (expected_result.has_value())
             result = expected_result.get_value();
+        else
+            return expected<command_data>::from_string(expected_result.get_exception_message());
     }
     else
     {
@@ -64,6 +64,8 @@ expected<command_data> command_dispatcher::input(const std::string& input)
         auto expected_result = command_one->call(matrix_inputs[0], number_of_threads);
         if (expected_result.has_value())
             result = expected_result.get_value();
+        else
+            return expected<command_data>::from_string(expected_result.get_exception_message());
     }
 
     command_result.command_duration_seconds = command_timer.elapsed();

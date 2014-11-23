@@ -18,7 +18,7 @@ public:
     {
         if (action == "error action")
         {
-            throw std::runtime_error("Error message");
+            return expected<commit_data>::from_exception(std::runtime_error("Error message"));
         }
 
         input_called_ = true;
@@ -158,7 +158,7 @@ Define(Osoasso)
 
         std::stringstream help_message;
         help_message << "text#help#"
-                     << "Osoasso Version " << VERSION << "\n"
+                     << "Osoasso Version " << VERSION << " (PNaCL)\n"
                      << "For a list of commands, type this: help commands";
 
         AssertEqual(help_message.str(), instance.handle_message(":help:me@bar.com"));

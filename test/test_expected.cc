@@ -24,23 +24,21 @@ Define(Expected)
 
     It("Exposes a query to determine if a value does not exist")
     {
-        auto e = std::make_shared<std::invalid_argument>(std::invalid_argument("Unused"));
-        expected<int> expected_int(e);
+        expected<int> expected_int = expected<int>::from_exception(std::invalid_argument("Unused"));
         AssertFalse(expected_int.has_value());
     } Done
 
-    It("Throws an exception if a value does not exist and get_value is called")
+    It("Throws a runtime_error exception if a value does not exist and get_value is called")
     {
         const std::string expected_message = "Exception message";
-        auto e = std::make_shared<std::invalid_argument>(std::invalid_argument(expected_message.c_str()));
-        expected<int> expected_int(e);
+        expected<int> expected_int = expected<int>::from_exception(std::invalid_argument(expected_message.c_str()));
 
         bool exception_occurred = false;
         try
         {
             expected_int.get_value();
         }
-        catch (const std::invalid_argument& e)
+        catch (const std::runtime_error& e)
         {
             exception_occurred = true;
             AssertEqual(expected_message, e.what());
@@ -52,8 +50,7 @@ Define(Expected)
     It("Stores the message from the exception")
     {
         const std::string expected_message = "Expected message";
-        auto e = std::make_shared<std::invalid_argument>(std::invalid_argument(expected_message));
-        expected<int> expected_int(e);
+        expected<int> expected_int = expected<int>::from_exception(std::invalid_argument(expected_message));
         AssertEqual(expected_message, expected_int.get_exception_message());
     } Done
 }

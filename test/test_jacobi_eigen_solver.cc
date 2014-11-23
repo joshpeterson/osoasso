@@ -102,9 +102,9 @@ Define(JacobiEigenSolver)
         {
             jacobi_eigen_solver jacobi_command;
 
-            jacobi_command.call(input, 1);
+            jacobi_command.call(input, 1).get_value();
         }
-        catch (std::exception&)
+        catch (const std::runtime_error&)
         {
             exception_occurred = true;
         }
