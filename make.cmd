@@ -2,7 +2,7 @@
 
 setlocal
 
-set NACL_SDK_ROOT=c:\Users\Josh\Documents\development\nacl_sdk\pepper_38
+set NACL_SDK_ROOT=c:\Users\Josh\Documents\development\nacl_sdk\pepper_37
 set CORES=3
 
 if "%1"=="pnacl" (
