@@ -12,7 +12,7 @@ namespace osoasso
 class random_symmetric : public command_with_one_argument
 {
 public:
-    std::shared_ptr<const matrix<double>> call(std::shared_ptr<const matrix<double>> size, int number_of_threads) const;
+    expected_const_matrix call(std::shared_ptr<const matrix<double>> size, int number_of_threads) const;
     std::string get_help() const;
 };
 

@@ -11,8 +11,8 @@ namespace osoasso
 class command_with_two_arguments : public command
 {
 public:
-    virtual std::shared_ptr<const matrix<double>> call(std::shared_ptr<const matrix<double>> left, std::shared_ptr<const matrix<double>> right,
-                                                       int number_of_threads) const = 0;
+    virtual expected_const_matrix call(std::shared_ptr<const matrix<double>> left, std::shared_ptr<const matrix<double>> right,
+                                       int number_of_threads) const = 0;
     virtual int number_of_arguments() const
     {
         return 2;

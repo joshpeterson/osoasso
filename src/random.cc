@@ -6,15 +6,15 @@
 
 using namespace osoasso;
 
-std::shared_ptr<const matrix<double>> random::call(std::shared_ptr<const matrix<double>> rows, std::shared_ptr<const matrix<double>> columns,
-                                                int number_of_threads) const
+expected_const_matrix random::call(std::shared_ptr<const matrix<double>> rows, std::shared_ptr<const matrix<double>> columns,
+                                   int number_of_threads) const
 {
     if (rows->rows() != 1 && rows->columns() != 1)
     {
         std::stringstream message;
         message << "The first argument must have one element, but it is of size " << rows->rows()
                 << "x" << rows->columns();
-        throw std::invalid_argument(message.str());
+        INVALID_ARGUMENT_CONST(std::invalid_argument(message.str()));
     }
 
     if (columns->rows() != 1 && columns->columns() != 1)
@@ -22,7 +22,7 @@ std::shared_ptr<const matrix<double>> random::call(std::shared_ptr<const matrix<
         std::stringstream message;
         message << "The second argument must have one element, but it is of size " << columns->rows()
                 << "x" << columns->columns();
-        throw std::invalid_argument(message.str());
+        INVALID_ARGUMENT_CONST(std::invalid_argument(message.str()));
     }
 
     size_t num_rows = (*rows)(1,1);
@@ -38,7 +38,7 @@ std::shared_ptr<const matrix<double>> random::call(std::shared_ptr<const matrix<
         }
     }
 
-    return result;
+    return expected_const_matrix(result);
 }
 
 std::string random::get_help() const

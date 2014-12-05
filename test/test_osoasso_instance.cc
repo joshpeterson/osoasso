@@ -2,6 +2,7 @@
 #include "../test_harness/test.h"
 #include "../include/osoasso_instance.h"
 #include "../include/project_manager.h"
+#include "../include/expected.h"
 #include "../include/version.h"
 
 using namespace osoasso;
@@ -13,11 +14,11 @@ public:
     {
     }
 
-    commit_data input(const std::string& action, const std::string& user)
+    expected<commit_data> input(const std::string& action, const std::string& user)
     {
         if (action == "error action")
         {
-            throw std::runtime_error("Error message");
+            return expected<commit_data>::from_exception(std::runtime_error("Error message"));
         }
 
         input_called_ = true;
@@ -37,7 +38,7 @@ public:
             data.tag = "tag";
         }
 
-        return data;
+        return expected<commit_data>(data);
     }
 
     std::shared_ptr<const matrix<double>> get_matrix(const std::string& name) const
@@ -157,7 +158,7 @@ Define(Osoasso)
 
         std::stringstream help_message;
         help_message << "text#help#"
-                     << "Osoasso Version " << VERSION << "\n"
+                     << "Osoasso Version " << VERSION << " (PNaCL)\n"
                      << "For a list of commands, type this: help commands";
 
         AssertEqual(help_message.str(), instance.handle_message(":help:me@bar.com"));

@@ -13,7 +13,7 @@ Define(Add)
 
         add add_command;
 
-        std::shared_ptr<const matrix<double>> result = add_command.call(matrix1, matrix2, 1);
+        std::shared_ptr<const matrix<double>> result = add_command.call(matrix1, matrix2, 1).get_value();
 
         AssertElementsEqual(*expected, *result);
     } Done
@@ -29,9 +29,9 @@ Define(Add)
         bool exception_thrown = false;
         try
         {
-            add_command.call(matrix1, matrix2, 1);
+            add_command.call(matrix1, matrix2, 1).get_value();
         }
-        catch(const std::invalid_argument&)
+        catch(const std::runtime_error&)
         {
             exception_thrown = true;
         }

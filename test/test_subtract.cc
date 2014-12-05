@@ -13,7 +13,7 @@ Define(Subtract)
 
         subtract subtract_command;
 
-        std::shared_ptr<const matrix<double>> result = subtract_command.call(matrix1, matrix2, 1);
+        std::shared_ptr<const matrix<double>> result = subtract_command.call(matrix1, matrix2, 1).get_value();
 
         AssertElementsEqual(*expected, *result);
     } Done
@@ -29,9 +29,9 @@ Define(Subtract)
         bool exception_thrown = false;
         try
         {
-            subtract_command.call(matrix1, matrix2, 1);
+            subtract_command.call(matrix1, matrix2, 1).get_value();
         }
-        catch(const std::invalid_argument&)
+        catch(const std::runtime_error&)
         {
             exception_thrown = true;
         }

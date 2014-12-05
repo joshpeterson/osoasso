@@ -27,17 +27,17 @@ std::string osoasso_instance::handle_message(const std::string& message)
             std::string action = message.substr(first_delim + 1, second_delim - first_delim - 1);
             std::string user = message.substr(second_delim + 1);
 
-            try
+            if (action.substr(0, 4) == "help")
             {
-                if (action.substr(0, 4) == "help")
+                std::string help_message = help_.get_help_for_action(action);
+                output << "text#" << action << "#" << help_message;
+            }
+            else
+            {
+                auto expected_data = manager_.input(action, user);
+                if (expected_data.has_value())
                 {
-                    std::string help_message = help_.get_help_for_action(action);
-                    output << "text#" << action << "#" << help_message;
-                }
-                else
-                {
-                    commit_data data = manager_.input(action, user);
-
+                    auto data = expected_data.get_value();
                     output << data.name << "#" << data.action << "#" << data.user
                                          << "#" << data.time << "#" << data.command_duration_seconds << "#"
                                          << data.output;
@@ -49,10 +49,10 @@ std::string osoasso_instance::handle_message(const std::string& message)
                         output << "#" << formatter.to_html_table();
                     }
                 }
-            }
-            catch (const std::exception& e)
-            {
-                output << "error#" << action << "#" << e.what();
+                else
+                {
+                    output << "error#" << action << "#" << expected_data.get_exception_message();
+                }
             }
         }
     }

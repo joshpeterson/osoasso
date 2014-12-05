@@ -3,10 +3,12 @@ VALID_TOOLCHAINS := pnacl newlib glibc
 include $(NACL_SDK_ROOT)/tools/common.mk
 
 LIBS = ppapi_cpp ppapi
-# CFLAGS = -Wall -Wno-long-long -pthread -Werror -std=c++0x -O2
-# Use gnu++11 for pnacl
+ifeq ($(TOOLCHAIN),newlib)
+ CFLAGS = -Wall -Wno-long-long -pthread -Werror -std=c++0x -O2
+else
 CFLAGS = -Wall -Wno-long-long -pthread -Werror -std=gnu++11 -O2 --pnacl-exceptions=sjlj
 LDFLAGS = --pnacl-exceptions=sjlj
+endif
 
 TARGET = osoasso
 SOURCES =	src/osoasso.cc\

@@ -14,13 +14,13 @@
 
 using namespace osoasso;
 
-std::shared_ptr<const matrix<double>> jacobi_eigen_solver::call(std::shared_ptr<const matrix<double>> input, int number_of_threads) const
+expected_const_matrix jacobi_eigen_solver::call(std::shared_ptr<const matrix<double>> input, int number_of_threads) const
 {
     transpose transpose_command;
-    auto input_transpose = transpose_command.call(input, 1);
+    auto input_transpose = transpose_command.call(input, 1).get_value();
     if (*input != *input_transpose)
-        throw std::invalid_argument("The input matrix is not a symmetric matrix. This command requires a symmetric matrix.");
-    
+        INVALID_ARGUMENT_CONST(std::invalid_argument("The input matrix is not a symmetric matrix. This command requires a symmetric matrix."));
+
     std::shared_ptr<const matrix<double>> A = input;
 #ifdef DEBUG_OUTPUT
     int iteration = 0;
@@ -53,7 +53,7 @@ std::shared_ptr<const matrix<double>> jacobi_eigen_solver::call(std::shared_ptr<
 
         identity identity_command;
 
-        auto V = identity_command(A->rows());
+        auto V = identity_command(A->rows()).get_value();
         (*V)(i,i) = (*V)(j,j) = std::cos(alpha);
         (*V)(i,j) = std::sin(alpha);
         (*V)(j,i) = -std::sin(alpha);
@@ -66,7 +66,7 @@ std::shared_ptr<const matrix<double>> jacobi_eigen_solver::call(std::shared_ptr<
 
         multiply multiply_command;
 
-        auto A_prime = multiply_command.call(multiply_command.call(transpose_command.call(V,1), A, 1), V, 1);
+        auto A_prime = multiply_command.call(multiply_command.call(transpose_command.call(V,1).get_value(), A, 1).get_value(), V, 1).get_value();
 
 #ifdef DEBUG_OUTPUT
         std::cout << "A_prime:\n";
@@ -82,7 +82,7 @@ std::shared_ptr<const matrix<double>> jacobi_eigen_solver::call(std::shared_ptr<
     for (size_t i = 1; i <= input->rows(); ++i)
         (*eigenvalues)(1, i) = (*A)(i,i);
 
-    return eigenvalues;
+    return expected_const_matrix(eigenvalues);
 }
 
 std::string jacobi_eigen_solver::get_help() const

@@ -12,13 +12,13 @@ namespace osoasso
 class identity : public command_with_one_argument
 {
 public:
-    std::shared_ptr<const matrix<double>> call(std::shared_ptr<const matrix<double>> size, int number_of_threads) const;
+    expected_const_matrix call(std::shared_ptr<const matrix<double>> size, int number_of_threads) const;
     std::string get_help() const;
 
-    std::shared_ptr<matrix<double>> operator()(int size) const;
+    expected_matrix operator()(int size) const;
 
 private:
-    std::shared_ptr<matrix<double>> call_implementation(std::shared_ptr<const matrix<double>> size, int number_of_threads) const;
+    expected_matrix call_implementation(std::shared_ptr<const matrix<double>> size, int number_of_threads) const;
 };
 
 }

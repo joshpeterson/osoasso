@@ -10,7 +10,7 @@ Define(TagRepository)
     {
         tag_repository tags;
         tags.add("tag", "object name");
-        AssertEqual(std::string("object name"), tags.get("tag"));
+        AssertEqual(std::string("object name"), tags.get("tag").get_value());
     } Done
 
     It("Throws an exception when a tag is not found")
@@ -21,9 +21,14 @@ Define(TagRepository)
         std::string exception_message;
         try
         {
-            tags.get("foo");
+            tags.get("foo").get_value();
         }
         catch (const std::runtime_error& e)
+        {
+            exception_occurred = true;
+            exception_message = e.what();
+        }
+        catch (const std::exception& e)
         {
             exception_occurred = true;
             exception_message = e.what();
@@ -38,7 +43,7 @@ Define(TagRepository)
         tag_repository tags;
         tags.add("tag", "object name");
         tags.add("tag", "object name 2");
-        AssertEqual(std::string("object name 2"), tags.get("tag"));
+        AssertEqual(std::string("object name 2"), tags.get("tag").get_value());
     } Done
 
     It("Has a contains check that does not throw an exception when a tag does not exist")

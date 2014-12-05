@@ -3,6 +3,7 @@
 
 #include <string>
 #include <map>
+#include "expected.h"
 
 namespace osoasso
 {
@@ -11,7 +12,7 @@ class tag_repository
 {
 public:
     void add(const std::string& tag, const std::string& object_name);
-    std::string get(const std::string& tag) const;
+    expected<std::string> get(const std::string& tag) const;
     bool contains(const std::string& tag) const;
     size_t count() const;
 

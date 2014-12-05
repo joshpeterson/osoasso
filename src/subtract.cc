@@ -5,22 +5,22 @@
 
 using namespace osoasso;
 
-std::shared_ptr<const matrix<double>> subtract::call(std::shared_ptr<const matrix<double>> left, std::shared_ptr<const matrix<double>> right,
-                                                     int number_of_threads) const
+expected_const_matrix subtract::call(std::shared_ptr<const matrix<double>> left, std::shared_ptr<const matrix<double>> right,
+                                     int number_of_threads) const
 {
     if (left->rows() != right->rows())
     {
         std::stringstream message;
         message << "Matrices do not have the same number of rows left: " << left->rows()
                 << " right: " << right->rows();
-        throw std::invalid_argument(message.str());
+        INVALID_ARGUMENT_CONST(std::invalid_argument(message.str()));
     }
     else if (left->columns() != right->columns())
     {
         std::stringstream message;
         message << "Matrices do not have the same number of columns left: " << left->columns() 
                 << " right: " << right->columns();
-        throw std::invalid_argument(message.str());
+        INVALID_ARGUMENT_CONST(std::invalid_argument(message.str()));
     }
 
     auto result = std::make_shared<matrix<double>>(left->rows(), left->columns());
@@ -32,7 +32,7 @@ std::shared_ptr<const matrix<double>> subtract::call(std::shared_ptr<const matri
         }
     }
 
-    return result;
+    return expected_const_matrix(result);
 }
 
 std::string subtract::get_help() const

@@ -42,7 +42,7 @@ Define(JacobiEigenSolver)
 
         auto result = jacobi_command.call(input, 1);
 
-        validate_eigenvalues(expected_eigenvalues, result);
+        validate_eigenvalues(expected_eigenvalues, result.get_value());
     } Done
 
     It ("Finds the eigenvalues of another 3x3 symmetric matrix")
@@ -54,7 +54,7 @@ Define(JacobiEigenSolver)
 
         auto result = jacobi_command.call(input, 1);
 
-        validate_eigenvalues(expected_eigenvalues, result);
+        validate_eigenvalues(expected_eigenvalues, result.get_value());
     } Done
 
     It ("Finds the eigenvalues of a 4x4 symmetric matrix")
@@ -66,7 +66,7 @@ Define(JacobiEigenSolver)
 
         auto result = jacobi_command.call(input, 1);
 
-        validate_eigenvalues(expected_eigenvalues, result);
+        validate_eigenvalues(expected_eigenvalues, result.get_value());
     } Done
 
     It ("Finds the eigenvalues of a 9x9 symmetric matrix")
@@ -90,7 +90,7 @@ Define(JacobiEigenSolver)
 
         auto result = jacobi_command.call(input, 1);
 
-        validate_eigenvalues(expected_eigenvalues, result);
+        validate_eigenvalues(expected_eigenvalues, result.get_value());
     } Done
 
     It ("Throws an exception when the input is not a symmetric matrix")
@@ -102,9 +102,9 @@ Define(JacobiEigenSolver)
         {
             jacobi_eigen_solver jacobi_command;
 
-            jacobi_command.call(input, 1);
+            jacobi_command.call(input, 1).get_value();
         }
-        catch (std::exception&)
+        catch (const std::runtime_error&)
         {
             exception_occurred = true;
         }

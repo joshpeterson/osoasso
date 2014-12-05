@@ -17,7 +17,6 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.TextBox;
@@ -58,7 +57,7 @@ public class Osoasso extends Composite implements EntryPoint
     private static Osoasso instance;
 
     private JavaScriptObject naclModule = null;
-
+    
     private StringConcatenator concatenator = new StringConcatenator();
     private ActionHistory history = new ActionHistory();
 
@@ -126,7 +125,13 @@ public class Osoasso extends Composite implements EntryPoint
         root.add(outer);
     	
     	naclModule = GetNaclModule();
-        RegisterNaclListener(naclModule);
+    	if (naclModule == null)
+    	{
+    		naclModule = GetEmscriptenElement();
+    		CallEmscriptenCreateInstance(naclModule);
+    	}
+    	
+    	RegisterNaclListener(naclModule);
     }
 
     @UiHandler(
@@ -140,7 +145,7 @@ public class Osoasso extends Composite implements EntryPoint
                 String action = inputField.getText();
                 if (!action.isEmpty())
                 {
-                    CallOsoassoNaclModuleInputMethod(naclModule, action, usernameField.getText());
+                	CallOsoassoNaclModuleInputMethod(naclModule, action, usernameField.getText());
     
                     history.add(action);
                     scrollPanel.scrollToBottom();
@@ -234,7 +239,6 @@ public class Osoasso extends Composite implements EntryPoint
         {       	
             naclModule = GetNaclModule();
             RegisterNaclListener(naclModule);
-
         }
     }
 
@@ -267,10 +271,20 @@ public class Osoasso extends Composite implements EntryPoint
 		naclModule.postMessage('input:' + input + ":" + username);
     }-*/;
     
-    private static native void exportOnNaclModuleLoadedMethod() /*-{
-    $wnd.onNaclModuleLoaded = function() {
-       $entry(@org.josh.osoasso.client.Osoasso::onNaclModuleLoaded()());
-    }
- }-*/;
+    private static native void exportOnNaclModuleLoadedMethod()
+    /*-{
+	    $wnd.onNaclModuleLoaded = function() {
+	       $entry(@org.josh.osoasso.client.Osoasso::onNaclModuleLoaded()());
+	    }
+ 	}-*/;
 
+    private native JavaScriptObject GetEmscriptenElement()
+    /*-{
+		return $doc.getElementById("emscripten");
+    }-*/;
+    
+    private native JavaScriptObject CallEmscriptenCreateInstance(JavaScriptObject emscriptenInstance)
+    /*-{
+    	return $doc.CreateEmscriptenInstance(emscriptenInstance);
+    }-*/;
 }

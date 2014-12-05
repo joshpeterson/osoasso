@@ -2,7 +2,7 @@
 
 using namespace osoasso;
 
-std::shared_ptr<const matrix<double>> transpose::call(std::shared_ptr<const matrix<double>> input, int number_of_threads) const
+expected_const_matrix transpose::call(std::shared_ptr<const matrix<double>> input, int number_of_threads) const
 {
     size_t num_rows = input->rows();
     size_t num_columns = input->columns();
@@ -16,7 +16,7 @@ std::shared_ptr<const matrix<double>> transpose::call(std::shared_ptr<const matr
         }
     }
 
-    return result;
+    return expected_const_matrix(result);
 }
 
 std::string transpose::get_help() const

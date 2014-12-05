@@ -22,15 +22,15 @@ public:
     {
     }
 
-    std::shared_ptr<const matrix<double>> call(std::shared_ptr<const matrix<double>> left, std::shared_ptr<const matrix<double>> right,
-                                               int number_of_threads) const
+    expected_const_matrix call(std::shared_ptr<const matrix<double>> left, std::shared_ptr<const matrix<double>> right,
+                               int number_of_threads) const
     {
         command_called_ = true;
         left_ = left;
         right_ = right;
         number_of_threads_ = number_of_threads;
         auto test = std::shared_ptr<const matrix<double>>(new matrix<double>({{1}, {1}}));
-        return test;
+        return expected_const_matrix(test);
     }
 
     int number_of_arguments() const
@@ -77,13 +77,13 @@ public:
     {
     }
 
-    std::shared_ptr<const matrix<double>> call(std::shared_ptr<const matrix<double>> input, int number_of_threads) const
+    expected_const_matrix call(std::shared_ptr<const matrix<double>> input, int number_of_threads) const
     {
         command_called_ = true;
         input_ = input;
         number_of_threads_ = number_of_threads;
         auto test = std::shared_ptr<const matrix<double>>(new matrix<double>({{1}, {1}}));
-        return test;
+        return expected_const_matrix(test);
     }
 
     std::string get_help() const
@@ -123,7 +123,7 @@ Define(CommandDispatcher)
         tag_repository tags;
 
         command_dispatcher dispatcher(commands, matrices, tags);
-        dispatcher.input("foo([[1 2]], [[3 5]])");
+        dispatcher.input("foo([[1 2]], [[3 5]])").get_value();
 
         AssertTrue(test_command->command_called());
     } Done
@@ -142,7 +142,7 @@ Define(CommandDispatcher)
         bool exception_thrown = false;
         try
         {
-            dispatcher.input("foo([[1 2]], [[3 5]], [[2 6]])");
+            dispatcher.input("foo([[1 2]], [[3 5]], [[2 6]])").get_value();
         }
         catch (const std::runtime_error& e)
         {
@@ -168,7 +168,7 @@ Define(CommandDispatcher)
         bool exception_thrown = false;
         try
         {
-            dispatcher.input("foo([[1 2]])");
+            dispatcher.input("foo([[1 2]])").get_value();
         }
         catch (const std::runtime_error& e)
         {
@@ -189,7 +189,7 @@ Define(CommandDispatcher)
         tag_repository tags;
 
         command_dispatcher dispatcher(commands, matrices, tags);
-        dispatcher.input("foo([[1 2]], [[3 5]])");
+        dispatcher.input("foo([[1 2]], [[3 5]])").get_value();
 
         matrix<double> expected_left = {{ 1, 2 }};
         matrix<double> expected_right = {{ 3, 5 }};
@@ -207,7 +207,7 @@ Define(CommandDispatcher)
         tag_repository tags;
 
         command_dispatcher dispatcher(commands, matrices, tags);
-        dispatcher.input("foo([[1 2]], [[3 5]])");
+        dispatcher.input("foo([[1 2]], [[3 5]])").get_value();
 
         auto expected_left = std::shared_ptr<const matrix<double>>(new matrix<double>({{ 1, 2 }}));
         auto expected_right = std::shared_ptr<const matrix<double>>(new matrix<double>({{ 3, 5 }}));
@@ -229,7 +229,7 @@ Define(CommandDispatcher)
         tag_repository tags;
 
         command_dispatcher dispatcher(commands, matrices, tags);
-        dispatcher.input("foo([[1 2]], [[3 5]])");
+        dispatcher.input("foo([[1 2]], [[3 5]])").get_value();
 
         auto expected_result = std::shared_ptr<const matrix<double>>(new matrix<double>({{1}, {1}}));
 
@@ -253,7 +253,7 @@ Define(CommandDispatcher)
         std::shared_ptr<const blob<double>> blob_result = blobber.make_blob(expected_result);
 
         command_dispatcher dispatcher(commands, matrices, tags);
-        command_data result = dispatcher.input("foo([[1 2]], [[3 5]])");
+        command_data result = dispatcher.input("foo([[1 2]], [[3 5]])").get_value();
         AssertEqual(blob_result->name(), result.output);
 
     } Done
@@ -274,7 +274,7 @@ Define(CommandDispatcher)
         std::shared_ptr<const blob<double>> blob_right = blobber.make_blob(right);
 
         command_dispatcher dispatcher(commands, matrices, tags);
-        command_data result = dispatcher.input("foo([[1 2]], [[3 5]])");
+        command_data result = dispatcher.input("foo([[1 2]], [[3 5]])").get_value();
 
         AssertEqual(blob_left->name(), result.inputs[0]);
         AssertEqual(blob_right->name(), result.inputs[1]);
@@ -290,7 +290,7 @@ Define(CommandDispatcher)
         tag_repository tags;
 
         command_dispatcher dispatcher(commands, matrices, tags);
-        command_data result = dispatcher.input("tag = foo([[1 2]], [[3 5]])");
+        command_data result = dispatcher.input("tag = foo([[1 2]], [[3 5]])").get_value();
         AssertEqual("tag", result.tag);
     } Done
 
@@ -313,7 +313,7 @@ Define(CommandDispatcher)
         input << "foo(" << blob_left->name() << ", [[3 5]])";
 
         command_dispatcher dispatcher(commands, matrices, tags);
-        dispatcher.input(input.str());
+        dispatcher.input(input.str()).get_value();
 
         AssertElementsEqual(*expected_left, *test_command->left_argument());
     } Done
@@ -327,9 +327,9 @@ Define(CommandDispatcher)
         tag_repository tags;
 
         command_dispatcher dispatcher(commands, matrices, tags);
-        dispatcher.input("bar = foo([[1 2]], [[3 5]])");
+        dispatcher.input("bar = foo([[1 2]], [[3 5]])").get_value();
 
-        AssertEqual(std::string("f8febc7d 612c9ce4 53575949 67981bd6 33215355"), tags.get("bar"));
+        AssertEqual(std::string("f8febc7d 612c9ce4 53575949 67981bd6 33215355"), tags.get("bar").get_value());
     } Done
 
     It("Finds an input by tag in the tag repository")
@@ -350,7 +350,7 @@ Define(CommandDispatcher)
         tags.add("tag", blob_left->name());
 
         command_dispatcher dispatcher(commands, matrices, tags);
-        dispatcher.input("foo(tag, [[3 5]])");
+        dispatcher.input("foo(tag, [[3 5]])").get_value();
 
         AssertElementsEqual(*expected_left, *test_command->left_argument());
     } Done
@@ -364,7 +364,7 @@ Define(CommandDispatcher)
         tag_repository tags;
 
         command_dispatcher dispatcher(commands, matrices, tags);
-        dispatcher.input("foo([[1 2]], [[3 5]])");
+        dispatcher.input("foo([[1 2]], [[3 5]])").get_value();
 
         AssertEqual<size_t>(0, tags.count());
     } Done
@@ -378,7 +378,7 @@ Define(CommandDispatcher)
         tag_repository tags;
 
         command_dispatcher dispatcher(commands, matrices, tags);
-        command_data data = dispatcher.input("foo([[1 2]], [[3 5]])");
+        command_data data = dispatcher.input("foo([[1 2]], [[3 5]])").get_value();
 
         // Verify that we at least get a non-negative time less than 1 second.
         AssertTrue(data.command_duration_seconds >= 0 && data.command_duration_seconds < 1);
@@ -399,7 +399,7 @@ Define(CommandDispatcher)
         tag_repository tags;
 
         command_dispatcher dispatcher(commands, matrices, tags);
-        dispatcher.input("foo(2, [[3 5]])");
+        dispatcher.input("foo(2, [[3 5]])").get_value();
 
         AssertElementsEqual(*expected_left, *test_command->left_argument());
     } Done
@@ -419,7 +419,7 @@ Define(CommandDispatcher)
         tag_repository tags;
 
         command_dispatcher dispatcher(commands, matrices, tags);
-        dispatcher.input("foo(2.3, [[3 5]])");
+        dispatcher.input("foo(2.3, [[3 5]])").get_value();
 
         AssertElementsEqual(*expected_left, *test_command->left_argument());
     } Done
@@ -433,7 +433,7 @@ Define(CommandDispatcher)
         tag_repository tags;
 
         command_dispatcher dispatcher(commands, matrices, tags);
-        dispatcher.input("foo([[1 2]], [[3 5]])");
+        dispatcher.input("foo([[1 2]], [[3 5]])").get_value();
 
         AssertEqual(1, test_command->number_of_threads());
     } Done
@@ -447,7 +447,7 @@ Define(CommandDispatcher)
         tag_repository tags;
 
         command_dispatcher dispatcher(commands, matrices, tags);
-        dispatcher.input("foo([[1 2]], [[3 5]], 3)");
+        dispatcher.input("foo([[1 2]], [[3 5]], 3)").get_value();
 
         AssertEqual(3, test_command->number_of_threads());
     } Done
@@ -461,7 +461,7 @@ Define(CommandDispatcher)
         tag_repository tags;
 
         command_dispatcher dispatcher(commands, matrices, tags);
-        dispatcher.input("foo([[1 2]], 3)");
+        dispatcher.input("foo([[1 2]], 3)").get_value();
 
         matrix<double> expected_input = {{ 1, 2 }};
 

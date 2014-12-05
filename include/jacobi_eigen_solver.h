@@ -12,7 +12,7 @@ namespace osoasso
 class jacobi_eigen_solver : public command_with_one_argument
 {
 public:
-    std::shared_ptr<const matrix<double>> call(std::shared_ptr<const matrix<double>> input, int number_of_threads) const;
+    expected_const_matrix call(std::shared_ptr<const matrix<double>> input, int number_of_threads) const;
     std::string get_help() const;
 };
 

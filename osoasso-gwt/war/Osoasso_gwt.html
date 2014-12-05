@@ -28,6 +28,28 @@
     <!-- be added before this line.                -->
     <!--                                           -->
     <script type="text/javascript" language="javascript" src="osoasso_gwt/osoasso_gwt.nocache.js"></script>
+    <script type="text/javascript" src="loadnacl.js"></script>
+    <script type="text/javascript" src="common.js"></script>
+    <script type="text/javascript" language="javascript" src="osoasso.js"></script>
+    <script type="text/javascript">	    
+		    document.CreateEmscriptenInstance = function createEmscriptenInstance(e)
+		    {
+		    	CreateInstance(200, 200, e);
+		    	e.finishLoading();
+		    }
+		    
+		    function HasPNaCL()
+		    {
+		    	return navigator.mimeTypes['application/x-pnacl'] !== undefined
+		    }
+		    
+		    // Lifted from http://stackoverflow.com/questions/901115/how-can-i-get-query-string-values-in-javascript
+		    function getParameterByName(name)
+		    {
+    			var match = RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
+   				return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
+			}
+    </script>
   </head>
 
   <!--                                           -->
@@ -51,6 +73,23 @@
     <div id="listener">
 	    <script type="text/javascript">
 		    var listener = document.getElementById('listener');
+		    var target = getParameterByName('target');
+		    if (target == "javascript")
+		    {
+		    	document.write('<span id="emscripten"></span>');
+		    }
+		    else if (target == "pnacl")
+		    {
+		    	document.write('<embed name="nacl_module" id="osoasso" width="0" height="0" src="osoasso.nmf" type="application/x-pnacl" />');
+		    }
+		    else
+		    {
+		        if (HasPNaCL())
+			    document.write('<embed name="nacl_module" id="osoasso" width="0" height="0" src="osoasso.nmf" type="application/x-pnacl" />');
+			else
+			    document.write('<span id="emscripten"></span>');
+		}
+
 		    listener.addEventListener('loadStart', moduleLoadStarted, true);
 		    listener.addEventListener('progress', moduleLoadProgress, true);
 		    listener.addEventListener('error', moduleLoadError, true);
@@ -89,7 +128,8 @@
   			  alert('Bad news: something went very wrong, but it\'s not your fault! Please reload the page and try again.'); 
 			}
 	    </script>
-    	<embed name="nacl_module" id="osoasso" width="0" height="0" src="osoasso.nmf" type="application/x-pnacl" />
+    	<!-- <embed name="nacl_module" id="osoasso" width="0" height="0" src="osoasso.nmf" type="application/x-pnacl" />
+    	<span id="emscripten"></span>-->
     </div>
   </body>
 </html>

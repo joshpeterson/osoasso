@@ -7,8 +7,8 @@
 
 using namespace osoasso;
 
-std::shared_ptr<const matrix<double>> multiply::call(std::shared_ptr<const matrix<double>> left, std::shared_ptr<const matrix<double>> right,
-                                                     int number_of_threads) const
+expected_const_matrix multiply::call(std::shared_ptr<const matrix<double>> left, std::shared_ptr<const matrix<double>> right,
+                                     int number_of_threads) const
 {
     if (left->columns() != right->rows())
     {
@@ -16,7 +16,7 @@ std::shared_ptr<const matrix<double>> multiply::call(std::shared_ptr<const matri
         message << "The number of columns in the left metrix (" << left->columns()
                 << ") is not the same as the number of rows in the right matrix ("
                 << right->rows() << ").";
-        throw std::invalid_argument(message.str());
+        INVALID_ARGUMENT_CONST(std::invalid_argument(message.str()));
     }
 
     row_multiplier multiplier(left->rows(), right->columns());
@@ -25,7 +25,7 @@ std::shared_ptr<const matrix<double>> multiply::call(std::shared_ptr<const matri
     task.start();
     task.complete();
 
-    return multiplier.get_result();
+    return expected_const_matrix(multiplier.get_result());
 }
 
 std::string multiply::get_help() const

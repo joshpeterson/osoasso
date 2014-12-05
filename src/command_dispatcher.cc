@@ -10,8 +10,6 @@
 #include "../include/tag_repository.h"
 #include "../include/timer.h"
 
-#include <iostream>
-
 using namespace osoasso;
 
 command_dispatcher::command_dispatcher(const command_factory& commands,
@@ -21,7 +19,7 @@ command_dispatcher::command_dispatcher(const command_factory& commands,
 {
 }
 
-command_data command_dispatcher::input(const std::string& input)
+expected<command_data> command_dispatcher::input(const std::string& input)
 {
     command_parser parser(input);
     std::shared_ptr<command> command = commands_.get(parser.name());
@@ -33,7 +31,9 @@ command_data command_dispatcher::input(const std::string& input)
         matrix_inputs.back()->rows() == 1 && matrix_inputs.back()->columns() == 1)
         has_optional_parameter = true;
 
-    this->validate_number_of_inputs(parser.name(), parser.inputs(), command, has_optional_parameter);
+    auto expected_command_data = this->validate_number_of_inputs(parser.name(), parser.inputs(), command, has_optional_parameter);
+    if (!expected_command_data.has_value())
+        return expected_command_data;
 
     int number_of_threads = 1;
     if (has_optional_parameter)
@@ -49,16 +49,23 @@ command_data command_dispatcher::input(const std::string& input)
     std::shared_ptr<const matrix<double>> result;
 
     timer command_timer;
-    std::shared_ptr<command_with_two_arguments> command_two = std::dynamic_pointer_cast<command_with_two_arguments>(command);
-    if (command_two)
+    if (command->number_of_arguments() == 2)
     {
-        result = command_two->call(matrix_inputs[0], matrix_inputs[1], number_of_threads);
+        command_with_two_arguments* command_two = (command_with_two_arguments*)command.get();
+        auto expected_result = command_two->call(matrix_inputs[0], matrix_inputs[1], number_of_threads);
+        if (expected_result.has_value())
+            result = expected_result.get_value();
+        else
+            return expected<command_data>::from_string(expected_result.get_exception_message());
     }
     else
     {
-        std::shared_ptr<command_with_one_argument> command_one = std::dynamic_pointer_cast<command_with_one_argument>(command);
-
-        result = command_one->call(matrix_inputs[0], number_of_threads);
+        command_with_one_argument* command_one = (command_with_one_argument*)command.get();
+        auto expected_result = command_one->call(matrix_inputs[0], number_of_threads);
+        if (expected_result.has_value())
+            result = expected_result.get_value();
+        else
+            return expected<command_data>::from_string(expected_result.get_exception_message());
     }
 
     command_result.command_duration_seconds = command_timer.elapsed();
@@ -74,10 +81,10 @@ command_data command_dispatcher::input(const std::string& input)
     command_result.output = result_name;
     command_result.inputs = input_names;
 
-    return command_result;
+    return expected<command_data>(command_result);
 }
 
-void command_dispatcher::validate_number_of_inputs(const std::string& command_name, const std::vector<std::string>& inputs,
+expected<command_data> command_dispatcher::validate_number_of_inputs(const std::string& command_name, const std::vector<std::string>& inputs,
                                                    std::shared_ptr<command> command, bool allow_optional_parameter) const
 {
     int arguments_provided = static_cast<int>(inputs.size());
@@ -99,8 +106,10 @@ void command_dispatcher::validate_number_of_inputs(const std::string& command_na
                 message << ", ";
         }
 
-        throw std::runtime_error(message.str());
+        return expected<command_data>::from_exception(std::runtime_error(message.str()));
     }
+
+    return expected<command_data>(command_data());
 }
 
 std::vector<std::shared_ptr<const matrix<double>>> command_dispatcher::unpack_arguments(const std::vector<std::string>& inputs) const
@@ -113,7 +122,7 @@ std::vector<std::shared_ptr<const matrix<double>>> command_dispatcher::unpack_ar
             if (tags_.contains(*i))
             {
                 // First look for a tag name
-                matrix_inputs.push_back(matrices_.get(tags_.get(*i)));
+                matrix_inputs.push_back(matrices_.get(tags_.get(*i).get_value()));
             }
             else if (is_number(*i))
             {
