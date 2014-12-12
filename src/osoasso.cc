@@ -41,8 +41,6 @@ public:
 
     virtual void HandleMessage(const pp::Var& var_message)
     {
-        //PostMessage(std::string("1,1,text#help#Looking good"));
-        //return;
         if (!var_message.is_string())
         {
             return;

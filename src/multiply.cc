@@ -1,6 +1,5 @@
 #include <sstream>
 #include <stdexcept>
-#include <pthread.h>
 #include "../include/multiply.h"
 #include "../include/matrix.h"
 #include "../include/parallel_task.h"

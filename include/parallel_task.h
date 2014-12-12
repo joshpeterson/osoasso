@@ -4,6 +4,7 @@
 #include <vector>
 #include <utility>
 #include <memory>
+#include <pthread.h>
 
 namespace osoasso
 {
@@ -16,7 +17,7 @@ private:
 
 public:
     parallel_task(IteratorType begin, IteratorType end, TaskType& task, TaskConstructorArgumentType argument, int number_of_threads)
-        : begin_(begin), end_(end), original_task_(task), argument_(argument), created_tasks_(), number_of_threads_(number_of_threads)
+        : begin_(begin), end_(end), original_task_(task), argument_(argument), number_of_threads_(number_of_threads)
     {
     }
 
@@ -36,20 +37,28 @@ public:
                 std::advance(it, number_of_leftover_tasks_for_last_range);
             thread_data->end = it;
             
+#if !defined(__EMSCRIPTEN__)
             pthread_t task_handle;
             pthread_create(&task_handle, NULL, &ApplyTask, thread_data.get());
-
             created_tasks_.push_back(std::make_pair(task_handle, thread_data));
+#else
+            created_task_ = thread_data;
+            ApplyTask(thread_data.get());
+#endif
         }
     }
 
     void complete()
     {
+#if !defined(__EMSCRIPTEN__)
         for (auto created_task = created_tasks_.begin(); created_task != created_tasks_.end(); ++created_task)
         {
             pthread_join(created_task->first, NULL);
             original_task_.reduce(created_task->second->task);
         }
+#else
+            original_task_.reduce(created_task_->task);
+#endif
     }
 
 private:
@@ -68,7 +77,11 @@ private:
     IteratorType end_;
     TaskType& original_task_;
     TaskConstructorArgumentType argument_;
+#if !defined(__EMSCRIPTEN__)
     std::vector<std::pair<pthread_t, std::shared_ptr<task_thread_data>>> created_tasks_;
+#else
+    std::shared_ptr<task_thread_data> created_task_;
+#endif
     int number_of_threads_;
 
     static void* ApplyTask(void* thread_data_input)
