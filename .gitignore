@@ -7,3 +7,8 @@
 gwt-unitCache*
 war*
 test-classes*
+emscripten/*
+pnacl/*
+newlib/*
+glibc/*
+.metadata/*
