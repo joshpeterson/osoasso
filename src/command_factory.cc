@@ -8,7 +8,7 @@ command_factory::command_factory(int number_of_entries, std::initializer_list<st
 {
 }
 
-std::shared_ptr<command> command_factory::get(std::string name) const
+expected<std::shared_ptr<command>> command_factory::get(std::string name) const
 {
     return commands_.get(name);
 }

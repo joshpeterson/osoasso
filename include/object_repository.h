@@ -9,6 +9,7 @@
 #include <stdexcept>
 #include <vector>
 #include <algorithm>
+#include "expected.h"
 
 namespace osoasso
 {
@@ -40,19 +41,17 @@ public:
         objects_.insert(object);
     }
 
-    RepositoryValueType get(const std::string& name) const
+    expected<RepositoryValueType> get(const std::string& name) const
     {
         auto found_object = objects_.find(name);
         if (found_object != objects_.end())
         {
-            return found_object->second;
+            return expected<RepositoryValueType>(found_object->second);
         }
-        else
-        {
-            std::stringstream message;
-            message << "No object found with name: " << name;
-            throw std::domain_error(message.str());
-        }
+
+        std::stringstream message;
+        message << "No object found with name: " << name;
+        return expected<RepositoryValueType>::from_string(message.str().c_str());
     }
 
     size_t size() const

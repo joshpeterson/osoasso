@@ -34,9 +34,8 @@ expected<commit_data> project_manager::input(const std::string& action, const st
     command_dispatcher dispatcher(commands_, matrices_, tags_);
     auto expected_command_data = dispatcher.input(action);
     if (!expected_command_data.has_value())
-    {
         return expected<commit_data>::from_string(expected_command_data.get_exception_message());
-    }
+
     auto command_data = expected_command_data.get_value();
 
     commit_factory factory(commits_, commit_tree_);
@@ -47,7 +46,7 @@ expected<commit_data> project_manager::input(const std::string& action, const st
 
 std::shared_ptr<const matrix<double>> project_manager::get_matrix(const std::string& name) const
 {
-    return matrices_.get(name);
+    return matrices_.get(name).get_value();
 }
 
 std::vector<std::string> project_manager::get_command_names() const
@@ -63,7 +62,7 @@ std::vector<std::pair<std::string, std::string>> project_manager::get_command_he
 
     for (auto name = command_names.begin(); name != command_names.end(); ++name)
     {
-        command_help.push_back(std::make_pair(*name, commands_.get(*name)->get_help()));
+        command_help.push_back(std::make_pair(*name, commands_.get(*name).get_value()->get_help()));
     }
 
     return command_help;
@@ -72,7 +71,7 @@ std::vector<std::pair<std::string, std::string>> project_manager::get_command_he
 commit_data project_manager::get_last_commit(std::string& tag, double command_duration_seconds) const
 {
     std::string head_commit_name = commit_tree_.head();
-    std::shared_ptr<const commit> head_commit = commits_.get(head_commit_name);
+    std::shared_ptr<const commit> head_commit = commits_.get(head_commit_name).get_value();
 
     commit_data data;
     data.action = head_commit->action();

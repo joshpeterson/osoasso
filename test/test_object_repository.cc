@@ -12,7 +12,7 @@ Define(ObjectRepository)
 
         object_repository<int> test_repo;
         test_repo.add(object1);
-        AssertEqual(3, test_repo.get("Object 1"));
+        AssertEqual(3, test_repo.get("Object 1").get_value());
     } Done
 
     It("Get throws a domain error exception or an invalid object name")
@@ -22,9 +22,9 @@ Define(ObjectRepository)
         bool exception_thrown = false;
         try
         {
-            test_repo.get("Object 1");
+            test_repo.get("Object 1").get_value();
         }
-        catch(const std::domain_error&)
+        catch(const std::runtime_error&)
         {
             exception_thrown = true;
         }
@@ -40,7 +40,7 @@ Define(ObjectRepository)
         object_repository<int> test_repo;
         test_repo.add(object1);
         test_repo.add(object2);
-        AssertEqual(4, test_repo.get("Object 2"));
+        AssertEqual(4, test_repo.get("Object 2").get_value());
     } Done
 
     It("Allows intialization with a list")
@@ -50,8 +50,8 @@ Define(ObjectRepository)
 
         object_repository<int> test_repo(2, { object1, object2 });
 
-        AssertEqual(3, test_repo.get("Object 1"));
-        AssertEqual(4, test_repo.get("Object 2"));
+        AssertEqual(3, test_repo.get("Object 1").get_value());
+        AssertEqual(4, test_repo.get("Object 2").get_value());
     } Done
 
     It("Reports its size")
@@ -74,7 +74,7 @@ Define(ObjectRepository)
         test_repo.add(object2);
 
         AssertEqual<size_t>(1, test_repo.size());
-        AssertEqual(3, test_repo.get("Object 1"));
+        AssertEqual(3, test_repo.get("Object 1").get_value());
     } Done
 
     It("Does not add objects with duplicate names in the initializer list")
@@ -85,7 +85,7 @@ Define(ObjectRepository)
         object_repository<int> test_repo(2, { object1, object2 });
 
         AssertEqual<size_t>(1, test_repo.size());
-        AssertEqual(3, test_repo.get("Object 1"));
+        AssertEqual(3, test_repo.get("Object 1").get_value());
     } Done
 
     It("Returns a list of keys")

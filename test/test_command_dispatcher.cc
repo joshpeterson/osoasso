@@ -216,8 +216,8 @@ Define(CommandDispatcher)
         std::shared_ptr<const blob<double>> blob_left = blobber.make_blob(expected_left);
         std::shared_ptr<const blob<double>> blob_right = blobber.make_blob(expected_right);
 
-        AssertElementsEqual(*expected_left, *matrices.get(blob_left->name()));
-        AssertElementsEqual(*expected_right, *matrices.get(blob_right->name()));
+        AssertElementsEqual(*expected_left, *matrices.get(blob_left->name()).get_value());
+        AssertElementsEqual(*expected_right, *matrices.get(blob_right->name()).get_value());
     } Done
 
     It("Stores the result of the command in the object repository")
@@ -236,7 +236,7 @@ Define(CommandDispatcher)
         matrix_blobber<double> blobber;
         std::shared_ptr<const blob<double>> blob_result = blobber.make_blob(expected_result);
 
-        AssertElementsEqual(*expected_result, *matrices.get(blob_result->name()));
+        AssertElementsEqual(*expected_result, *matrices.get(blob_result->name()).get_value());
     } Done
 
     It("Returns the name of the result matrix in a command data struct")

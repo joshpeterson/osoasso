@@ -101,7 +101,7 @@ Define(CommitFactory)
 
         std::string expected_commit_name = result.make_blob().name();
 
-        AssertTrue(commits.get(expected_commit_name) != NULL);
+        AssertTrue(commits.get(expected_commit_name).get_value() != NULL);
     } Done
 
     It("Adds the commit name to the commit tree")

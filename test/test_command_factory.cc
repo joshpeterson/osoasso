@@ -43,7 +43,7 @@ Define(CommandFactory)
     {
         command_factory commands(1, { std::make_pair("mock", std::shared_ptr<command>(new mock_command)) });
 
-        std::shared_ptr<command> actual_command = commands.get("mock");
+        std::shared_ptr<command> actual_command = commands.get("mock").get_value();
         AssertEqual(15, actual_command->number_of_arguments());
     } Done
 

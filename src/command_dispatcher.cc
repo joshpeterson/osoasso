@@ -22,7 +22,11 @@ command_dispatcher::command_dispatcher(const command_factory& commands,
 expected<command_data> command_dispatcher::input(const std::string& input)
 {
     command_parser parser(input);
-    std::shared_ptr<command> command = commands_.get(parser.name());
+    auto expected_command = commands_.get(parser.name());
+    if (!expected_command.has_value())
+        return expected<command_data>::from_string(expected_command.get_exception_message());
+
+    auto command = expected_command.get_value();
 
     std::vector<std::shared_ptr<const matrix<double>>> matrix_inputs = this->unpack_arguments(parser.inputs());
 
@@ -122,7 +126,7 @@ std::vector<std::shared_ptr<const matrix<double>>> command_dispatcher::unpack_ar
             if (tags_.contains(*i))
             {
                 // First look for a tag name
-                matrix_inputs.push_back(matrices_.get(tags_.get(*i).get_value()));
+                matrix_inputs.push_back(matrices_.get(tags_.get(*i).get_value()).get_value());
             }
             else if (is_number(*i))
             {
@@ -135,7 +139,7 @@ std::vector<std::shared_ptr<const matrix<double>>> command_dispatcher::unpack_ar
             else
             {
                 // Finally the input may be a matrix SHA1 name
-                matrix_inputs.push_back(matrices_.get(*i));
+                matrix_inputs.push_back(matrices_.get(*i).get_value());
             }
         }
         else

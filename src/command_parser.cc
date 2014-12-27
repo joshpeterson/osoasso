@@ -53,9 +53,7 @@ bool command_parser::has_tag() const
 std::string command_parser::name() const
 {
     if (!command_segments_.empty())
-    {
         return command_segments_[command_name_offset()];
-    }
 
     return std::string();
 }
